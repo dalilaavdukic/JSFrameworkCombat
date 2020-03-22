@@ -1,28 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <character-animation :animation="animationToPlay1"></character-animation>
+    <character-animation :animation="animationToPlay2"></character-animation>
+    <character-animation :animation="animationToPlay3"></character-animation>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import characters from './assets/constants/characters';
+import characterActions from './assets/constants/characterActions';
+import CharacterAnimation from './components/CharacterAnimation';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    CharacterAnimation
+  },
+  data() {
+    return {
+      animationToPlay1: {
+        character: characters.vue,
+        action: characterActions.idle
+      },
+      animationToPlay2: {
+        character: characters.react,
+        action: characterActions.idle
+      },
+      animationToPlay3: {
+        character: characters.angular,
+        action: characterActions.idle
+      }
+    }
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss" scoped>
 </style>
