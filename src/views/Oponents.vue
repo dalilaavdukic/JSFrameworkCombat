@@ -1,15 +1,17 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
+  <div>
+    Oponents
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: 'Oponents',
   data() {
     return {
     }
+  },
+  methods: {
   }
 }
 </script>
