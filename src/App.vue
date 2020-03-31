@@ -15,4 +15,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#app {
+  font-family: 'Nova Flat';
+}
 </style>
