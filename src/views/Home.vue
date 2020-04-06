@@ -31,8 +31,9 @@ export default {
     return {
       vueCharacter: {
         character: characters.vue,
-        action: characterActions.attack,
+        action: characterActions.runWithGun,
         modifications: {
+          mode: constants.characterModes.enemy,
           loop: true
         }
       },
@@ -44,7 +45,7 @@ export default {
         character: characters.angular,
         action: characterActions.runWithGun,
         modifications: {
-          mode: constants.characterModes.enemies,
+          mode: constants.characterModes.enemy,
           loop: true
         }
       },

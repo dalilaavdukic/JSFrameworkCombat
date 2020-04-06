@@ -1,6 +1,6 @@
 export default {
   characterModes: {
-    players: 'players',
-    enemies: 'enemies'
+    player: 'players',
+    enemy: 'enemies'
   }
 }

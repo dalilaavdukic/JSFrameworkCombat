@@ -18,7 +18,7 @@ export default {
       characterSprite: {},
       width: 600,
       height: 600,
-      characterMode: constants.characterModes.players
+      characterMode: constants.characterModes.player
     }
   },
   methods: {
