@@ -6,6 +6,7 @@
 
 <script>
 import sprite from '../utils/sprite';
+import constants from '@/assets/constants/common';
 
 export default {
   name: 'CharacterAnimation',
@@ -16,7 +17,8 @@ export default {
       characterImage: new Image(),
       characterSprite: {},
       width: 600,
-      height: 600
+      height: 600,
+      characterMode: constants.characterModes.players
     }
   },
   methods: {
@@ -33,7 +35,8 @@ export default {
   },
   mounted() {
     this.getCanvas();
-    this.characterImage.src = require(`../assets/characters/${this.animation.character.name}/${this.animation.action.name}.png`);
+    if (this.animation.modifications?.mode) this.characterMode = this.animation.modifications.mode
+    this.characterImage.src = require(`../assets/characters/${this.characterMode}/${this.animation.character.name}/${this.animation.action.name}.png`);
     this.characterSprite = sprite({
       context: this.canvas.getContext("2d"),
       width: this.width*this.animation.action.numberOfFrames,
@@ -41,7 +44,7 @@ export default {
       image: this.characterImage,
       numberOfFrames: this.animation.action.numberOfFrames,
       ticksPerFrame: this.animation.action.ticksPerFrame,
-      loop: this.animation.action.loop
+      loop: this.animation.modifications?.loop || this.animation.action.loop
     });
     this.characterSprite.render();
     this.animate();
