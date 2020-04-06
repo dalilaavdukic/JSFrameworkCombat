@@ -31,19 +31,22 @@ export default {
     return {
       vueCharacter: {
         character: characters.vue,
-        action: characterActions.runWithGun,
+        action: characterActions.shoot,
         modifications: {
-          mode: constants.characterModes.enemy,
           loop: true
         }
       },
       reactCharacter: {
         character: characters.react,
-        action: characterActions.runWithGun
+        action: characterActions.shoot,
+        modifications: {
+          mode: constants.characterModes.enemy,
+          loop: true
+        }
       },
       angularCharacter: {
         character: characters.angular,
-        action: characterActions.runWithGun,
+        action: characterActions.shoot,
         modifications: {
           mode: constants.characterModes.enemy,
           loop: true
