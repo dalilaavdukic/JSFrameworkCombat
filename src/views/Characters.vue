@@ -1,41 +1,62 @@
 <template>
-  <div>
-    <character-animation :animation="animationToPlay1"></character-animation>
-    <character-animation :animation="animationToPlay2"></character-animation>
-    <character-animation :animation="animationToPlay3"></character-animation>
+  <div class="characters">
+    <div class="characters-header">
+      <game-title size='small'></game-title>
+      <h1>Choose a character to play with: </h1>
+    </div>
+    <div class="character-options">
+      <character-card 
+        v-for="character in characters" 
+        :key="character.name" 
+        :character="character">
+      </character-card>
+    </div>
   </div>
 </template>
 
 <script>
 import characters from '../assets/constants/characters';
-import characterActions from '../assets/constants/characterActions';
-import CharacterAnimation from '../components/CharacterAnimation';
+import GameTitle from '@/components/GameTitle';
+import CharacterCard from '@/components/CharacterCard';
 
 export default {
   name: 'Characters',
   components: {
-    CharacterAnimation
+    GameTitle,
+    CharacterCard
   },
   data() {
     return {
-      animationToPlay1: {
-        character: characters.vue,
-        action: characterActions.idle
-      },
-      animationToPlay2: {
-        character: characters.react,
-        action: characterActions.idle
-      },
-      animationToPlay3: {
-        character: characters.angular,
-        action: characterActions.idle
-      }
+      characters: characters
     }
-  },
-  methods: {
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.characters {
+  background: $js-grey;
+  -webkit-box-shadow: inset $box-shadow;
+  box-shadow: inset $box-shadow;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .characters-header {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    padding-top: 25px;
+    h1 {
+      color: $font-color;
+    }
+  }
+  .character-options {
+    display: flex;
+  }
+}
 </style>

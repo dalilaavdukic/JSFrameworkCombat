@@ -20,32 +20,41 @@ export default {
     }
   },
   methods: {
-    getCanvas: function() {
+    getCanvas() {
       this.canvas = this.$refs.characterAnimation;
       this.canvas.width = this.width;
       this.canvas.height = this.height;
     },
-    animate: function() {
+    animate() {
       requestAnimationFrame(this.animate);
       this.characterSprite.update();
+      this.characterSprite.render();
+    },
+    getSprite() {
+      if (this.animation.modifications?.mode) this.characterMode = this.animation.modifications.mode
+      this.characterImage.src = require(`../assets/characters/${this.characterMode}/${this.animation.character.name}/${this.animation.action.name}.png`);
+      this.characterSprite = sprite({
+        context: this.canvas.getContext("2d"),
+        width: this.width*this.animation.action.numberOfFrames,
+        height: this.height,
+        image: this.characterImage,
+        numberOfFrames: this.animation.action.numberOfFrames,
+        ticksPerFrame: this.animation.action.ticksPerFrame,
+        loop: this.animation.modifications?.loop || this.animation.action.loop
+      });
       this.characterSprite.render();
     }
   },
   mounted() {
     this.getCanvas();
-    if (this.animation.modifications?.mode) this.characterMode = this.animation.modifications.mode
-    this.characterImage.src = require(`../assets/characters/${this.characterMode}/${this.animation.character.name}/${this.animation.action.name}.png`);
-    this.characterSprite = sprite({
-      context: this.canvas.getContext("2d"),
-      width: this.width*this.animation.action.numberOfFrames,
-      height: this.height,
-      image: this.characterImage,
-      numberOfFrames: this.animation.action.numberOfFrames,
-      ticksPerFrame: this.animation.action.ticksPerFrame,
-      loop: this.animation.modifications?.loop || this.animation.action.loop
-    });
-    this.characterSprite.render();
+    this.getSprite();
     this.animate();
+  },
+  watch: {
+    animation: function(newAnimation) {
+      this.animation = newAnimation;
+      this.getSprite();
+    }
   }
 }
 </script>

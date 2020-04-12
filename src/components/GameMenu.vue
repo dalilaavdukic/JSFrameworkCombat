@@ -1,6 +1,6 @@
 <template>
   <div class="game-menu">
-    <menu-item v-for="item in items" :key="item.id" :item="item"></menu-item>
+    <menu-item v-for="(item, index) in items" :key="index" :item="item"></menu-item>
   </div>
 </template>
 

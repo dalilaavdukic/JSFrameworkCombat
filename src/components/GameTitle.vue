@@ -1,5 +1,5 @@
 <template>
-  <div class="game-title">
+  <div :class="['game-title', size]">
     <div class="js-logo">
       <img src="/images/JSLogo.png" alt="JS Logo" height="145" width="145">
     </div>
@@ -13,6 +13,7 @@
 <script>
 export default {
   name: 'GameTitle',
+  props: ['size']
 }
 </script>
 
@@ -28,7 +29,9 @@ export default {
   box-shadow: $box-shadow;
   font-size: 30px;
   border-radius: $border-radius;
-  margin-bottom: 10%;
+  &.small {
+    transform: scale(0.8);
+  }
   .title {
     text-align: center;
     padding-left: 10px;

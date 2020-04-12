@@ -2,7 +2,7 @@
   <div class="home">
     <div class="title-side">
       <game-title></game-title>
-      <div>
+      <div class="character-animation">
         <character-animation :animation="vueCharacter"></character-animation>
         <character-animation :animation="reactCharacter"></character-animation>
       </div>
@@ -68,7 +68,6 @@ export default {
   background: $js-grey;
   -webkit-box-shadow: inset $box-shadow;
   box-shadow: inset $box-shadow;
-  color: white;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -84,6 +83,9 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    .character-animation {
+      margin-top: 10%;
+    }
   }
   .menu-side {
     justify-content: flex-start;
