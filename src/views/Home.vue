@@ -2,12 +2,16 @@
   <div class="home">
     <div class="title-side">
       <game-title></game-title>
-      <character-animation :animation="vueCharacter"></character-animation>
-      <character-animation :animation="reactCharacter"></character-animation>
+      <div>
+        <character-animation :animation="vueCharacter"></character-animation>
+        <character-animation :animation="reactCharacter"></character-animation>
+      </div>
     </div>
     <div class="menu-side">
       <character-animation :animation="angularCharacter"></character-animation>
-      <game-menu></game-menu>
+      <div>
+        <game-menu></game-menu>
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +50,7 @@ export default {
       },
       angularCharacter: {
         character: characters.angular,
-        action: characterActions.shoot,
+        action: characterActions.jetpack,
         modifications: {
           mode: constants.characterModes.enemy,
           loop: true
