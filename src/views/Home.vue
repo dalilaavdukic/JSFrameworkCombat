@@ -8,10 +8,10 @@
       </div>
     </div>
     <div class="menu-side">
-      <character-animation :animation="angularCharacter"></character-animation>
       <div>
-        <game-menu></game-menu>
+        <character-animation :animation="angularCharacter"></character-animation>
       </div>
+      <game-menu></game-menu>
     </div>
   </div>
 </template>
@@ -80,7 +80,13 @@ export default {
   .title-side, .menu-side {
     width: 50%;
     height: 100%;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .menu-side {
+    justify-content: flex-start;
   }
 }
 </style>

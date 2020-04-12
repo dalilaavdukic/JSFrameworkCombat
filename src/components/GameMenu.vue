@@ -1,44 +1,26 @@
 <template>
-  <div class="container">
-    <div class="game-menu">
-      <router-link to='/characters'>
-        <div class="menu-item">Start New Game</div>
-      </router-link>
-    </div>
+  <div class="game-menu">
+    <menu-item v-for="item in items" :key="item.id" :item="item"></menu-item>
   </div>
 </template>
 
 <script>
+import menuItems from '@/assets/constants/menuItems';
+import MenuItem from './MenuItem';
 export default {
   name: 'GameMenu',
-  methods: {
+  components: { MenuItem },
+  data() {
+    return {
+      items: menuItems
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.container {
-  display: inline-block;
-  .game-menu {
-    a {
-      text-decoration: none;
-      .menu-item {
-        color: $font-color;
-        background: $js-grey;
-        box-shadow: $box-shadow;
-        font-size: 30px;
-        border-radius: $border-radius;
-        padding: 20px;
-        &:hover {
-          box-shadow: 0 0 100px 0px $js-yellow;
-          color: $js-grey;
-          background: $js-dark-yellow;
-        }
-        &:active {
-          box-shadow: inset 0 0 30px 0px $js-grey;
-        }
-      }
-    }
-  }
+.game-menu {
+  width: 50%;
+  margin-top: 10%;
 }
 </style>
