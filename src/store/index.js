@@ -1,17 +1,23 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import characters from '../assets/constants/characters';
 
 Vue.use(Vuex);
 
 // initial state, whole game
 const state = {
   player: {
-    name: 'Player One',
-    character: characters.vue,
-    health: 80,
-    specialAttack: 50
-  }
+    name: '',
+    character: '',
+    health: 100,
+    specialAttack: 0
+  },
+  enemy: {
+    name: '',
+    character: '',
+    health: 100,
+    specialAttack: 0
+  },
+  assetsLoaded: false
 };
 // mutations
 const mutations = {
@@ -20,12 +26,27 @@ const mutations = {
   },
   increaseSpecialAttack(state, increment) {
     state.player.specialAttack += increment;
+  },
+  chooseCharacter(state, payload) {
+    state[payload.type].character = payload.character
+  },
+  giveName(state, name) {
+    state.player.name = name;
+  },
+  setAssetsLoaded(state, loaded) {
+    state.assetsLoaded = loaded;
   }
 };
 // getters
 const getters = {
   player: state => {
     return state.player
+  },
+  enemy: state => {
+    return state.enemy
+  },
+  assetsLoaded: state => {
+    return state.assetsLoaded;
   }
 };
 

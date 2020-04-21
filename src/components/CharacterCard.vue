@@ -1,11 +1,17 @@
 <template>
-  <div @mouseenter="mouseOver()" @mouseleave="mouseLeave()" class="card">
+  <div :class="['card', {'selected': isSelected}]"
+       @click="selectCharacter()" 
+       @mouseenter="mouseOver()" 
+       @mouseleave="mouseLeave()">
     <character-animation :animation="animation"></character-animation>
     <h2>{{character.name}}</h2>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { mapMutations } from 'vuex';
+
 import characterActions from '@/assets/constants/characterActions';
 import CharacterAnimation from '@/components/CharacterAnimation';
 
@@ -21,7 +27,18 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters([
+      'player'
+    ]),
+    isSelected: function() {
+      return this.character.id === this.player.character.id
+    }
+  },
   methods: {
+    ...mapMutations([
+      'chooseCharacter'
+    ]),
     mouseOver() {
       this.animation = {
         character: this.character,
@@ -33,6 +50,13 @@ export default {
         character: this.character,
         action: characterActions.idle
       };
+    },
+    selectCharacter() {
+      const payload = {
+        type: 'player',
+        character: this.character
+      };
+      this.chooseCharacter(payload);
     }
   }
 }
@@ -53,6 +77,11 @@ export default {
     box-shadow: $box-shadow;
   }
   &:active {
+    color: $js-grey;
+    background: $js-dark-yellow;
+  }
+  &.selected {
+    box-shadow: $box-shadow;
     color: $js-grey;
     background: $js-dark-yellow;
   }

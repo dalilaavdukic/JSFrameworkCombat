@@ -1,11 +1,14 @@
 export default {
-   vue: {
-     name: 'Vue'
+  vue: {
+     id: 0,
+     name: 'vue'
    },
    angular: {
-     name: 'Angular'
+     id: 1,
+     name: 'angular'
    },
    react: {
-     name: 'React'
+     id: 2,
+     name: 'react'
    }
 }

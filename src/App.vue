@@ -1,15 +1,24 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <div v-if="!assetsLoaded">Loading Game</div>
+    <div v-else>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import gameAssetsService from '@/services/gameAssets.service';
 export default {
   name: 'App',
-  data() {
-    return {
-    }
+  computed: {
+    ...mapGetters([
+      'assetsLoaded'
+    ])
+  },
+  mounted() {
+    gameAssetsService.loadGameAssets();
   }
 }
 </script>

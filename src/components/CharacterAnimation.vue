@@ -5,6 +5,7 @@
 <script>
 import sprite from '../utils/sprite';
 import constants from '@/assets/constants/common';
+import gameAssetsService from '@/services/gameAssets.service';
 
 export default {
   name: 'CharacterAnimation',
@@ -12,7 +13,7 @@ export default {
   data() {
     return {
       canvas: {},
-      characterImage: new Image(),
+      characterImage: {},
       characterSprite: {},
       width: 600,
       height: 600,
@@ -32,7 +33,7 @@ export default {
     },
     getSprite() {
       if (this.animation.modifications?.mode) this.characterMode = this.animation.modifications.mode
-      this.characterImage.src = require(`../assets/characters/${this.characterMode}/${this.animation.character.name}/${this.animation.action.name}.png`);
+      this.characterImage = gameAssetsService.assets.characters[this.characterMode][this.animation.character.name][this.animation.action.name];
       this.characterSprite = sprite({
         context: this.canvas.getContext("2d"),
         width: this.width*this.animation.action.numberOfFrames,
