@@ -26,19 +26,23 @@ export default (options) => {
           this.height);
       },
       update: function() {
+        let animationCompleted = false;
         tickCount += 1;
               
         if (tickCount > ticksPerFrame) {    
-            tickCount = 0;
-          
-            // If the current frame index is in range
-            if (frameIndex < numberOfFrames - 1) {	
-                // Go to the next frame
-                frameIndex += 1;
-            }	else if (this.loop) {
-              frameIndex = 0;
+          tickCount = 0;
+        
+          // If the current frame index is in range
+          if (frameIndex < numberOfFrames - 1) {	
+              // Go to the next frame
+              frameIndex += 1;
+          }	else if (this.loop) {
+            frameIndex = 0;
+          } else {
+            animationCompleted = true;
           }
         }
+        return animationCompleted;
       }
     }    
   }
