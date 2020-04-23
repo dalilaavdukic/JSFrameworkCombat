@@ -1,8 +1,7 @@
 <template>
   <div :class="['card', {'selected': isSelected}]"
        @click="selectCharacter()" 
-       @mouseenter="mouseOver()" 
-       @mouseleave="mouseLeave()">
+       @mouseenter="mouseOver()">
     <character-animation :animation="animation"></character-animation>
     <h2>{{character.name}}</h2>
   </div>
@@ -43,12 +42,6 @@ export default {
       this.animation = {
         character: this.character,
         action: characterActions.attack
-      };
-    },
-    mouseLeave() {
-      this.animation = {
-        character: this.character,
-        action: characterActions.idle
       };
     },
     selectCharacter() {
