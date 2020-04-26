@@ -1,5 +1,5 @@
 <template>
-  <div class="characters">
+  <div class="game-view">
     <div class="characters-header">
       <game-title size='small'></game-title>
       <h1>Choose a character to play with: </h1>
@@ -20,7 +20,7 @@
             @input="updateName" 
             type="text">
         </div>
-        <button @click="play" :disabled="!player.name">Play!</button>
+        <button @click="play" :disabled="!player.name || !player.character">Play!</button>
       </div>
     </form>
   </div>
@@ -64,77 +64,70 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.characters {
-  background: $js-grey;
-  -webkit-box-shadow: inset $box-shadow;
-  box-shadow: inset $box-shadow;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
+.characters-header {
+  align-self: flex-start;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  color: $font-color;
-  .characters-header {
-    align-self: flex-start;
+  padding-top: 25px;
+}
+.player-form {
+  .character-options {
+    display: flex;
+  }
+  .player-inputs {
     display: flex;
     align-items: center;
-    padding-top: 25px;
-  }
-  .player-form {
-    .character-options {
-      display: flex;
+    justify-content: space-between;
+    margin: 2rem;
+    label {
+      font-size: 24px;
     }
-    .player-inputs {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 2rem;
-      label {
-        font-size: 24px;
+    input {
+      height: 35px;
+      width: 350px;
+      margin-left: 30px;
+      padding: 0 15px;
+      border-radius: $border-radius;
+      padding-left: 15px;
+      font-size: 18px;
+      outline: none;
+      background: $js-grey;
+      border: 1px solid gray;
+      color: $font-color;
+      &:focus {
+        border: 1px solid $js-yellow;
       }
-      input {
-        height: 35px;
-        width: 350px;
-        margin-left: 30px;
-        padding: 0 15px;
-        border-radius: $border-radius;
-        padding-left: 15px;
-        font-size: 18px;
+    }
+    button {
+      font-size: 24px;
+      padding: 1rem;
+      color: $font-color;
+      background: $js-grey;
+      box-shadow: $box-shadow;
+      border-radius: $border-radius;
+      border: 0;
+      font-family: 'Nova Flat';
+      &:hover {
+        box-shadow: 0 0 100px 0px $js-yellow;
+        color: $js-grey;
+        background: $js-dark-yellow;
+        &:disabled {
+          box-shadow: none;
+        }
+      }
+      &:active {
+        box-shadow: inset 0 0 30px 0px $js-grey;
         outline: none;
-        background: $js-grey;
-        border: 1px solid gray;
-        color: wheat;
-        &:focus {
-          border: 1px solid $js-yellow;
-        }
       }
-      button {
-        font-size: 24px;
-        padding: 1rem;
-        color: $font-color;
-        background: $js-grey;
-        box-shadow: $box-shadow;
-        border-radius: $border-radius;
-        border: 0;
-        font-family: 'Nova Flat';
-        &:hover {
-          box-shadow: 0 0 100px 0px $js-yellow;
-          color: $js-grey;
-          background: $js-dark-yellow;
-        }
-        &:active {
-          box-shadow: inset 0 0 30px 0px $js-grey;
-          outline: none;
-        }
-        &:focus {
-          outline: none;
-        }
+      &:focus {
+        outline: 0.5px solid $js-grey;
+      }
+      &:disabled {
+        box-shadow: none;
+        color: $js-grey;
+        background: $disabled-btn-background;
       }
     }
   }
-  
 }
 </style>

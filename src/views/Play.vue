@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="game-view">
     {{player}}
     <button @click="damageHealth(10)">Damage Health</button>
     <button @click="increaseSpecialAttack(10)">Increase Special Attack</button>

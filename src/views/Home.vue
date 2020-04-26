@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home game-view">
     <div class="title-side">
       <game-title></game-title>
       <div class="character-animation">
@@ -65,17 +65,7 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  background: $js-grey;
-  -webkit-box-shadow: inset $box-shadow;
-  box-shadow: inset $box-shadow;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
   .title-side, .menu-side {
     width: 50%;
     height: 100%;
