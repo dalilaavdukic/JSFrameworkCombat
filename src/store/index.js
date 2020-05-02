@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import characters from '../assets/constants/characters';
 
 Vue.use(Vuex);
 
@@ -13,7 +14,7 @@ const state = {
   },
   enemy: {
     name: '',
-    character: '',
+    character: characters.angular,
     health: 100,
     specialAttack: 0
   },

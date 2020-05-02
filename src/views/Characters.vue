@@ -20,7 +20,7 @@
             @input="updateName" 
             type="text">
         </div>
-        <button @click="play" :disabled="!player.name || !player.character">Play!</button>
+        <button type="button" @click="play" :disabled="!player.name || !player.character">Play!</button>
       </div>
     </form>
   </div>
