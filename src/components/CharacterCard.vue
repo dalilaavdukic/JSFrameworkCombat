@@ -2,7 +2,10 @@
   <div :class="['card', {'selected': isSelected}]"
        @click="selectCharacter()" 
        @mouseenter="mouseOver()">
-    <character-animation :animation="animation"></character-animation>
+    <character-animation 
+      :character="character.name" 
+      :animation="animation">
+    </character-animation>
     <h2>{{character.name}}</h2>
   </div>
 </template>
@@ -20,10 +23,7 @@ export default {
   components: { CharacterAnimation },
   data() {
     return {
-      animation: {
-        character: this.character,
-        action: characterActions.idle
-      }
+      animation: characterActions.idle
     }
   },
   computed: {
@@ -39,10 +39,7 @@ export default {
       'chooseCharacter'
     ]),
     mouseOver() {
-      this.animation = {
-        character: this.character,
-        action: characterActions.attack
-      };
+      this.animation = characterActions.attack;
     },
     selectCharacter() {
       const payload = {

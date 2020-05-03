@@ -3,13 +3,25 @@
     <div class="title-side">
       <game-title></game-title>
       <div class="character-animation">
-        <character-animation :animation="vueCharacter"></character-animation>
-        <character-animation :animation="reactCharacter"></character-animation>
+        <character-animation 
+          :character="characters.vue.name" 
+          :animation="vueAnimation.animation"
+          :modifications="vueAnimation.modifications">
+        </character-animation>
+        <character-animation 
+          :character="characters.react.name" 
+          :animation="reactAnimation.animation"
+          :modifications="reactAnimation.modifications">
+        </character-animation>
       </div>
     </div>
     <div class="menu-side">
       <div>
-        <character-animation :animation="angularCharacter"></character-animation>
+        <character-animation 
+          :character="characters.angular.name" 
+          :animation="angularAnimation.animation"
+          :modifications="angularAnimation.modifications">
+        </character-animation>
       </div>
       <game-menu></game-menu>
     </div>
@@ -33,32 +45,28 @@ export default {
   },
   data() {
     return {
-      vueCharacter: {
-        character: characters.vue,
-        action: characterActions.shoot,
+      characters: characters,
+      vueAnimation: {
+        animation: characterActions.shoot,
         modifications: {
           loop: true
         }
       },
-      reactCharacter: {
-        character: characters.react,
-        action: characterActions.shoot,
+      reactAnimation: {
+        animation: characterActions.shoot,
         modifications: {
           mode: constants.characterModes.enemy,
           loop: true
         }
       },
-      angularCharacter: {
-        character: characters.angular,
-        action: characterActions.jetpack,
+      angularAnimation: {
+        animation: characterActions.jetpack,
         modifications: {
           mode: constants.characterModes.enemy,
           loop: true
         }
       },
     }
-  },
-  methods: {
   }
 }
 </script>

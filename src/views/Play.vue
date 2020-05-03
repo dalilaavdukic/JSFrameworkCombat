@@ -3,8 +3,15 @@
     <div class="game-world-bg"></div>
     <div class="game-canvas">
       <div class="playable-area">
-        <character-animation v-if="playerAnimation" class="player" :animation="playerAnimation"></character-animation>
-        <character-animation v-if="enemyAnimation" class="enemy" :animation="enemyAnimation"></character-animation>
+        <character-animation
+            class="player"
+            :character="player.character.name"
+            :animation="playerAnimation">
+        </character-animation>
+        <moveable-character
+          :character="enemy.character.name"
+          :modifications="{mode: constants.characterModes.enemy}">
+        </moveable-character>
       </div>
     </div>
   </div>
@@ -15,11 +22,12 @@ import { mapGetters } from 'vuex';
 import { mapMutations } from 'vuex';
 import characterActions from '@/assets/constants/characterActions';
 import CharacterAnimation from '@/components/CharacterAnimation';
+import MoveableCharacter from '@/components/MoveableCharacter';
 import constants from '@/assets/constants/common';
 
 export default {
   name: 'Play',
-  components: {CharacterAnimation},
+  components: {CharacterAnimation, MoveableCharacter},
   computed: {
     ...mapGetters([
       'player',
@@ -28,22 +36,11 @@ export default {
   },
   data() {
     return {
-      playerAnimation: {},
-      enemyAnimation: {}
+      playerAnimation: characterActions.idle,
+      constants: constants
     }
   },
   created() {
-    this.playerAnimation = {
-      character: this.player.character,
-      action: characterActions.idle
-    };
-    this.enemyAnimation = {
-      character: this.enemy.character,
-      action: characterActions.idle,
-      modifications: {
-        mode: constants.characterModes.enemy
-      }
-    }
   },
   methods: {
     ...mapMutations([
@@ -82,12 +79,6 @@ export default {
       .player {
         position: absolute;
         left: 0; 
-        right: 0; 
-        bottom: -23px;
-      }
-      .enemy {
-        position: absolute;
-        left: calc(100% - 300px); 
         right: 0; 
         bottom: -23px;
       }
