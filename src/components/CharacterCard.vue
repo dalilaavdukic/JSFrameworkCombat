@@ -23,7 +23,8 @@ export default {
   components: { CharacterAnimation },
   data() {
     return {
-      animation: characterActions.idle
+      animation: characterActions.idle,
+      availableAnimations: Object.keys(characterActions)
     }
   },
   computed: {
@@ -39,7 +40,10 @@ export default {
       'chooseCharacter'
     ]),
     mouseOver() {
-      this.animation = characterActions.attack;
+      this.animation = this.getRandomAnimation();
+    },
+    getRandomAnimation() {
+      return characterActions[this.availableAnimations[Math.round(Math.random()*this.availableAnimations.length)]];
     },
     selectCharacter() {
       const payload = {
