@@ -4,7 +4,8 @@
        @mouseenter="mouseOver()">
     <character-animation 
       :character="character.name" 
-      :animation="animation">
+      :animation="animation.animation"
+      :modifications="animation.modifications">
     </character-animation>
     <h2>{{character.name}}</h2>
   </div>
@@ -23,8 +24,8 @@ export default {
   components: { CharacterAnimation },
   data() {
     return {
-      animation: characterActions.idle,
-      availableAnimations: Object.keys(characterActions)
+      animation: { animation: characterActions.idle },
+      availableAnimations: ['attack', 'jetpack', 'jump', 'roll', 'run', 'runWithGun', 'shoot', 'sliding']
     }
   },
   computed: {
@@ -40,10 +41,17 @@ export default {
       'chooseCharacter'
     ]),
     mouseOver() {
-      this.animation = this.getRandomAnimation();
+      this.animation = { 
+        animation: this.getRandomAnimation(), 
+        modifications: {
+          loop: false
+        }
+      }
     },
     getRandomAnimation() {
-      return characterActions[this.availableAnimations[Math.round(Math.random()*this.availableAnimations.length)]];
+      const arrayIndex = Math.round(Math.random()*(this.availableAnimations.length-1));
+      const actionName = this.availableAnimations[arrayIndex];
+      return characterActions[actionName];
     },
     selectCharacter() {
       const payload = {

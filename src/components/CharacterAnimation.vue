@@ -60,7 +60,7 @@ export default {
         image: this.characterImage,
         numberOfFrames: this.currentAnimation.numberOfFrames,
         ticksPerFrame: this.currentAnimation.ticksPerFrame,
-        loop: this.modifications?.loop || this.currentAnimation.loop
+        loop: this.modifications?.loop !== undefined ? this.modifications.loop : this.currentAnimation.loop
       });
       this.characterSprite.render();
     }
