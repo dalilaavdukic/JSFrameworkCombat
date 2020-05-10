@@ -2,6 +2,7 @@
   <character-animation
     ref="characterAnimation"
     class="character"
+    @animationComplete="resetPosition()"
     :style="[position]" 
     :character="character" 
     :animation="animation"
@@ -13,6 +14,9 @@ import CharacterAnimation from '@/components/CharacterAnimation';
 import characters from '@/assets/constants/characters';
 import constants from '@/assets/constants/common';
 import characterActions from '@/assets/constants/characterActions';
+
+// will listen to changes to actions and update position, animation etc and pass to characterAnimation
+// changes can be intiated by user's keyboard (playableCharacter component) or programatically
 
 export default {
   name: 'MoveableCharacter',
@@ -33,7 +37,10 @@ export default {
     return {
       animation: characterActions.idle,
       currentModifications: {},
-      position: {}
+      position: {},
+      positionBeforeAnimation: {},
+      characterJumped: false,
+      lastJumpTime: new Date()
     }
   },
   methods: {
@@ -43,30 +50,58 @@ export default {
       }
     },
     jump() {
+      // recalculate position to return to only of more than 250 miliseconds have passed since last jump
+      // and if the position of the character has not been reset already
+      if (new Date() - this.lastJumpTime > 250 && !this.characterJumped) {
+        this.positionBeforeAnimation = this.getCurrentPosition();
+      }
+      this.characterJumped = true;
       this.$refs.characterAnimation.updateAnimation(characterActions.jump);
+      this.position = {
+        top: this.positionBeforeAnimation.top - constants.jumpHeight + 'px',
+        left: this.positionBeforeAnimation.left + 'px'
+      };
+      this.lastJumpTime = new Date();
     },
-    roll() {
-      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
+    sliding() {
+      this.$refs.characterAnimation.updateAnimation(characterActions.sliding);
     },
     attack() {
       this.$refs.characterAnimation.updateAnimation(characterActions.attack);
     },
     shoot() {
+      this.resetPosition();
       this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
+    },
+    roll() {
+      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
     },
     moveForward() {
       console.log('moveForward');
     },
     moveBackward() {
       console.log('moveBackward');
+    },
+    resetPosition() {
+      if (this.characterJumped) {
+        this.position = {
+          top: this.positionBeforeAnimation.top + 'px',
+          left: this.positionBeforeAnimation.left + 'px'
+        }
+      }
+      this.characterJumped = false;
+    },
+    getCurrentPosition() {
+      return {
+        top: this.$refs.characterAnimation.$el.offsetTop,
+        left: this.$refs.characterAnimation.$el.offsetLeft
+      }
     }
   },
   mounted() {
     this.currentModifications = this.modifications;
     this.calculateInitialPosition();
   }
-  // will listen to changes to actions and update position, animation etc and pass to characterAnimation
-  // changes can be intiated by user's keyboard (playableCharacter component) or programatically
 }
 </script>
 <style lang="scss" scoped>

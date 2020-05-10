@@ -27,7 +27,7 @@ export default {
     return {
       animation: { animation: characterActions.idle },
       modifications: {},
-      availableAnimations: ['attack', 'run', 'runWithGun', 'shoot', 'sliding']
+      availableAnimations: ['attack', 'shoot', 'sliding']
     }
   },
   computed: {

@@ -2,7 +2,7 @@ export default {
   attack: {
     name: 'attack',
     numberOfFrames: 6,
-    ticksPerFrame: 7,
+    ticksPerFrame: 4,
     loop: false
   },
   die: {
@@ -20,7 +20,7 @@ export default {
   idle: {
     name: 'idle',
     numberOfFrames: 12,
-    ticksPerFrame: 7,
+    ticksPerFrame: 4,
     loop: true
   },
   jetpack: {
@@ -32,13 +32,13 @@ export default {
   jump: {
     name: 'jump',
     numberOfFrames: 6,
-    ticksPerFrame: 7,
+    ticksPerFrame: 1,
     loop: false
   },
   roll: {
     name: 'roll',
     numberOfFrames: 7,
-    ticksPerFrame: 7,
+    ticksPerFrame: 2,
     loop: false
   },
   run: {
@@ -56,13 +56,13 @@ export default {
   shoot: {
     name: 'shoot',
     numberOfFrames: 5,
-    ticksPerFrame: 7,
+    ticksPerFrame: 4,
     loop: false
   },
   sliding: {
     name: 'sliding',
     numberOfFrames: 6,
-    ticksPerFrame: 7,
+    ticksPerFrame: 4,
     loop: false
   },
   throwing: {

@@ -45,6 +45,7 @@ export default {
       requestAnimationFrame(this.animate);
       const animationCompleted = this.characterSprite.update();
       if (animationCompleted) {
+        this.$emit('animationComplete');
         this.currentAnimation = this.defaultAnimation;
         this.getSprite();
       }

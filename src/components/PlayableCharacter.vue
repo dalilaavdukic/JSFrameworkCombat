@@ -36,27 +36,32 @@ export default {
   },
   methods: {
     doCommand(e) {
-      let cmd = e.keyCode;
-      const character = this.$refs.moveableCharacter;
-      switch (cmd) {
-        case controlKeys.forward:
-          character.moveForward();
-          break;
-        case controlKeys.backward:
-          character.moveBackward();
-          break;
-        case controlKeys.jump:
-          character.jump();
-          break;
-        case controlKeys.roll:
-          character.roll();
-          break;
-        case controlKeys.attack:
-          character.attack();
-          break;
-        case controlKeys.shoot:
-          character.shoot();
-          break;
+      if (!e.repeat) {
+        let cmd = e.keyCode;
+        const character = this.$refs.moveableCharacter;
+        switch (cmd) {
+          case controlKeys.forward:
+            character.moveForward();
+            break;
+          case controlKeys.backward:
+            character.moveBackward();
+            break;
+          case controlKeys.jump:
+            character.jump();
+            break;
+          case controlKeys.sliding:
+            character.sliding();
+            break;
+          case controlKeys.attack:
+            character.attack();
+            break;
+          case controlKeys.shoot:
+            character.shoot();
+            break;
+          case controlKeys.roll:
+            character.roll();
+            break;
+        }
       }
     }
   }
