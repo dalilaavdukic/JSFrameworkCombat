@@ -77,10 +77,15 @@ export default {
       this.$refs.characterAnimation.updateAnimation(characterActions.roll);
     },
     moveForward() {
-      console.log('moveForward');
+      this.$refs.characterAnimation.updateAnimation(characterActions.run);
+      this.positionBeforeAnimation = this.getCurrentPosition();
+      this.position = {
+        top: this.positionBeforeAnimation.top,
+        left: this.positionBeforeAnimation.left + 200 + 'px'
+      };
     },
     moveBackward() {
-      console.log('moveBackward');
+      this.$refs.characterAnimation.updateAnimation(characterActions.run);
     },
     resetPosition() {
       if (this.characterJumped) {

@@ -44,13 +44,13 @@ export default {
   run: {
     name: 'run',
     numberOfFrames: 10,
-    ticksPerFrame: 7,
+    ticksPerFrame: 4,
     loop: false
   },
   runWithGun: {
     name: 'runWithGun',
     numberOfFrames: 10,
-    ticksPerFrame: 7,
+    ticksPerFrame: 4,
     loop: false
   },
   shoot: {
