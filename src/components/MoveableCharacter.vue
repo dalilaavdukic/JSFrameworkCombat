@@ -1,5 +1,6 @@
 <template>
   <character-animation
+    ref="characterAnimation"
     class="character"
     :style="[position]" 
     :character="character" 
@@ -31,17 +32,37 @@ export default {
   data() {
     return {
       animation: characterActions.idle,
+      currentModifications: {},
       position: {}
     }
   },
   methods: {
     calculateInitialPosition() {
       this.position = {
-        left: this.modifications?.mode === constants.characterModes.enemy? 'calc(100% - 300px)' : '0px'
+        left: this.currentModifications?.mode === constants.characterModes.enemy? 'calc(100% - 300px)' : '0px'
       }
+    },
+    jump() {
+      this.$refs.characterAnimation.updateAnimation(characterActions.jump);
+    },
+    roll() {
+      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
+    },
+    attack() {
+      this.$refs.characterAnimation.updateAnimation(characterActions.attack);
+    },
+    shoot() {
+      this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
+    },
+    moveForward() {
+      console.log('moveForward');
+    },
+    moveBackward() {
+      console.log('moveBackward');
     }
   },
   mounted() {
+    this.currentModifications = this.modifications;
     this.calculateInitialPosition();
   }
   // will listen to changes to actions and update position, animation etc and pass to characterAnimation

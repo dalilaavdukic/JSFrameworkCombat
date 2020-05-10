@@ -39,19 +39,19 @@ export default {
     name: 'roll',
     numberOfFrames: 7,
     ticksPerFrame: 7,
-    loop: true
+    loop: false
   },
   run: {
     name: 'run',
     numberOfFrames: 10,
     ticksPerFrame: 7,
-    loop: true
+    loop: false
   },
   runWithGun: {
     name: 'runWithGun',
     numberOfFrames: 10,
     ticksPerFrame: 7,
-    loop: true
+    loop: false
   },
   shoot: {
     name: 'shoot',
@@ -63,7 +63,7 @@ export default {
     name: 'sliding',
     numberOfFrames: 6,
     ticksPerFrame: 7,
-    loop: true
+    loop: false
   },
   throwing: {
     name: 'throwing',

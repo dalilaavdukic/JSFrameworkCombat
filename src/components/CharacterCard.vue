@@ -2,10 +2,11 @@
   <div :class="['card', {'selected': isSelected}]"
        @click="selectCharacter()" 
        @mouseenter="mouseOver()">
-    <character-animation 
+    <character-animation
+      ref="characterAnimation"
       :character="character.name" 
       :animation="animation.animation"
-      :modifications="animation.modifications">
+      :modifications="modifications">
     </character-animation>
     <h2>{{character.name}}</h2>
   </div>
@@ -25,7 +26,8 @@ export default {
   data() {
     return {
       animation: { animation: characterActions.idle },
-      availableAnimations: ['attack', 'jetpack', 'jump', 'roll', 'run', 'runWithGun', 'shoot', 'sliding']
+      modifications: {},
+      availableAnimations: ['attack', 'run', 'runWithGun', 'shoot', 'sliding']
     }
   },
   computed: {
@@ -41,12 +43,10 @@ export default {
       'chooseCharacter'
     ]),
     mouseOver() {
-      this.animation = { 
-        animation: this.getRandomAnimation(), 
-        modifications: {
-          loop: false
-        }
-      }
+      const characterAnimation = this.$refs.characterAnimation;
+      const animation = this.getRandomAnimation();
+      this.modifications = { loop: false };
+      characterAnimation.updateAnimation(animation);
     },
     getRandomAnimation() {
       const arrayIndex = Math.round(Math.random()*(this.availableAnimations.length-1));

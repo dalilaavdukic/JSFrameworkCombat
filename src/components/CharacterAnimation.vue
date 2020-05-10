@@ -63,6 +63,10 @@ export default {
         loop: this.modifications?.loop !== undefined ? this.modifications.loop : this.currentAnimation.loop
       });
       this.characterSprite.render();
+    },
+    updateAnimation(animation) {
+      this.currentAnimation = animation;
+      this.getSprite();
     }
   },
   mounted() {
@@ -71,12 +75,6 @@ export default {
     this.getCanvas();
     this.getSprite();
     this.animate();
-  },
-  watch: {
-    animation: function(newAnimation) {
-      this.currentAnimation = newAnimation;
-      this.getSprite();
-    }
   }
 }
 </script>
