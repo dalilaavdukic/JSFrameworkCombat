@@ -3,7 +3,7 @@
     ref="characterAnimation"
     class="character"
     @animationComplete="resetPosition()"
-    :style="[position]" 
+    :style="[position, transition]" 
     :character="character" 
     :animation="animation"
     :modifications="modifications">
@@ -38,6 +38,7 @@ export default {
       animation: characterActions.idle,
       currentModifications: {},
       position: {},
+      transition: undefined,
       positionBeforeAnimation: {},
       characterJumped: false,
       lastJumpTime: new Date()
@@ -77,11 +78,16 @@ export default {
       this.$refs.characterAnimation.updateAnimation(characterActions.roll);
     },
     moveForward() {
+      if (!this.transition) {
+        this.transition = {
+          transition: `left ${constants.runDuration} linear`
+        }
+      }
       this.$refs.characterAnimation.updateAnimation(characterActions.run);
       this.positionBeforeAnimation = this.getCurrentPosition();
       this.position = {
         top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left + 200 + 'px'
+        left: this.positionBeforeAnimation.left + constants.runSpeed + 'px'
       };
     },
     moveBackward() {
