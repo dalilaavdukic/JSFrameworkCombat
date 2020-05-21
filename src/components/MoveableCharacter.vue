@@ -2,7 +2,7 @@
   <character-animation
     ref="characterAnimation"
     class="character"
-    @animationComplete="resetPosition()"
+    :class = "{'jump-animation': isJumping}"
     :style="[position, transition]" 
     :character="character" 
     :animation="animation"
@@ -39,9 +39,8 @@ export default {
       currentModifications: {},
       position: {},
       transition: undefined,
+      isJumping: false,
       positionBeforeAnimation: {},
-      characterJumped: false,
-      lastJumpTime: new Date()
     }
   },
   methods: {
@@ -51,27 +50,29 @@ export default {
       }
     },
     jump() {
-      // recalculate position to return to only of more than 250 miliseconds have passed since last jump
-      // and if the position of the character has not been reset already
-      if (new Date() - this.lastJumpTime > 250 && !this.characterJumped) {
-        this.positionBeforeAnimation = this.getCurrentPosition();
-      }
-      this.characterJumped = true;
       this.$refs.characterAnimation.updateAnimation(characterActions.jump);
-      this.position = {
-        top: this.positionBeforeAnimation.top - constants.jumpHeight + 'px',
-        left: this.positionBeforeAnimation.left + 'px'
-      };
-      this.lastJumpTime = new Date();
+      this.isJumping = true;
+      setTimeout(() => {
+        this.isJumping = false;
+      }, 400)
     },
     sliding() {
+      if (!this.transition) {
+        this.transition = {
+          transition: `left ${constants.slideDuration} linear`
+        }
+      }
       this.$refs.characterAnimation.updateAnimation(characterActions.sliding);
+      this.positionBeforeAnimation = this.getCurrentPosition();
+      this.position = {
+        top: this.positionBeforeAnimation.top,
+        left: this.positionBeforeAnimation.left + constants.slideSpeed + 'px'
+      };
     },
     attack() {
       this.$refs.characterAnimation.updateAnimation(characterActions.attack);
     },
     shoot() {
-      this.resetPosition();
       this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
     },
     roll() {
@@ -93,15 +94,6 @@ export default {
     moveBackward() {
       this.$refs.characterAnimation.updateAnimation(characterActions.run);
     },
-    resetPosition() {
-      if (this.characterJumped) {
-        this.position = {
-          top: this.positionBeforeAnimation.top + 'px',
-          left: this.positionBeforeAnimation.left + 'px'
-        }
-      }
-      this.characterJumped = false;
-    },
     getCurrentPosition() {
       return {
         top: this.$refs.characterAnimation.$el.offsetTop,
@@ -115,11 +107,21 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+  @keyframes jump {
+    0% {bottom: $floor-position;}
+    50% {bottom: $jump-height}
+    100% {bottom: $floor-position;}
+  }
+
+  .jump-animation {
+    animation: jump $jump-duration linear
+  }
+
   .character {
     position: absolute;
     left: 0; 
     right: 0; 
-    bottom: -23px;
+    bottom: $floor-position;
   }
 </style>

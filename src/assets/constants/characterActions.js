@@ -32,7 +32,7 @@ export default {
   jump: {
     name: 'jump',
     numberOfFrames: 6,
-    ticksPerFrame: 1,
+    ticksPerFrame: 2,
     loop: false
   },
   roll: {
@@ -62,7 +62,7 @@ export default {
   sliding: {
     name: 'sliding',
     numberOfFrames: 6,
-    ticksPerFrame: 4,
+    ticksPerFrame: 3,
     loop: false
   },
   throwing: {
