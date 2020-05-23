@@ -6,7 +6,7 @@
     :style="[position, transition]" 
     :character="character" 
     :animation="animation"
-    :modifications="modifications">
+    :modifications="currentModifications">
   </character-animation>
 </template>
 <script>
@@ -57,16 +57,15 @@ export default {
       }, 400)
     },
     sliding() {
-      if (!this.transition) {
-        this.transition = {
-          transition: `left ${constants.slideDuration} linear`
-        }
+      this.transition = {
+        transition: `left ${constants.slideDuration} linear`
       }
       this.$refs.characterAnimation.updateAnimation(characterActions.sliding);
       this.positionBeforeAnimation = this.getCurrentPosition();
+      const slideSpeed = this.currentModifications?.mode === constants.characterModes.enemy? -constants.slideSpeed : constants.slideSpeed;
       this.position = {
         top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left + constants.slideSpeed + 'px'
+        left: this.positionBeforeAnimation.left + slideSpeed + 'px'
       };
     },
     attack() {
@@ -76,14 +75,25 @@ export default {
       this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
     },
     roll() {
-      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
-    },
-    moveForward() {
-      if (!this.transition) {
-        this.transition = {
-          transition: `left ${constants.runDuration} linear`
-        }
+      this.transition = {
+        transition: `left ${constants.rollDuration} linear`
       }
+      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
+      this.positionBeforeAnimation = this.getCurrentPosition();
+      const rollSpeed = this.currentModifications?.mode === constants.characterModes.enemy? -constants.rollSpeed : constants.rollSpeed;
+      this.position = {
+        top: this.positionBeforeAnimation.top,
+        left: this.positionBeforeAnimation.left + rollSpeed + 'px'
+      };
+    },
+    moveRight() {
+      this.currentModifications = {
+        mode: constants.characterModes.player
+      };
+      this.transition = {
+        transition: `left ${constants.runDuration} linear`
+      }
+      this.$refs.characterAnimation.updateModification(this.currentModifications);
       this.$refs.characterAnimation.updateAnimation(characterActions.run);
       this.positionBeforeAnimation = this.getCurrentPosition();
       this.position = {
@@ -91,8 +101,20 @@ export default {
         left: this.positionBeforeAnimation.left + constants.runSpeed + 'px'
       };
     },
-    moveBackward() {
+    moveLeft() {
+      this.currentModifications = {
+        mode: constants.characterModes.enemy
+      };
+      this.transition = {
+        transition: `left ${constants.runDuration} linear`
+      };
+      this.$refs.characterAnimation.updateModification(this.currentModifications);
       this.$refs.characterAnimation.updateAnimation(characterActions.run);
+      this.positionBeforeAnimation = this.getCurrentPosition();
+      this.position = {
+        top: this.positionBeforeAnimation.top,
+        left: this.positionBeforeAnimation.left - constants.runSpeed + 'px'
+      };
     },
     getCurrentPosition() {
       return {
@@ -101,7 +123,7 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     this.currentModifications = this.modifications;
     this.calculateInitialPosition();
   }

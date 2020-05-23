@@ -32,7 +32,8 @@ export default {
       height: 600,
       characterMode: constants.characterModes.player,
       defaultAnimation: {},
-      currentAnimation: {}
+      currentAnimation: {},
+      currentModifications: {}
     }
   },
   methods: {
@@ -52,7 +53,7 @@ export default {
       this.characterSprite.render();
     },
     getSprite() {
-      if (this.modifications?.mode) this.characterMode = this.modifications.mode
+      if (this.currentModifications?.mode) this.characterMode = this.currentModifications.mode
       this.characterImage = gameAssetsService.assets.characters[this.characterMode][this.character][this.currentAnimation.name];
       this.characterSprite = sprite({
         context: this.canvas.getContext("2d"),
@@ -61,18 +62,23 @@ export default {
         image: this.characterImage,
         numberOfFrames: this.currentAnimation.numberOfFrames,
         ticksPerFrame: this.currentAnimation.ticksPerFrame,
-        loop: this.modifications?.loop !== undefined ? this.modifications.loop : this.currentAnimation.loop
+        loop: this.currentModifications?.loop !== undefined ? this.currentModifications.loop : this.currentAnimation.loop
       });
       this.characterSprite.render();
     },
     updateAnimation(animation) {
       this.currentAnimation = animation;
       this.getSprite();
+    },
+    updateModification(modifications) {
+      this.currentModifications = modifications;
+      this.getSprite();
     }
   },
   mounted() {
     this.defaultAnimation = characterActions.idle;
     this.currentAnimation = this.animation;
+    this.currentModifications = this.modifications;
     this.getCanvas();
     this.getSprite();
     this.animate();

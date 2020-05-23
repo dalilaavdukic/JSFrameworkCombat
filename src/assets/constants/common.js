@@ -7,5 +7,7 @@ export default {
   runSpeed: 200,
   runDuration: '0.8s',
   slideSpeed: 100,
-  slideDuration: '0.3s'
+  slideDuration: '0.3s',
+  rollSpeed: 100,
+  rollDuration: '0.3s'
 }

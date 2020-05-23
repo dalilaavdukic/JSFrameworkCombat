@@ -1,6 +1,6 @@
 export default {
-  forward: 39, // '-> arrow key', // run forward
-  backward: 37, // '<- arrow key', // run backwards (add enemy modification)
+  right: 39, // '-> arrow key', // run right
+  left: 37, // '<- arrow key', // run left (add enemy modification)
   jump: 38, // 'up arrow key', // jump, and move up
   sliding: 40, // 'down arrow key', // roll and move forward,
   attack: 65, // 'a', // play attack animation, if close to other character decrease health (calculate position with getBoundingClientRect)

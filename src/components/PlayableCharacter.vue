@@ -40,11 +40,11 @@ export default {
         let cmd = e.keyCode;
         const character = this.$refs.moveableCharacter;
         switch (cmd) {
-          case controlKeys.forward:
-            character.moveForward();
+          case controlKeys.right:
+            character.moveRight();
             break;
-          case controlKeys.backward:
-            character.moveBackward();
+          case controlKeys.left:
+            character.moveLeft();
             break;
           case controlKeys.jump:
             character.jump();
@@ -65,7 +65,6 @@ export default {
       }
     }
   }
-  // will listen to keyboard input and update action and modifications accordingly
 }
 </script>
 <style lang="scss" scoped>
