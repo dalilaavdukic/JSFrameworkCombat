@@ -9,5 +9,6 @@ export default {
   slideSpeed: 100,
   slideDuration: '0.3s',
   rollSpeed: 100,
-  rollDuration: '0.3s'
+  rollDuration: '0.3s',
+  playAreaBorderLimitOffset: 100
 }

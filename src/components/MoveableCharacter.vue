@@ -62,7 +62,7 @@ export default {
       }
       this.$refs.characterAnimation.updateAnimation(characterActions.sliding);
       this.positionBeforeAnimation = this.getCurrentPosition();
-      const slideSpeed = this.currentModifications?.mode === constants.characterModes.enemy? -constants.slideSpeed : constants.slideSpeed;
+      const slideSpeed = this.getSlideSpeed(this.positionBeforeAnimation);
       this.position = {
         top: this.positionBeforeAnimation.top,
         left: this.positionBeforeAnimation.left + slideSpeed + 'px'
@@ -80,7 +80,7 @@ export default {
       }
       this.$refs.characterAnimation.updateAnimation(characterActions.roll);
       this.positionBeforeAnimation = this.getCurrentPosition();
-      const rollSpeed = this.currentModifications?.mode === constants.characterModes.enemy? -constants.rollSpeed : constants.rollSpeed;
+      const rollSpeed = this.getRollSpeed(this.positionBeforeAnimation);
       this.position = {
         top: this.positionBeforeAnimation.top,
         left: this.positionBeforeAnimation.left + rollSpeed + 'px'
@@ -96,9 +96,10 @@ export default {
       this.$refs.characterAnimation.updateModification(this.currentModifications);
       this.$refs.characterAnimation.updateAnimation(characterActions.run);
       this.positionBeforeAnimation = this.getCurrentPosition();
+      const runSpeed = (this.positionBeforeAnimation.right - constants.runSpeed) >= 0? constants.runSpeed : this.positionBeforeAnimation.right + constants.playAreaBorderLimitOffset;
       this.position = {
         top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left + constants.runSpeed + 'px'
+        left: this.positionBeforeAnimation.left + runSpeed + 'px'
       };
     },
     moveLeft() {
@@ -111,16 +112,40 @@ export default {
       this.$refs.characterAnimation.updateModification(this.currentModifications);
       this.$refs.characterAnimation.updateAnimation(characterActions.run);
       this.positionBeforeAnimation = this.getCurrentPosition();
+      const runSpeed = (this.positionBeforeAnimation.left - constants.runSpeed) >= 0? constants.runSpeed : this.positionBeforeAnimation.left + constants.playAreaBorderLimitOffset;
       this.position = {
         top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left - constants.runSpeed + 'px'
+        left: this.positionBeforeAnimation.left - runSpeed + 'px'
       };
     },
     getCurrentPosition() {
       return {
         top: this.$refs.characterAnimation.$el.offsetTop,
-        left: this.$refs.characterAnimation.$el.offsetLeft
+        left: this.$refs.characterAnimation.$el.offsetLeft,
+        right: window.innerWidth - (this.$refs.characterAnimation.$el.offsetLeft + this.$refs.characterAnimation.$el.offsetWidth)
       }
+    },
+    getSlideSpeed(position) {
+      let slideSpeed = 0;
+      if (this.currentModifications?.mode === constants.characterModes.enemy) {
+        // if character is moving to the left
+        slideSpeed = - ((position.left - constants.slideSpeed) >= 0? constants.slideSpeed : position.left + constants.playAreaBorderLimitOffset);
+      } else { 
+        // if character is moving to the right
+        slideSpeed = (position.right - constants.slideSpeed) >= 0? constants.slideSpeed : position.right + constants.playAreaBorderLimitOffset;
+      }
+      return slideSpeed;
+    },
+    getRollSpeed(position) {
+      let rollSpeed = 0;
+      if (this.currentModifications?.mode === constants.characterModes.enemy) {
+        // if character is moving to the left
+        rollSpeed = - ((position.left - constants.rollSpeed) >= 0? constants.rollSpeed : position.left + constants.playAreaBorderLimitOffset);
+      } else { 
+        // if character is moving to the right
+        rollSpeed = (position.right - constants.rollSpeed) >= 0? constants.rollSpeed : position.right + constants.playAreaBorderLimitOffset;
+      }
+      return rollSpeed;
     }
   },
   created() {
