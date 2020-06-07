@@ -10,5 +10,6 @@ export default {
   slideDuration: '0.3s',
   rollSpeed: 100,
   rollDuration: '0.3s',
+  jumpDuration: 400, // ms
   playAreaBorderLimitOffset: 100
 }

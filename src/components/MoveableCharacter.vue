@@ -1,37 +1,39 @@
 <template>
   <character-animation
     ref="characterAnimation"
-    class="character"
-    :class = "{'jump-animation': isJumping}"
-    :style="[position, transition]" 
-    :character="character" 
+    class="movable-character"
+    :class="{ 'jump-animation': isJumping }"
+    :style="[position, transition]"
+    :character="character"
     :animation="animation"
-    :modifications="currentModifications">
+    :modifications="currentModifications"
+  >
   </character-animation>
 </template>
 <script>
-import CharacterAnimation from '@/components/CharacterAnimation';
-import characters from '@/assets/constants/characters';
-import constants from '@/assets/constants/common';
-import characterActions from '@/assets/constants/characterActions';
+import CharacterAnimation from "@/components/CharacterAnimation";
+import characters from "@/assets/constants/characters";
+import constants from "@/assets/constants/common";
+import transitions from "@/assets/constants/transitions";
+import characterActions from "@/assets/constants/characterActions";
 
 // will listen to changes to actions and update position, animation etc and pass to characterAnimation
 // changes can be intiated by user's keyboard (playableCharacter component) or programatically
 
 export default {
-  name: 'MoveableCharacter',
-  components: {CharacterAnimation},
+  name: "MoveableCharacter",
+  components: { CharacterAnimation },
   props: {
     character: {
       type: String,
-      default: characters.vue.name
+      default: characters.vue.name,
     },
     action: {
-      type: String
+      type: String,
     },
     modifications: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -41,134 +43,196 @@ export default {
       transition: undefined,
       isJumping: false,
       positionBeforeAnimation: {},
-    }
+    };
   },
-  methods: {
-    calculateInitialPosition() {
-      this.position = {
-        left: this.currentModifications?.mode === constants.characterModes.enemy? 'calc(100% - 300px)' : '0px'
-      }
-    },
-    jump() {
-      this.$refs.characterAnimation.updateAnimation(characterActions.jump);
-      this.isJumping = true;
-      setTimeout(() => {
-        this.isJumping = false;
-      }, 400)
-    },
-    sliding() {
-      this.transition = {
-        transition: `left ${constants.slideDuration} linear`
-      }
-      this.$refs.characterAnimation.updateAnimation(characterActions.sliding);
-      this.positionBeforeAnimation = this.getCurrentPosition();
-      const slideSpeed = this.getSlideSpeed(this.positionBeforeAnimation);
-      this.position = {
-        top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left + slideSpeed + 'px'
-      };
-    },
-    attack() {
-      this.$refs.characterAnimation.updateAnimation(characterActions.attack);
-    },
-    shoot() {
-      this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
-    },
-    roll() {
-      this.transition = {
-        transition: `left ${constants.rollDuration} linear`
-      }
-      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
-      this.positionBeforeAnimation = this.getCurrentPosition();
-      const rollSpeed = this.getRollSpeed(this.positionBeforeAnimation);
-      this.position = {
-        top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left + rollSpeed + 'px'
-      };
-    },
-    moveRight() {
-      this.currentModifications = {
-        mode: constants.characterModes.player
-      };
-      this.transition = {
-        transition: `left ${constants.runDuration} linear`
-      }
-      this.$refs.characterAnimation.updateModification(this.currentModifications);
-      this.$refs.characterAnimation.updateAnimation(characterActions.run);
-      this.positionBeforeAnimation = this.getCurrentPosition();
-      const runSpeed = (this.positionBeforeAnimation.right - constants.runSpeed) >= 0? constants.runSpeed : this.positionBeforeAnimation.right + constants.playAreaBorderLimitOffset;
-      this.position = {
-        top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left + runSpeed + 'px'
-      };
-    },
-    moveLeft() {
-      this.currentModifications = {
-        mode: constants.characterModes.enemy
-      };
-      this.transition = {
-        transition: `left ${constants.runDuration} linear`
-      };
-      this.$refs.characterAnimation.updateModification(this.currentModifications);
-      this.$refs.characterAnimation.updateAnimation(characterActions.run);
-      this.positionBeforeAnimation = this.getCurrentPosition();
-      const runSpeed = (this.positionBeforeAnimation.left - constants.runSpeed) >= 0? constants.runSpeed : this.positionBeforeAnimation.left + constants.playAreaBorderLimitOffset;
-      this.position = {
-        top: this.positionBeforeAnimation.top,
-        left: this.positionBeforeAnimation.left - runSpeed + 'px'
-      };
-    },
-    getCurrentPosition() {
-      return {
-        top: this.$refs.characterAnimation.$el.offsetTop,
-        left: this.$refs.characterAnimation.$el.offsetLeft,
-        right: window.innerWidth - (this.$refs.characterAnimation.$el.offsetLeft + this.$refs.characterAnimation.$el.offsetWidth)
-      }
-    },
-    getSlideSpeed(position) {
+  computed: {
+    slideSpeed: function() {
       let slideSpeed = 0;
       if (this.currentModifications?.mode === constants.characterModes.enemy) {
         // if character is moving to the left
-        slideSpeed = - ((position.left - constants.slideSpeed) >= 0? constants.slideSpeed : position.left + constants.playAreaBorderLimitOffset);
-      } else { 
+        slideSpeed = 
+          // don't let character move out of screen to the left
+          -(this.positionBeforeAnimation.left - constants.slideSpeed >= 0
+            ? constants.slideSpeed
+            : this.positionBeforeAnimation.left +
+              constants.playAreaBorderLimitOffset);
+      } else {
         // if character is moving to the right
-        slideSpeed = (position.right - constants.slideSpeed) >= 0? constants.slideSpeed : position.right + constants.playAreaBorderLimitOffset;
+        slideSpeed =
+        // don't let character move out of screen to the right
+          this.positionBeforeAnimation.right - constants.slideSpeed >= 0
+            ? constants.slideSpeed
+            : this.positionBeforeAnimation.right +
+              constants.playAreaBorderLimitOffset;
       }
       return slideSpeed;
     },
-    getRollSpeed(position) {
+    rollSpeed: function() {
       let rollSpeed = 0;
       if (this.currentModifications?.mode === constants.characterModes.enemy) {
         // if character is moving to the left
-        rollSpeed = - ((position.left - constants.rollSpeed) >= 0? constants.rollSpeed : position.left + constants.playAreaBorderLimitOffset);
-      } else { 
+        rollSpeed = 
+          // don't let character move out of screen to the left
+          -(this.positionBeforeAnimation.left - constants.rollSpeed >= 0
+            ? constants.rollSpeed
+            : this.positionBeforeAnimation.left + constants.playAreaBorderLimitOffset);
+      } else {
         // if character is moving to the right
-        rollSpeed = (position.right - constants.rollSpeed) >= 0? constants.rollSpeed : position.right + constants.playAreaBorderLimitOffset;
+        rollSpeed =
+          // don't let character move out of screen to the right
+          this.positionBeforeAnimation.right - constants.rollSpeed >= 0
+            ? constants.rollSpeed
+            : this.positionBeforeAnimation.right + constants.playAreaBorderLimitOffset;
       }
       return rollSpeed;
+    },
+    runSpeed: function() {
+      let runSpeed = 0;
+      if (this.currentModifications?.mode === constants.characterModes.enemy) {
+        // if character is moving to the left
+        runSpeed = 
+          // don't let character move out of screen to the left
+          -(this.positionBeforeAnimation.left - constants.runSpeed >= 0
+            ? constants.runSpeed
+            : this.positionBeforeAnimation.left + constants.playAreaBorderLimitOffset);
+      } else {
+        // if character is moving to the right
+        runSpeed =
+          // don't let character move out of screen to the right
+          this.positionBeforeAnimation.right - constants.runSpeed >= 0
+            ? constants.runSpeed
+            : this.positionBeforeAnimation.right + constants.playAreaBorderLimitOffset;
+      }
+      return runSpeed;
     }
   },
   created() {
     this.currentModifications = this.modifications;
     this.calculateInitialPosition();
+  },
+  mounted() {
+    this.positionBeforeAnimation = this.getCurrentPosition();
+  },
+  methods: {
+    jump() {
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.jump);
+      // apply jumping class to play animation
+      this.isJumping = true;
+      // remove class after animation finishes
+      setTimeout(() => {
+        this.isJumping = false;
+      }, constants.jumpDuration);
+    },
+    sliding() {
+      // apply appropriate transition to make character move at desired speed
+      this.transition = transitions.slide;
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.sliding);
+      // move character to appropriate position
+      this.moveCharacterToNewPosition(this.slideSpeed);
+    },
+    attack() {
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.attack);
+    },
+    shoot() {
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
+    },
+    roll() {
+      // apply appropriate transition to make character move at desired speed
+      this.transition = transitions.roll;
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
+      // move character to appropriate position
+      this.moveCharacterToNewPosition(this.rollSpeed);
+    },
+    moveRight() {
+      // make sure character is facing to the right
+      this.turnToRight();
+      // apply appropriate transition to make character move at desired speed
+      this.transition = transitions.run;
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.run);
+      // move character to appropriate position
+      this.moveCharacterToNewPosition(this.runSpeed);
+    },
+    moveLeft() {
+      // make sure character is facing to the left
+      this.turnToLeft();
+      // apply appropriate transition to make character move at desired speed
+      this.transition = transitions.run;
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.run);
+      // move character to appropriate position
+      this.moveCharacterToNewPosition(this.runSpeed);
+    },
+    turnToLeft() {
+      this.currentModifications = {
+        mode: constants.characterModes.enemy,
+      };
+      this.$refs.characterAnimation.updateModification(
+        this.currentModifications
+      );
+    },
+    turnToRight() {
+      this.currentModifications = {
+        mode: constants.characterModes.player,
+      };
+      this.$refs.characterAnimation.updateModification(
+        this.currentModifications
+      );
+    },
+    getCurrentPosition() {
+      return {
+        top: this.$refs.characterAnimation.$el.offsetTop,
+        left: this.$refs.characterAnimation.$el.offsetLeft,
+        right:
+          window.innerWidth -
+          (this.$refs.characterAnimation.$el.offsetLeft +
+            this.$refs.characterAnimation.$el.offsetWidth),
+      };
+    },
+    calculateInitialPosition() {
+      this.position = {
+        left:
+          this.currentModifications?.mode === constants.characterModes.enemy
+            ? "calc(100% - 300px)"
+            : "0px",
+      };
+    },
+    moveCharacterToNewPosition(speed) {
+      this.positionBeforeAnimation = this.getCurrentPosition();
+      this.position = {
+        top: this.positionBeforeAnimation.top,
+        left: this.positionBeforeAnimation.left + speed + "px",
+      };
+    }
   }
-}
+};
 </script>
 <style lang="scss">
-  @keyframes jump {
-    0% {bottom: $floor-position;}
-    50% {bottom: $jump-height}
-    100% {bottom: $floor-position;}
-  }
-
-  .jump-animation {
-    animation: jump $jump-duration linear
-  }
-
-  .character {
-    position: absolute;
-    left: 0; 
-    right: 0; 
+@keyframes jump {
+  0% {
     bottom: $floor-position;
   }
+  50% {
+    bottom: $jump-height;
+  }
+  100% {
+    bottom: $floor-position;
+  }
+}
+
+.jump-animation {
+  animation: jump $jump-duration linear;
+}
+
+.movable-character {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: $floor-position;
+}
 </style>
