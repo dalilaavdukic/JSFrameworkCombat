@@ -125,12 +125,13 @@ export default {
       }, constants.jumpDuration);
     },
     sliding() {
+      const action = characterActions.sliding;
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.slide;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.sliding);
+      this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(this.slideSpeed);
+      this.moveCharacterToNewPosition(action.name);
     },
     attack() {
       // set appropriate spritesheet
@@ -141,32 +142,35 @@ export default {
       this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
     },
     roll() {
+      const action = characterActions.roll;
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.roll;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.roll);
+      this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(this.rollSpeed);
+      this.moveCharacterToNewPosition(action.name);
     },
     moveRight() {
+      const action = characterActions.run;
       // make sure character is facing to the right
       this.turnToRight();
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.run;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.run);
+      this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(this.runSpeed);
+      this.moveCharacterToNewPosition(action.name);
     },
     moveLeft() {
+      const action = characterActions.run;
       // make sure character is facing to the left
       this.turnToLeft();
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.run;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.run);
+      this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(this.runSpeed);
+      this.moveCharacterToNewPosition(action.name);
     },
     turnToLeft() {
       this.currentModifications = {
@@ -202,8 +206,22 @@ export default {
             : "0px",
       };
     },
-    moveCharacterToNewPosition(speed) {
+    moveCharacterToNewPosition(action) {
       this.positionBeforeAnimation = this.getCurrentPosition();
+      // use appropriate speed according to which action has been triggered
+      let speed = 0;
+      switch (action) {
+        case characterActions.sliding.name:
+          speed = this.slideSpeed;
+          break;
+        case characterActions.roll.name:
+          speed = this.rollSpeed;
+          break;
+        case characterActions.run.name:
+          speed = this.runSpeed;
+          break;
+      }
+
       this.position = {
         top: this.positionBeforeAnimation.top,
         left: this.positionBeforeAnimation.left + speed + "px",
