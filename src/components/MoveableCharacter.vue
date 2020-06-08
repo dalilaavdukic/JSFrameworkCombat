@@ -5,8 +5,8 @@
     :class="{ 'jump-animation': isJumping }"
     :style="[position, transition]"
     :character="character"
-    :animation="animation"
     :modifications="currentModifications"
+    @animationComplete="animationComplete()"
   >
   </character-animation>
 </template>
@@ -37,7 +37,8 @@ export default {
   },
   data() {
     return {
-      animation: characterActions.idle,
+      lastTriggeredAnimation: {},
+      animationCompleted: true,
       currentModifications: {},
       position: {},
       transition: undefined,
@@ -46,9 +47,15 @@ export default {
     };
   },
   computed: {
+    isFacingToTheRight: function() {
+      return this.currentModifications?.mode === constants.characterModes.player;
+    },
+    isFacingToTheLeft: function() {
+      return this.currentModifications?.mode === constants.characterModes.enemy;
+    },
     slideSpeed: function() {
       let slideSpeed = 0;
-      if (this.currentModifications?.mode === constants.characterModes.enemy) {
+      if (this.isFacingToTheLeft) {
         // if character is moving to the left
         slideSpeed = 
           // don't let character move out of screen to the left
@@ -69,7 +76,7 @@ export default {
     },
     rollSpeed: function() {
       let rollSpeed = 0;
-      if (this.currentModifications?.mode === constants.characterModes.enemy) {
+      if (this.isFacingToTheLeft) {
         // if character is moving to the left
         rollSpeed = 
           // don't let character move out of screen to the left
@@ -88,7 +95,7 @@ export default {
     },
     runSpeed: function() {
       let runSpeed = 0;
-      if (this.currentModifications?.mode === constants.characterModes.enemy) {
+      if (this.isFacingToTheLeft) {
         // if character is moving to the left
         runSpeed = 
           // don't let character move out of screen to the left
@@ -115,8 +122,10 @@ export default {
   },
   methods: {
     jump() {
+      const action = characterActions.jump;
+      this.initiateAction(action);
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.jump);
+      this.$refs.characterAnimation.updateAnimation(action);
       // apply jumping class to play animation
       this.isJumping = true;
       // remove class after animation finishes
@@ -126,32 +135,51 @@ export default {
     },
     sliding() {
       const action = characterActions.sliding;
+      this.initiateAction(action);
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.slide;
       // set appropriate spritesheet
       this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(action.name);
+      this.moveToNewPosition(action.name);
     },
     attack() {
+      const action = characterActions.attack;
+      this.initiateAction(action);
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.attack);
+      this.$refs.characterAnimation.updateAnimation(action);
     },
     shoot() {
+      const action = characterActions.shoot;
+      this.initiateAction(action);
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.shoot);
+      this.$refs.characterAnimation.updateAnimation(action);
     },
     roll() {
       const action = characterActions.roll;
+      this.initiateAction(action);
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.roll;
       // set appropriate spritesheet
       this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(action.name);
+      this.moveToNewPosition(action.name);
     },
     moveRight() {
+      if (this.isFacingToTheLeft) {
+        // if the character is facing the opposite direction
+        if (!this.animationCompleted && this.lastTriggeredAnimation !== characterActions.idle) {
+          // and the animation has not finished yet, stop the action but leave the character facing the same direction
+          this.stopAction();
+        } else {
+          // if the animation has finished, only turn the character around without moving it
+          this.turnToRight();
+        }
+        return;
+      }
+      // if the character is already facing the correct direction move it
       const action = characterActions.run;
+      this.initiateAction(action);
       // make sure character is facing to the right
       this.turnToRight();
       // apply appropriate transition to make character move at desired speed
@@ -159,10 +187,23 @@ export default {
       // set appropriate spritesheet
       this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(action.name);
+      this.moveToNewPosition(action.name);
     },
     moveLeft() {
+      if (this.isFacingToTheRight) {
+        // if the character is facing the opposite direction
+        if (!this.animationCompleted && this.lastTriggeredAnimation !== characterActions.idle) {
+          // and the animation has not finished yet, stop the action but leave the character facing the same direction
+          this.stopAction();
+        } else {
+          // if the animation has finished, only turn the character around without moving it
+          this.turnToLeft();
+        }
+        return;
+      }
+      // if the character is already facing the correct direction move it
       const action = characterActions.run;
+      this.initiateAction(action);
       // make sure character is facing to the left
       this.turnToLeft();
       // apply appropriate transition to make character move at desired speed
@@ -170,7 +211,21 @@ export default {
       // set appropriate spritesheet
       this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveCharacterToNewPosition(action.name);
+      this.moveToNewPosition(action.name); 
+    },
+    initiateAction(action) {
+      this.lastTriggeredAnimation = action;
+      this.animationCompleted = false;
+    },
+    stopAction() {
+      // use idle spritesheet
+      this.$refs.characterAnimation.updateAnimation(characterActions.idle);
+      this.lastTriggeredAnimation = characterActions.idle;
+      // stop any remaining movement
+      this.positionBeforeAnimation = this.getCurrentPosition();
+      this.position = {
+        left: this.positionBeforeAnimation.left + "px",
+      };
     },
     turnToLeft() {
       this.currentModifications = {
@@ -188,25 +243,7 @@ export default {
         this.currentModifications
       );
     },
-    getCurrentPosition() {
-      return {
-        top: this.$refs.characterAnimation.$el.offsetTop,
-        left: this.$refs.characterAnimation.$el.offsetLeft,
-        right:
-          window.innerWidth -
-          (this.$refs.characterAnimation.$el.offsetLeft +
-            this.$refs.characterAnimation.$el.offsetWidth),
-      };
-    },
-    calculateInitialPosition() {
-      this.position = {
-        left:
-          this.currentModifications?.mode === constants.characterModes.enemy
-            ? "calc(100% - 300px)"
-            : "0px",
-      };
-    },
-    moveCharacterToNewPosition(action) {
+    moveToNewPosition(action) {
       this.positionBeforeAnimation = this.getCurrentPosition();
       // use appropriate speed according to which action has been triggered
       let speed = 0;
@@ -223,9 +260,29 @@ export default {
       }
 
       this.position = {
-        top: this.positionBeforeAnimation.top,
         left: this.positionBeforeAnimation.left + speed + "px",
       };
+    },
+    getCurrentPosition() {
+      return {
+        top: this.$refs.characterAnimation.$el.offsetTop,
+        left: this.$refs.characterAnimation.$el.offsetLeft,
+        right:
+          window.innerWidth -
+          (this.$refs.characterAnimation.$el.offsetLeft +
+            this.$refs.characterAnimation.$el.offsetWidth),
+      };
+    },
+    calculateInitialPosition() {
+      this.position = {
+        left:
+          this.isFacingToTheLeft
+            ? "calc(100% - 300px)"
+            : "0px",
+      };
+    },
+    animationComplete() {
+      this.animationCompleted = true;
     }
   }
 };

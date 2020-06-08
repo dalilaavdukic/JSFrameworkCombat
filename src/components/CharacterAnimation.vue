@@ -13,7 +13,7 @@ export default {
   props: {
     animation: {
       type: Object,
-      required: true
+      default: () => (characterActions.idle)
     },
     character: {
       type: String,
