@@ -11,32 +11,48 @@ const state = {
     character: '',
     health: 100,
     specialAttack: 0,
-    position: {},
-    facingDirection: ''
+    facingDirection: 'right'
   },
   enemy: {
     name: '',
     character: characters.angular,
     health: 100,
     specialAttack: 0,
-    position: {},
-    facingDirection: ''
+    facingDirection: 'left'
   },
   assetsLoaded: false
 };
 // mutations
 const mutations = {
-  damageHealth(state, damage) {
+  damagePlayersHealth(state, damage) {
     state.player.health -= damage;
   },
-  increaseSpecialAttack(state, increment) {
+  damageEnemysHealth(state, damage) {
+    state.enemy.health -= damage;
+  },
+  increasePlayersSpecialAttack(state, increment) {
     state.player.specialAttack += increment;
+  },
+  increaseEnemysSpecialAttack(state, increment) {
+    state.enemy.specialAttack += increment;
+  },
+  resetPlayersSpecialAttack(state) {
+    state.player.specialAttack = 0;
+  },
+  resetEnemysSpecialAttack(state) {
+    state.enemy.specialAttack = 0;
   },
   chooseCharacter(state, payload) {
     state[payload.type].character = payload.character
   },
   giveName(state, name) {
     state.player.name = name;
+  },
+  setPlayersFacingDirection(state, direction) {
+    state.player.facingDirection = direction;
+  },
+  setEnemysFacingDirection(state, direction) {
+    state.enemy.facingDirection = direction;
   },
   setAssetsLoaded(state, loaded) {
     state.assetsLoaded = loaded;

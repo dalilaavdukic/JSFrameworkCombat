@@ -277,6 +277,9 @@ export default {
     },
     animationComplete() {
       this.animationCompleted = true;
+    },
+    facingDirection() {
+      return this.currentModifications?.mode === constants.characterModes.player? 'right' : 'left';
     }
   }
 };

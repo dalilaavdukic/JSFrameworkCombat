@@ -8,6 +8,7 @@
 <script>
 import MoveableCharacter from '@/components/MoveableCharacter';
 import controlKeys from '@/assets/constants/controlKeys';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'PlayableCharacter',
@@ -23,6 +24,7 @@ export default {
   },
   data() {
     return {
+      characterRef: undefined
     }
   },
   created() {
@@ -32,31 +34,39 @@ export default {
     window.removeEventListener('keydown', this.doCommand);
   },
   methods: {
+    ...mapMutations([
+      'setPlayersFacingDirection'
+    ]),
     doCommand(e) {
       if (!e.repeat) {
         let cmd = e.keyCode;
-        const character = this.$refs.moveableCharacter;
+        this.characterRef = this.$refs.moveableCharacter;
         switch (cmd) {
           case controlKeys.right:
-            character.moveRight();
+            this.characterRef.moveRight();
+            this.setPlayersFacingDirection(this.characterRef.facingDirection());
             break;
           case controlKeys.left:
-            character.moveLeft();
+            this.characterRef.moveLeft();
+            this.setPlayersFacingDirection(this.characterRef.facingDirection());
             break;
           case controlKeys.jump:
-            character.jump();
+            this.characterRef.jump();
             break;
           case controlKeys.sliding:
-            character.sliding();
+            this.characterRef.sliding();
             break;
           case controlKeys.attack:
-            character.attack();
+            this.characterRef.attack();
+            this.$emit('attack');
             break;
           case controlKeys.shoot:
-            character.shoot();
+            this.characterRef.shoot();
+            this.$emit('shoot');
             break;
           case controlKeys.roll:
-            character.roll();
+            this.characterRef.roll();
+            this.$emit('roll');
             break;
         }
       }

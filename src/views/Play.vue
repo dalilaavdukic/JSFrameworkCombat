@@ -4,9 +4,14 @@
     <div class="game">
       <div class="playable-area">
         <playable-character
+          ref="player"
+          @attack="playerAttacked()"
+          @shoot="playerShot()"
+          @roll="playerRolled()"
           :character="player.character.name">
         </playable-character>
         <oponent-character
+          ref="enemy"
           :character="enemy.character.name">
         </oponent-character>
       </div>
@@ -39,9 +44,36 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'damageHealth',
-      'increaseSpecialAttack'
-    ])
+      'damagePlayersHealth',
+      'damageEnemysHealth',
+      'increasePlayersSpecialAttack'
+    ]),
+    playerAttacked() {
+      const playerPosition = this.getPosition('player');
+      const enemyPosition = this.getPosition('enemy');
+      const distance = enemyPosition.left - playerPosition.left;
+      if (this.player.facingDirection === 'right') {
+        if (Math.abs(distance) < 100) {
+          this.damageEnemysHealth(5);
+        }
+      } else {
+        if (distance <= -100) {
+          this.damageEnemysHealth(5);
+        }
+      }
+    },
+    playerShot() {
+      console.log('player shot');
+    },
+    playerRolled() {
+      console.log('player rolled');
+    },
+    getPosition(mode) {
+      return {
+        top: this.$refs[mode].$el.offsetTop,
+        left: this.$refs[mode].$el.offsetLeft
+      };
+    }
   }
 }
 </script>
