@@ -6,10 +6,9 @@
         <playable-character
           :character="player.character.name">
         </playable-character>
-        <moveable-character
-          :character="enemy.character.name"
-          :modifications="{mode: constants.characterModes.enemy}">
-        </moveable-character>
+        <oponent-character
+          :character="enemy.character.name">
+        </oponent-character>
       </div>
     </div>
   </div>
@@ -19,12 +18,12 @@
 import { mapGetters } from 'vuex';
 import { mapMutations } from 'vuex';
 import PlayableCharacter from '@/components/PlayableCharacter';
-import MoveableCharacter from '@/components/MoveableCharacter';
+import OponentCharacter from '@/components/OponentCharacter';
 import constants from '@/assets/constants/common';
 
 export default {
   name: 'Play',
-  components: {PlayableCharacter, MoveableCharacter},
+  components: {PlayableCharacter, OponentCharacter},
   computed: {
     ...mapGetters([
       'player',

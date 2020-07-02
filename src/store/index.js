@@ -10,13 +10,17 @@ const state = {
     name: '',
     character: '',
     health: 100,
-    specialAttack: 0
+    specialAttack: 0,
+    position: {},
+    facingDirection: ''
   },
   enemy: {
     name: '',
     character: characters.angular,
     health: 100,
-    specialAttack: 0
+    specialAttack: 0,
+    position: {},
+    facingDirection: ''
   },
   assetsLoaded: false
 };

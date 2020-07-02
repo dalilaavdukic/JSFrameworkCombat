@@ -17,9 +17,6 @@ import constants from "@/assets/constants/common";
 import transitions from "@/assets/constants/transitions";
 import characterActions from "@/assets/constants/characterActions";
 
-// will listen to changes to actions and update position, animation etc and pass to characterAnimation
-// changes can be intiated by user's keyboard (playableCharacter component) or programatically
-
 export default {
   name: "MoveableCharacter",
   components: { CharacterAnimation },
@@ -27,9 +24,6 @@ export default {
     character: {
       type: String,
       default: characters.vue.name,
-    },
-    action: {
-      type: String,
     },
     modifications: {
       type: Object,

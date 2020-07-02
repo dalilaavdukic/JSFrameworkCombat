@@ -2,8 +2,7 @@
   <moveable-character
     ref="moveableCharacter"
     :character="character"
-    :modifications="combinedModifications"
-    :action="action">
+    :modifications="modifications">
   </moveable-character>
 </template>
 <script>
@@ -24,8 +23,6 @@ export default {
   },
   data() {
     return {
-      action: '',
-      combinedModifications: undefined
     }
   },
   created() {
