@@ -11,5 +11,7 @@ export default {
   rollSpeed: 100,
   rollDuration: '0.3s',
   jumpDuration: 400, // ms
-  playAreaBorderLimitOffset: 100
+  playAreaBorderLimitOffset: 100,
+  minimumAttackDamageDistance: 100,
+  attackDamageHealthAmount: 5
 }

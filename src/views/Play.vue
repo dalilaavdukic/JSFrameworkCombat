@@ -49,17 +49,8 @@ export default {
       'increasePlayersSpecialAttack'
     ]),
     playerAttacked() {
-      const playerPosition = this.getPosition('player');
-      const enemyPosition = this.getPosition('enemy');
-      const distance = enemyPosition.left - playerPosition.left;
-      if (this.player.facingDirection === 'right') {
-        if (Math.abs(distance) < 100) {
-          this.damageEnemysHealth(5);
-        }
-      } else {
-        if (distance <= -100) {
-          this.damageEnemysHealth(5);
-        }
+      if (this.attackCanDamageEnemy()) {
+        this.damageEnemysHealth(constants.attackDamageHealthAmount);
       }
     },
     playerShot() {
@@ -73,6 +64,16 @@ export default {
         top: this.$refs[mode].$el.offsetTop,
         left: this.$refs[mode].$el.offsetLeft
       };
+    },
+    attackCanDamageEnemy() {
+      const playerPosition = this.getPosition('player');
+      const enemyPosition = this.getPosition('enemy');
+      const distance = enemyPosition.left - playerPosition.left;
+      if (this.player.facingDirection === 'right') {
+        return distance > 0 && distance <= constants.minimumAttackDamageDistance; 
+      } else {
+        return distance >= -constants.minimumAttackDamageDistance && distance < 0;
+      }
     }
   }
 }
