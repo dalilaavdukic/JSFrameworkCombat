@@ -66,7 +66,6 @@ export default {
             break;
           case controlKeys.roll:
             this.characterRef.roll();
-            this.$emit('roll');
             break;
         }
       }

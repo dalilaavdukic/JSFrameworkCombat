@@ -7,7 +7,6 @@
           ref="player"
           @attack="playerAttacked()"
           @shoot="playerShot()"
-          @roll="playerRolled()"
           :character="player.character.name">
         </playable-character>
         <oponent-character
@@ -54,10 +53,9 @@ export default {
       }
     },
     playerShot() {
-      console.log('player shot');
-    },
-    playerRolled() {
-      console.log('player rolled');
+      if (this.shotCanDamageEnemy()) {
+        this.damageEnemysHealth(constants.shotDamageHealthAmount);
+      }
     },
     getPosition(mode) {
       return {
@@ -74,6 +72,20 @@ export default {
       } else {
         return distance >= -constants.minimumAttackDamageDistance && distance < 0;
       }
+    },
+    shotCanDamageEnemy() {
+      const playerPosition = this.getPosition('player');
+      const enemyPosition = this.getPosition('enemy');
+      const heightDifference = enemyPosition.top - playerPosition.top;
+      const distance = enemyPosition.left - playerPosition.left;
+      if (Math.abs(heightDifference) < 150) {
+        if (this.player.facingDirection === 'right') {
+          return distance > 0;
+        } else {
+          return distance < 0;
+        }
+      }
+      return false;
     }
   }
 }

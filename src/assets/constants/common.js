@@ -13,5 +13,6 @@ export default {
   jumpDuration: 400, // ms
   playAreaBorderLimitOffset: 100,
   minimumAttackDamageDistance: 100,
-  attackDamageHealthAmount: 5
+  attackDamageHealthAmount: 5,
+  shotDamageHealthAmount: 10
 }
