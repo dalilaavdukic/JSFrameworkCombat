@@ -19,8 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import PlayableCharacter from '@/components/PlayableCharacter';
 import OponentCharacter from '@/components/OponentCharacter';
 import constants from '@/assets/constants/common';
@@ -36,16 +35,35 @@ export default {
   },
   data() {
     return {
-      constants: constants
+      constants: constants,
+      specialAttackInterval: undefined
     }
   },
   created() {
+    this.specialAttackInterval = setInterval(() => {
+      this.increasePlayersSpecialAttack();
+      this.increaseEnemysSpecialAttack();
+    }, 10000)
+  },
+  destroyed() {
+    this.resetEnemysSpecialAttack();
+    this.resetPlayersSpecialAttack();
+    this.resetPlayersHealth();
+    this.resetEnemysHealth();
+    clearInterval(this.specialAttackInterval);
   },
   methods: {
     ...mapMutations([
       'damagePlayersHealth',
       'damageEnemysHealth',
-      'increasePlayersSpecialAttack'
+      'resetPlayersHealth',
+      'resetEnemysHealth',
+      'increasePlayersSpecialAttack',
+      'increaseEnemysSpecialAttack',
+      'decreasePlayersSpecialAttack',
+      'decreaseEnemysSpecialAttack',
+      'resetPlayersSpecialAttack',
+      'resetEnemysSpecialAttack'
     ]),
     playerAttacked() {
       if (this.attackCanDamageEnemy()) {
@@ -55,6 +73,7 @@ export default {
     playerShot() {
       if (this.shotCanDamageEnemy()) {
         this.damageEnemysHealth(constants.shotDamageHealthAmount);
+        this.decreasePlayersSpecialAttack(constants.specialAttackDecreaseAmount);
       }
     },
     getPosition(mode) {

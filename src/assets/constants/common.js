@@ -14,5 +14,8 @@ export default {
   playAreaBorderLimitOffset: 100,
   minimumAttackDamageDistance: 100,
   attackDamageHealthAmount: 5,
-  shotDamageHealthAmount: 10
+  shotDamageHealthAmount: 10,
+  specialAttackIncreaseAmount: 10,
+  specialAttackDecreaseAmount: 50,
+  specialAttackMaxValue: 100
 }

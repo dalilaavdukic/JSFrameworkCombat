@@ -8,7 +8,7 @@
 <script>
 import MoveableCharacter from '@/components/MoveableCharacter';
 import controlKeys from '@/assets/constants/controlKeys';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'PlayableCharacter',
@@ -21,6 +21,11 @@ export default {
     modifications:{
       type: Object
     }
+  },
+  computed: {
+    ...mapGetters([
+      'player'
+    ])
   },
   data() {
     return {
@@ -61,8 +66,10 @@ export default {
             this.$emit('attack');
             break;
           case controlKeys.shoot:
-            this.characterRef.shoot();
-            this.$emit('shoot');
+            if (this.player.canUseSpecialAttack) {
+              this.characterRef.shoot();
+              this.$emit('shoot');
+            }
             break;
           case controlKeys.roll:
             this.characterRef.roll();

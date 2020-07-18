@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import characters from '../assets/constants/characters';
+import constants from '../assets/constants/common';
 
 Vue.use(Vuex);
 
@@ -11,14 +12,16 @@ const state = {
     character: '',
     health: 100,
     specialAttack: 0,
-    facingDirection: 'right'
+    facingDirection: 'right',
+    canUseSpecialAttack: false
   },
   enemy: {
     name: '',
     character: characters.angular,
     health: 100,
     specialAttack: 0,
-    facingDirection: 'left'
+    facingDirection: 'left',
+    canUseSpecialAttack: false
   },
   assetsLoaded: false
 };
@@ -30,11 +33,35 @@ const mutations = {
   damageEnemysHealth(state, damage) {
     state.enemy.health -= damage;
   },
-  increasePlayersSpecialAttack(state, increment) {
-    state.player.specialAttack += increment;
+  resetPlayersHealth(state) {
+    state.player.health = 100;
   },
-  increaseEnemysSpecialAttack(state, increment) {
-    state.enemy.specialAttack += increment;
+  resetEnemysHealth(state) {
+    state.enemy.health = 100;
+  },
+  increasePlayersSpecialAttack(state) {
+    state.player.specialAttack += constants.specialAttackIncreaseAmount;
+    if (state.player.specialAttack === constants.specialAttackMaxValue) {
+      state.player.canUseSpecialAttack = true;
+    }
+  },
+  increaseEnemysSpecialAttack(state) {
+    state.enemy.specialAttack += constants.specialAttackIncreaseAmount;
+    if (state.enemy.specialAttack === constants.specialAttackMaxValue) {
+      state.enemy.canUseSpecialAttack = true;
+    }
+  },
+  decreasePlayersSpecialAttack(state) {
+    state.player.specialAttack -= constants.specialAttackDecreaseAmount;
+    if (state.player.specialAttack === 0) {
+      state.player.canUseSpecialAttack = false;
+    }
+  },
+  decreaseEnemysSpecialAttack(state) {
+    state.enemy.specialAttack -= constants.specialAttackDecreaseAmount;
+    if (state.enemy.specialAttack === 0) {
+      state.enemy.canUseSpecialAttack = false;
+    }
   },
   resetPlayersSpecialAttack(state) {
     state.player.specialAttack = 0;
