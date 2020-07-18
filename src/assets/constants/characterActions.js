@@ -8,8 +8,14 @@ export default {
   die: {
     name: 'die',
     numberOfFrames: 12,
-    ticksPerFrame: 7,
+    ticksPerFrame: 3,
     loop: false
+  },
+  dead: {
+    name: 'dead',
+    numberOfFrames: 1,
+    ticksPerFrame: 1,
+    loop: true
   },
   dizzy: {
     name: 'dizzy',
@@ -59,8 +65,8 @@ export default {
     ticksPerFrame: 4,
     loop: false
   },
-  sliding: {
-    name: 'sliding',
+  slide: {
+    name: 'slide',
     numberOfFrames: 6,
     ticksPerFrame: 3,
     loop: false

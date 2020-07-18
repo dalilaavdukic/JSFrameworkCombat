@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import characters from '../assets/constants/characters';
 import constants from '../assets/constants/common';
+import EventBus from '@/utils/eventBus';
 
 Vue.use(Vuex);
 
@@ -29,6 +30,9 @@ const state = {
 const mutations = {
   damagePlayersHealth(state, damage) {
     state.player.health -= damage;
+    if (state.player.health <= 0) {
+      EventBus.$emit('player-died');
+    }
   },
   damageEnemysHealth(state, damage) {
     state.enemy.health -= damage;

@@ -127,8 +127,8 @@ export default {
         this.isJumping = false;
       }, constants.jumpDuration);
     },
-    sliding() {
-      const action = characterActions.sliding;
+    slide() {
+      const action = characterActions.slide;
       this.initiateAction(action);
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.slide;
@@ -158,6 +158,12 @@ export default {
       this.$refs.characterAnimation.updateAnimation(action);
       // move character to appropriate position
       this.moveToNewPosition(action.name);
+    },
+    die() {
+      const action = characterActions.die;
+      this.initiateAction(action);
+      // set appropriate spritesheet
+      this.$refs.characterAnimation.updateAnimation(action);
     },
     moveRight() {
       if (this.isFacingToTheLeft) {
@@ -242,7 +248,7 @@ export default {
       // use appropriate speed according to which action has been triggered
       let speed = 0;
       switch (action) {
-        case characterActions.sliding.name:
+        case characterActions.slide.name:
           speed = this.slideSpeed;
           break;
         case characterActions.roll.name:

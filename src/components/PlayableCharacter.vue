@@ -9,6 +9,7 @@
 import MoveableCharacter from '@/components/MoveableCharacter';
 import controlKeys from '@/assets/constants/controlKeys';
 import { mapMutations, mapGetters } from 'vuex';
+import EventBus from '@/utils/eventBus';
 
 export default {
   name: 'PlayableCharacter',
@@ -27,6 +28,12 @@ export default {
       'player'
     ])
   },
+  mounted() {
+    this.characterRef = this.$refs.moveableCharacter;
+    EventBus.$on('player-died', () => {
+      this.characterRef.die();
+    });
+  },
   data() {
     return {
       characterRef: undefined
@@ -43,9 +50,8 @@ export default {
       'setPlayersFacingDirection'
     ]),
     doCommand(e) {
-      if (!e.repeat) {
+      if (!e.repeat && this.player.health > 0) {
         let cmd = e.keyCode;
-        this.characterRef = this.$refs.moveableCharacter;
         switch (cmd) {
           case controlKeys.right:
             this.characterRef.moveRight();
@@ -58,8 +64,8 @@ export default {
           case controlKeys.jump:
             this.characterRef.jump();
             break;
-          case controlKeys.sliding:
-            this.characterRef.sliding();
+          case controlKeys.slide:
+            this.characterRef.slide();
             break;
           case controlKeys.attack:
             this.characterRef.attack();
