@@ -12,7 +12,7 @@ import constants from '@/assets/constants/common';
 // will listen to events raised by player in store and react based on them
 
 export default {
-  name: 'OponentCharacter',
+  name: 'Oponent',
   components: {MoveableCharacter},
   props: {
     character: {

@@ -12,7 +12,7 @@ import { mapMutations, mapGetters } from 'vuex';
 import EventBus from '@/utils/eventBus';
 
 export default {
-  name: 'PlayableCharacter',
+  name: 'Player',
   components: {MoveableCharacter},
   props: {
     character: {

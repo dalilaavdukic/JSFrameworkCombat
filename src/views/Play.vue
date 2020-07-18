@@ -3,16 +3,16 @@
     <div class="game-world-bg"></div>
     <div class="game">
       <div class="playable-area">
-        <playable-character
+        <player
           ref="player"
           @attack="playerAttacked()"
           @shoot="playerShot()"
           :character="player.character.name">
-        </playable-character>
-        <oponent-character
+        </player>
+        <oponent
           ref="enemy"
           :character="enemy.character.name">
-        </oponent-character>
+        </oponent>
       </div>
     </div>
   </div>
@@ -20,13 +20,13 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import PlayableCharacter from '@/components/PlayableCharacter';
-import OponentCharacter from '@/components/OponentCharacter';
+import Player from '@/components/Player';
+import Oponent from '@/components/Oponent';
 import constants from '@/assets/constants/common';
 
 export default {
   name: 'Play',
-  components: {PlayableCharacter, OponentCharacter},
+  components: {Player, Oponent},
   computed: {
     ...mapGetters([
       'player',
