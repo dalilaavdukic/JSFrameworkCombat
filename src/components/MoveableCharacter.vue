@@ -6,7 +6,7 @@
     :style="[position, transition]"
     :character="character"
     :modifications="currentModifications"
-    @animationComplete="animationComplete()"
+    @animationComplete="animationComplete($event)"
   >
   </character-animation>
 </template>
@@ -38,6 +38,7 @@ export default {
       transition: undefined,
       isJumping: false,
       positionBeforeAnimation: {},
+      characterAnimation: undefined
     };
   },
   computed: {
@@ -112,6 +113,7 @@ export default {
     this.calculateInitialPosition();
   },
   mounted() {
+    this.characterAnimation = this.$refs.characterAnimation;
     this.positionBeforeAnimation = this.getCurrentPosition();
   },
   methods: {
@@ -119,7 +121,7 @@ export default {
       const action = characterActions.jump;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
       // apply jumping class to play animation
       this.isJumping = true;
       // remove class after animation finishes
@@ -133,7 +135,7 @@ export default {
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.slide;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
       // move character to appropriate position
       this.moveToNewPosition(action.name);
     },
@@ -141,13 +143,13 @@ export default {
       const action = characterActions.attack;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
     },
     shoot() {
       const action = characterActions.shoot;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
     },
     roll() {
       const action = characterActions.roll;
@@ -155,7 +157,7 @@ export default {
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.roll;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
       // move character to appropriate position
       this.moveToNewPosition(action.name);
     },
@@ -163,7 +165,18 @@ export default {
       const action = characterActions.die;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
+    },
+    dizzy() {
+      const action = characterActions.dizzy;
+      this.initiateAction(action);
+      // set appropriate spritesheet
+      this.characterAnimation.updateAnimation(action);
+      setTimeout(() => {
+        const action = characterActions.idle;
+        this.initiateAction(action)
+        this.characterAnimation.updateAnimation(action);
+      }, constants.dizzinessDuration)
     },
     moveRight() {
       if (this.isFacingToTheLeft) {
@@ -185,7 +198,7 @@ export default {
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.run;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
       // move character to appropriate position
       this.moveToNewPosition(action.name);
     },
@@ -209,17 +222,18 @@ export default {
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.run;
       // set appropriate spritesheet
-      this.$refs.characterAnimation.updateAnimation(action);
+      this.characterAnimation.updateAnimation(action);
       // move character to appropriate position
       this.moveToNewPosition(action.name); 
     },
     initiateAction(action) {
       this.lastTriggeredAnimation = action;
       this.animationCompleted = false;
+      this.$emit('animationStarted', action);
     },
     stopAction() {
       // use idle spritesheet
-      this.$refs.characterAnimation.updateAnimation(characterActions.idle);
+      this.characterAnimation.updateAnimation(characterActions.idle);
       this.lastTriggeredAnimation = characterActions.idle;
       // stop any remaining movement
       this.positionBeforeAnimation = this.getCurrentPosition();
@@ -231,7 +245,7 @@ export default {
       this.currentModifications = {
         mode: constants.characterModes.enemy,
       };
-      this.$refs.characterAnimation.updateModification(
+      this.characterAnimation.updateModification(
         this.currentModifications
       );
     },
@@ -239,7 +253,7 @@ export default {
       this.currentModifications = {
         mode: constants.characterModes.player,
       };
-      this.$refs.characterAnimation.updateModification(
+      this.characterAnimation.updateModification(
         this.currentModifications
       );
     },
@@ -265,12 +279,12 @@ export default {
     },
     getCurrentPosition() {
       return {
-        top: this.$refs.characterAnimation.$el.offsetTop,
-        left: this.$refs.characterAnimation.$el.offsetLeft,
+        top: this.characterAnimation.$el.offsetTop,
+        left: this.characterAnimation.$el.offsetLeft,
         right:
           window.innerWidth -
-          (this.$refs.characterAnimation.$el.offsetLeft +
-            this.$refs.characterAnimation.$el.offsetWidth),
+          (this.characterAnimation.$el.offsetLeft +
+            this.characterAnimation.$el.offsetWidth),
       };
     },
     calculateInitialPosition() {
@@ -281,8 +295,9 @@ export default {
             : "0px",
       };
     },
-    animationComplete() {
+    animationComplete(runningAnimation) {
       this.animationCompleted = true;
+      this.$emit('animationStarted', runningAnimation);
     },
     facingDirection() {
       return this.currentModifications?.mode === constants.characterModes.player? 'right' : 'left';

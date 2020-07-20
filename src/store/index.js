@@ -14,7 +14,8 @@ const state = {
     health: 100,
     specialAttack: 0,
     facingDirection: 'right',
-    canUseSpecialAttack: false
+    canUseSpecialAttack: false,
+    hasBeenDizzy: false
   },
   enemy: {
     name: '',
@@ -22,7 +23,8 @@ const state = {
     health: 100,
     specialAttack: 0,
     facingDirection: 'left',
-    canUseSpecialAttack: false
+    canUseSpecialAttack: false,
+    hasBeenDizzy: false
   },
   assetsLoaded: false
 };
@@ -30,18 +32,31 @@ const state = {
 const mutations = {
   damagePlayersHealth(state, damage) {
     state.player.health -= damage;
-    if (state.player.health <= 0) {
+    if (state.player.health < 15 && state.player.health > 0 && !state.player.hasBeenDizzy) {
+      EventBus.$emit('player-dizzy');
+      state.player.hasBeenDizzy = true;
+    } else if (state.player.health <= 0) {
       EventBus.$emit('player-died');
+      state.player.hasBeenDizzy = false;
     }
   },
   damageEnemysHealth(state, damage) {
     state.enemy.health -= damage;
+    if (state.enemy.health < 15 && state.enemy.health > 0 && !state.enemy.hasBeenDizzy) {
+      EventBus.$emit('enemy-dizzy');
+      state.enemy.hasBeenDizzy = true;
+    } else if (state.enemy.health <= 0) {
+      EventBus.$emit('enemy-died');
+      state.enemy.hasBeenDizzy = false;
+    }
   },
   resetPlayersHealth(state) {
     state.player.health = 100;
+    state.player.hasBeenDizzy = false;
   },
   resetEnemysHealth(state) {
     state.enemy.health = 100;
+    state.enemy.hasBeenDizzy = false;
   },
   increasePlayersSpecialAttack(state) {
     state.player.specialAttack += constants.specialAttackIncreaseAmount;
@@ -84,6 +99,12 @@ const mutations = {
   },
   setEnemysFacingDirection(state, direction) {
     state.enemy.facingDirection = direction;
+  },
+  setPlayersAnimation(state, animation) {
+    state.player.currentAnimation = animation;
+  },
+  setEnemysAnimation(state, animation) {
+    state.enemy.currentAnimation = animation;
   },
   setAssetsLoaded(state, loaded) {
     state.assetsLoaded = loaded;

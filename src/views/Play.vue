@@ -69,6 +69,9 @@ export default {
       if (this.attackCanDamageEnemy()) {
         this.damageEnemysHealth(constants.attackDamageHealthAmount);
       }
+      // TO DO: remove this, using for testing purposes
+      // because until the enemy is implemented there is no way to damage the players health
+      // this.damagePlayersHealth(constants.attackDamageHealthAmount);
     },
     playerShot() {
       if (this.shotCanDamageEnemy()) {

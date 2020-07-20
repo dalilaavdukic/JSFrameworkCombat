@@ -17,5 +17,6 @@ export default {
   shotDamageHealthAmount: 10,
   specialAttackIncreaseAmount: 10,
   specialAttackDecreaseAmount: 50,
-  specialAttackMaxValue: 100
+  specialAttackMaxValue: 100,
+  dizzinessDuration: 3000 // ms
 }

@@ -49,9 +49,9 @@ export default {
         if (this.currentAnimation === characterActions.die) {
           this.currentAnimation = characterActions.dead;
         } else {
-          this.$emit('animationComplete');
           this.currentAnimation = this.defaultAnimation;
         }
+        this.$emit('animationComplete', this.currentAnimation);
         this.getSprite();
       }
       this.characterSprite.render();

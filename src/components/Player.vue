@@ -2,7 +2,8 @@
   <moveable-character
     ref="moveableCharacter"
     :character="character"
-    :modifications="modifications">
+    :modifications="modifications"
+    @animationStarted="setPlayersAnimation($event)">
   </moveable-character>
 </template>
 <script>
@@ -10,6 +11,7 @@ import MoveableCharacter from '@/components/MoveableCharacter';
 import controlKeys from '@/assets/constants/controlKeys';
 import { mapMutations, mapGetters } from 'vuex';
 import EventBus from '@/utils/eventBus';
+import characterActions from '@/assets/constants/characterActions';
 
 export default {
   name: 'Player',
@@ -33,6 +35,9 @@ export default {
     EventBus.$on('player-died', () => {
       this.characterRef.die();
     });
+    EventBus.$on('player-dizzy', () => {
+      this.characterRef.dizzy();
+    });
   },
   data() {
     return {
@@ -47,10 +52,11 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setPlayersFacingDirection'
+      'setPlayersFacingDirection',
+      'setPlayersAnimation'
     ]),
     doCommand(e) {
-      if (!e.repeat && this.player.health > 0) {
+      if (!e.repeat && this.player.health > 0 && this.player.currentAnimation !== characterActions.dizzy) {
         let cmd = e.keyCode;
         switch (cmd) {
           case controlKeys.right:
