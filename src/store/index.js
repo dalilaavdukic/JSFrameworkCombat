@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import characters from '../assets/constants/characters';
 import constants from '../assets/constants/common';
 import EventBus from '@/utils/eventBus';
+import characterActions from '../assets/constants/characterActions';
 
 Vue.use(Vuex);
 
@@ -15,7 +16,8 @@ const state = {
     specialAttack: 0,
     facingDirection: 'right',
     canUseSpecialAttack: false,
-    hasBeenDizzy: false
+    hasBeenDizzy: false,
+    currentAnimation: characterActions.idle
   },
   enemy: {
     name: '',
@@ -24,7 +26,8 @@ const state = {
     specialAttack: 0,
     facingDirection: 'left',
     canUseSpecialAttack: false,
-    hasBeenDizzy: false
+    hasBeenDizzy: false,
+    currentAnimation: characterActions.idle
   },
   assetsLoaded: false
 };
@@ -72,7 +75,8 @@ const mutations = {
   },
   decreasePlayersSpecialAttack(state) {
     state.player.specialAttack -= constants.specialAttackDecreaseAmount;
-    if (state.player.specialAttack === 0) {
+    if (state.player.specialAttack <= 0) {
+      state.player.specialAttack = 0;
       state.player.canUseSpecialAttack = false;
     }
   },
