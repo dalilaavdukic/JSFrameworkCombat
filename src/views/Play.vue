@@ -2,6 +2,10 @@
   <div class="play-container">
     <div class="game-world-bg"></div>
     <div class="game">
+      <div class="players-bars">
+        <players-bars :player="player"></players-bars>
+        <players-bars :player="enemy"></players-bars>
+      </div>
       <div class="playable-area">
         <player
           ref="player"
@@ -19,12 +23,13 @@
 import { mapGetters, mapMutations } from "vuex";
 import Player from "@/components/Player";
 import Oponent from "@/components/Oponent";
+import PlayersBars from "@/components/PlayersBars";
 import constants from "@/assets/constants/common";
 import characterActions from "@/assets/constants/characterActions";
 
 export default {
   name: "Play",
-  components: { Player, Oponent },
+  components: { Player, Oponent, PlayersBars },
   computed: {
     ...mapGetters(["player", "enemy"])
   },
@@ -144,11 +149,19 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    .players-bars {
+      position: relative;
+      top: 0;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      padding: 20px;
+    }
     .playable-area {
       position: relative;
       width: 100%;
       height: 75.5%;
-      top: 100px;
     }
   }
 }

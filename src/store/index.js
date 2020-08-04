@@ -20,7 +20,7 @@ const state = {
     currentAnimation: characterActions.idle
   },
   enemy: {
-    name: '',
+    name: 'Enemy',
     character: characters.angular,
     health: 100,
     specialAttack: 0,
