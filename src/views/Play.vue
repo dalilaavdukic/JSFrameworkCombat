@@ -4,7 +4,7 @@
     <div class="game">
       <div class="players-bars">
         <players-bars :player="player"></players-bars>
-        <players-bars :player="enemy"></players-bars>
+        <players-bars :player="enemy" side="right"></players-bars>
       </div>
       <div class="playable-area">
         <player
@@ -43,7 +43,7 @@ export default {
     this.specialAttackInterval = setInterval(() => {
       this.increasePlayersSpecialAttack();
       this.increaseEnemysSpecialAttack();
-    }, 10000);
+    }, 2000);
   },
   destroyed() {
     this.resetEnemysSpecialAttack();

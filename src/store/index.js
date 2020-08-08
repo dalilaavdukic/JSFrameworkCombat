@@ -62,13 +62,17 @@ const mutations = {
     state.enemy.hasBeenDizzy = false;
   },
   increasePlayersSpecialAttack(state) {
-    state.player.specialAttack += constants.specialAttackIncreaseAmount;
+    if (state.player.specialAttack < constants.specialAttackMaxValue) {
+      state.player.specialAttack += constants.specialAttackIncreaseAmount;
+    }
     if (state.player.specialAttack === constants.specialAttackMaxValue) {
       state.player.canUseSpecialAttack = true;
     }
   },
   increaseEnemysSpecialAttack(state) {
-    state.enemy.specialAttack += constants.specialAttackIncreaseAmount;
+    if (state.enemy.specialAttack < constants.specialAttackMaxValue) { 
+      state.enemy.specialAttack += constants.specialAttackIncreaseAmount;
+    }
     if (state.enemy.specialAttack === constants.specialAttackMaxValue) {
       state.enemy.canUseSpecialAttack = true;
     }
