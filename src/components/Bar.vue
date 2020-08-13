@@ -1,5 +1,5 @@
 <template>
-  <div class="bar">
+  <div :class="['bar', side]">
     <div :class="[character, side]" :style="{width: value+'%'}">
       <span v-if="value">{{value}}%</span>
     </div>
@@ -30,22 +30,28 @@ export default {
 <style lang="scss" scoped>
 .bar {
   border: 1px solid $js-darkest-yellow;
-  border-radius: 10px;
   height: 20px;
   width: 100%;
   margin-bottom: 5px;
+  &.right {
+    border-radius: 10px 0 0 10px;
+  }
+  &.left {
+    border-radius: 0 10px 10px 0;
+  }
   div {
     height: 20px;
-    border-radius: 10px;
     transition: width 0.2s linear;
     color: $js-grey;
     text-align: center;
     &.right {
       display: block;
       float: right;
+      border-radius: 10px 0 0 10px;
     }
     background-color: $js-dark-yellow; /* For browsers that do not support gradients */
     &.left {
+      border-radius: 0 10px 10px 0;
       background-image: linear-gradient(to right, $js-dark-yellow, $js-darkest-yellow);
     }
     &.right {

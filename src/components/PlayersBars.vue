@@ -1,6 +1,9 @@
 <template>
-  <div class="bars">
-    <div>
+  <div :class="['player-info', side]">
+    <div class="profile-pic">
+      <img :src="getProfilePic()">
+    </div>
+    <div :class="['bars', side]">
       <bar :value="player.health" :side="side"></bar>
       <bar :value="player.specialAttack" :character="player.character.name" :side="side"></bar>
     </div>
@@ -23,16 +26,48 @@ export default {
       required: false,
       default: 'left'
     }
+  },
+  methods: {
+    getProfilePic() {
+      return require(`@/assets/characters/${this.side === 'left'? 'players' : 'enemies'}/${this.player.character.name}/profile.png`);
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.bars {
-  height: 60px;
-  width: 25%;
+.player-info {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  &.right {
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+  }
   &:last-child {
     text-align: end;
+  }
+  .profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid $js-darkest-yellow;
+    background-color: $js-grey;
+    z-index: 1;
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+  }
+  .bars {
+    width: 420px;
+    &.left {
+      margin-left: -7px;
+    }
+    &.right {
+      margin-right: -7px;
+    }
   }
 }
 </style>

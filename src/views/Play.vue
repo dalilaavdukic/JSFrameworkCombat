@@ -156,12 +156,12 @@ export default {
       display: flex;
       justify-content: space-between;
       flex-direction: row;
-      padding: 20px;
+      padding: 20px 20px 0;
     }
     .playable-area {
       position: relative;
       width: 100%;
-      height: 75.5%;
+      height: 74.5%;
     }
   }
 }
