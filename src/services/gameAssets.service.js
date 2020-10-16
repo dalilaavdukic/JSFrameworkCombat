@@ -7,7 +7,11 @@ export default {
   assets: {},
   numOfLoadedAssets: 0,
   totalNumOfAssets() {
-    return Object.keys(characters).length * Object.keys(characterActions).length * Object.keys(constants.characterModes).length;
+    return (
+      Object.keys(characters).length *
+      Object.keys(characterActions).length *
+      Object.keys(constants.characterModes).length
+    );
   },
   loadGameAssets: function() {
     this.assets.characters = {};
@@ -29,10 +33,12 @@ export default {
               store.commit('setAssetsLoaded', true);
             }
           };
-          this.assets.characters[characterModes[type]][character][action] = actionSprite;
+          this.assets.characters[characterModes[type]][character][
+            action
+          ] = actionSprite;
           actionSprite.src = require(`../assets/characters/${characterModes[type]}/${character}/${action}.png`);
-        })
-      })
-    })
+        });
+      });
+    });
   }
-}
+};

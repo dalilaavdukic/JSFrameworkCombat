@@ -12,11 +12,14 @@ export default {
   rollDuration: "0.3s",
   jumpDuration: 400, // ms
   playAreaBorderLimitOffset: 100,
-  minimumAttackDamageDistance: 100,
+  minimumAttackDamageDistance: 140,
   attackDamageHealthAmount: 5,
   shotDamageHealthAmount: 10,
   specialAttackIncreaseAmount: 10,
   specialAttackDecreaseAmount: 50,
   specialAttackMaxValue: 100,
   dizzinessDuration: 3000, // ms
+  dizzyHealth: 15,
+  specialAttackIncreaseInterval: 2000, // ms
+  oponentAttackInterval: 2000, // ms
 };

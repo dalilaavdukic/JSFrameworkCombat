@@ -77,4 +77,4 @@ export default {
     ticksPerFrame: 7,
     loop: false
   }
-}
+};

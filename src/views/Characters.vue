@@ -1,26 +1,30 @@
 <template>
   <div class="game-view">
     <div class="characters-header">
-      <game-title size='small'></game-title>
-      <h1>Choose a character to play with: </h1>
+      <game-title size="small"></game-title>
+      <h1>Choose a character to play with:</h1>
     </div>
     <form class="player-form">
       <div class="character-options">
-        <character-card 
-          v-for="character in characters" 
-          :key="character.name" 
-          :character="character">
+        <character-card
+          v-for="character in characters"
+          :key="character.name"
+          :character="character"
+        >
         </character-card>
       </div>
       <div class="player-inputs">
         <div>
           <label>Name:</label>
-          <input 
-            :value="player.name" 
-            @input="updateName" 
-            type="text">
+          <input :value="player.name" @input="updateName" type="text" />
         </div>
-        <button type="button" @click="play" :disabled="!player.name || !player.character">Play!</button>
+        <button
+          type="button"
+          @click="play"
+          :disabled="!player.name || !player.character"
+        >
+          Play!
+        </button>
       </div>
     </form>
   </div>
@@ -36,31 +40,29 @@ export default {
   name: 'Characters',
   components: {
     GameTitle,
-    CharacterCard
+    CharacterCard,
   },
   data() {
     return {
-      characters: characters
-    }
+      characters: characters,
+    };
   },
   computed: {
     ...mapGetters(['player']),
-    buttonDisabled: function() {
+    buttonDisabled: function () {
       return this.player.name === '';
-    }
+    },
   },
   methods: {
-    ...mapMutations([
-      'giveName'
-    ]),
+    ...mapMutations(['giveName']),
     updateName(e) {
       this.giveName(e.target.value);
     },
     play() {
       this.$router.push('play');
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

@@ -13,14 +13,12 @@ import gameAssetsService from '@/services/gameAssets.service';
 export default {
   name: 'App',
   computed: {
-    ...mapGetters([
-      'assetsLoaded'
-    ])
+    ...mapGetters(['assetsLoaded']),
   },
   mounted() {
     gameAssetsService.loadGameAssets();
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>

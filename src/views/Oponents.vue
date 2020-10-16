@@ -1,19 +1,15 @@
 <template>
-  <div>
-    Oponents
-  </div>
+  <div>Oponents</div>
 </template>
 
 <script>
 export default {
   name: 'Oponents',
   data() {
-    return {
-    }
+    return {};
   },
-  methods: {
-  }
-}
+  methods: {},
+};
 </script>
 
 <style lang="scss" scoped>

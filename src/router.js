@@ -12,7 +12,7 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      redirect: { path: 'home'}
+      redirect: { path: 'home' }
     },
     {
       path: '/home',
@@ -31,4 +31,4 @@ export default new VueRouter({
       component: Play
     }
   ]
-})
+});

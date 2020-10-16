@@ -1,14 +1,14 @@
 <template>
   <router-link :to="item.link">
-    <div class="menu-item">{{item.label}}</div>
+    <div class="menu-item">{{ item.label }}</div>
   </router-link>
 </template>
 
 <script>
 export default {
   name: 'MenuItem',
-  props: ['item']
-}
+  props: ['item'],
+};
 </script>
 
 <style lang="scss" scoped>

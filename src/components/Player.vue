@@ -3,8 +3,8 @@
     ref="moveableCharacter"
     :character="character"
     :modifications="modifications"
-    @animationStarted="setPlayersAnimation($event)">
-  </moveable-character>
+    @animationStarted="setPlayersAnimation($event)"
+  ></moveable-character>
 </template>
 <script>
 import MoveableCharacter from '@/components/MoveableCharacter';
@@ -15,20 +15,18 @@ import characterActions from '@/assets/constants/characterActions';
 
 export default {
   name: 'Player',
-  components: {MoveableCharacter},
+  components: { MoveableCharacter },
   props: {
     character: {
       type: String,
-      required: true
+      required: true,
     },
-    modifications:{
-      type: Object
-    }
+    modifications: {
+      type: Object,
+    },
   },
   computed: {
-    ...mapGetters([
-      'player'
-    ])
+    ...mapGetters(['player', 'enemy']),
   },
   mounted() {
     this.characterRef = this.$refs.moveableCharacter;
@@ -41,8 +39,8 @@ export default {
   },
   data() {
     return {
-      characterRef: undefined
-    }
+      characterRef: undefined,
+    };
   },
   created() {
     window.addEventListener('keydown', this.doCommand);
@@ -51,12 +49,14 @@ export default {
     window.removeEventListener('keydown', this.doCommand);
   },
   methods: {
-    ...mapMutations([
-      'setPlayersFacingDirection',
-      'setPlayersAnimation'
-    ]),
+    ...mapMutations(['setPlayersFacingDirection', 'setPlayersAnimation']),
     doCommand(e) {
-      if (!e.repeat && this.player.health > 0 && this.player.currentAnimation !== characterActions.dizzy) {
+      if (
+        !e.repeat &&
+        this.player.health > 0 &&
+        this.enemy.health > 0 &&
+        this.player.currentAnimation !== characterActions.dizzy
+      ) {
         let cmd = e.keyCode;
         switch (cmd) {
           case controlKeys.right:
@@ -88,9 +88,9 @@ export default {
             break;
         }
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 </style>

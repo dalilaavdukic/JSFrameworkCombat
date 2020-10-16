@@ -1,6 +1,10 @@
 <template>
   <div class="game-menu">
-    <menu-item v-for="(item, index) in items" :key="index" :item="item"></menu-item>
+    <menu-item
+      v-for="(item, index) in items"
+      :key="index"
+      :item="item"
+    ></menu-item>
   </div>
 </template>
 
@@ -12,10 +16,10 @@ export default {
   components: { MenuItem },
   data() {
     return {
-      items: menuItems
-    }
-  }
-}
+      items: menuItems,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>

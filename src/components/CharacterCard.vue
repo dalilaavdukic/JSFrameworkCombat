@@ -1,14 +1,17 @@
 <template>
-  <div :class="['card', {'selected': isSelected}]"
-       @click="selectCharacter()" 
-       @mouseenter="mouseOver()">
+  <div
+    :class="['card', { selected: isSelected }]"
+    @click="selectCharacter()"
+    @mouseenter="mouseOver()"
+  >
     <character-animation
       ref="characterAnimation"
-      :character="character.name" 
+      :character="character.name"
       :animation="animation.animation"
-      :modifications="modifications">
+      :modifications="modifications"
+    >
     </character-animation>
-    <h2>{{character.name}}</h2>
+    <h2>{{ character.name }}</h2>
   </div>
 </template>
 
@@ -27,21 +30,17 @@ export default {
     return {
       animation: { animation: characterActions.idle },
       modifications: {},
-      availableAnimations: ['attack', 'shoot', 'slide']
-    }
+      availableAnimations: ['attack', 'shoot', 'slide'],
+    };
   },
   computed: {
-    ...mapGetters([
-      'player'
-    ]),
-    isSelected: function() {
-      return this.character.id === this.player.character.id
-    }
+    ...mapGetters(['player']),
+    isSelected: function () {
+      return this.character.id === this.player.character.id;
+    },
   },
   methods: {
-    ...mapMutations([
-      'chooseCharacter'
-    ]),
+    ...mapMutations(['chooseCharacter']),
     mouseOver() {
       const characterAnimation = this.$refs.characterAnimation;
       const animation = this.getRandomAnimation();
@@ -49,19 +48,21 @@ export default {
       characterAnimation.updateAnimation(animation);
     },
     getRandomAnimation() {
-      const arrayIndex = Math.round(Math.random()*(this.availableAnimations.length-1));
+      const arrayIndex = Math.round(
+        Math.random() * (this.availableAnimations.length - 1)
+      );
       const actionName = this.availableAnimations[arrayIndex];
       return characterActions[actionName];
     },
     selectCharacter() {
       const payload = {
         type: 'player',
-        character: this.character
+        character: this.character,
       };
       this.chooseCharacter(payload);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

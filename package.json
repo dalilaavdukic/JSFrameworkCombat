@@ -47,5 +47,8 @@
   ],
   "resolutions": {
     "minimist": "^1.2.5"
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }

@@ -1,11 +1,15 @@
 <template>
   <div :class="['player-info', side]">
     <div class="profile-pic">
-      <img :src="getProfilePic()">
+      <img :src="getProfilePic()" />
     </div>
     <div :class="['bars', side]">
       <bar :value="player.health" :side="side"></bar>
-      <bar :value="player.specialAttack" :character="player.character.name" :side="side"></bar>
+      <bar
+        :value="player.specialAttack"
+        :character="player.character.name"
+        :side="side"
+      ></bar>
     </div>
   </div>
 </template>
@@ -19,20 +23,22 @@ export default {
   props: {
     player: {
       type: Object,
-      required: true
+      required: true,
     },
     side: {
       type: String,
       required: false,
-      default: 'left'
-    }
+      default: 'left',
+    },
   },
   methods: {
     getProfilePic() {
-      return require(`@/assets/characters/${this.side === 'left'? 'players' : 'enemies'}/${this.player.character.name}/profile.png`);
-    }
-  }
-}
+      return require(`@/assets/characters/${
+        this.side === 'left' ? 'players' : 'enemies'
+      }/${this.player.character.name}/profile.png`);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

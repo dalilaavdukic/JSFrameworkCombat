@@ -1,7 +1,7 @@
 <template>
   <div :class="['game-title', size]">
     <div class="js-logo">
-      <img src="/images/JSLogo.png" alt="JS Logo" height="145" width="145">
+      <img src="/images/JSLogo.png" alt="JS Logo" height="145" width="145" />
     </div>
     <div class="title">
       <div>Framework</div>
@@ -13,8 +13,8 @@
 <script>
 export default {
   name: 'GameTitle',
-  props: ['size']
-}
+  props: ['size'],
+};
 </script>
 
 <style lang="scss" scoped>

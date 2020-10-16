@@ -13,37 +13,44 @@
           @shoot="playerShot()"
           :character="player.character.name"
         ></player>
-        <oponent ref="enemy" :character="enemy.character.name"></oponent>
+        <oponent
+          ref="enemy"
+          :character="enemy.character.name"
+          @attack="enemyAttacked()"
+          @shoot="enemyShot()"
+        ></oponent>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import Player from "@/components/Player";
-import Oponent from "@/components/Oponent";
-import PlayersBars from "@/components/PlayersBars";
-import constants from "@/assets/constants/common";
-import characterActions from "@/assets/constants/characterActions";
+import { mapGetters, mapMutations } from 'vuex';
+import Player from '@/components/Player';
+import Oponent from '@/components/Oponent';
+import PlayersBars from '@/components/PlayersBars';
+import constants from '@/assets/constants/common';
+import characterActions from '@/assets/constants/characterActions';
 
 export default {
-  name: "Play",
+  name: 'Play',
   components: { Player, Oponent, PlayersBars },
   computed: {
-    ...mapGetters(["player", "enemy"])
+    ...mapGetters(['player', 'enemy']),
   },
   data() {
     return {
       constants: constants,
-      specialAttackInterval: undefined
+      specialAttackInterval: undefined,
     };
   },
   created() {
     this.specialAttackInterval = setInterval(() => {
-      this.increasePlayersSpecialAttack();
-      this.increaseEnemysSpecialAttack();
-    }, 2000);
+      if (this.enemy.health > 0 && this.player.health > 0) {
+        this.increasePlayersSpecialAttack();
+        this.increaseEnemysSpecialAttack();
+      }
+    }, constants.specialAttackIncreaseInterval);
   },
   destroyed() {
     this.resetEnemysSpecialAttack();
@@ -54,35 +61,45 @@ export default {
   },
   methods: {
     ...mapMutations([
-      "damagePlayersHealth",
-      "damageEnemysHealth",
-      "resetPlayersHealth",
-      "resetEnemysHealth",
-      "increasePlayersSpecialAttack",
-      "increaseEnemysSpecialAttack",
-      "decreasePlayersSpecialAttack",
-      "decreaseEnemysSpecialAttack",
-      "resetPlayersSpecialAttack",
-      "resetEnemysSpecialAttack"
+      'damagePlayersHealth',
+      'damageEnemysHealth',
+      'resetPlayersHealth',
+      'resetEnemysHealth',
+      'increasePlayersSpecialAttack',
+      'increaseEnemysSpecialAttack',
+      'decreasePlayersSpecialAttack',
+      'decreaseEnemysSpecialAttack',
+      'resetPlayersSpecialAttack',
+      'resetEnemysSpecialAttack',
     ]),
     playerAttacked() {
+      // emit event that player has attacked so enemy can react
       if (this.attackCanDamageEnemy()) {
         this.damageEnemysHealth(constants.attackDamageHealthAmount);
       }
-      // TO DO: remove this, using for testing purposes
-      // because until the enemy is implemented there is no way to damage the players health
-      // this.damagePlayersHealth(constants.attackDamageHealthAmount);
     },
     playerShot() {
+      // emit event that play has shot so enemy can react
       if (this.shotCanDamageEnemy()) {
         this.damageEnemysHealth(constants.shotDamageHealthAmount);
       }
       this.decreasePlayersSpecialAttack(constants.specialAttackDecreaseAmount);
     },
+    enemyAttacked() {
+      if (this.attackCanDamagePlayer()) {
+        this.damagePlayersHealth(constants.attackDamageHealthAmount);
+      }
+    },
+    enemyShot() {
+      if (this.shotCanDamagePlayer()) {
+        this.damagePlayersHealth(constants.shotDamageHealthAmount);
+      }
+      this.decreaseEnemysSpecialAttack(constants.specialAttackDecreaseAmount);
+    },
     getPosition(mode) {
       return {
         top: this.$refs[mode].$el.offsetTop,
-        left: this.$refs[mode].$el.offsetLeft
+        left: this.$refs[mode].$el.offsetLeft,
       };
     },
     attackCanDamageEnemy() {
@@ -92,10 +109,10 @@ export default {
       ) {
         return false;
       }
-      const playerPosition = this.getPosition("player");
-      const enemyPosition = this.getPosition("enemy");
+      const playerPosition = this.getPosition('player');
+      const enemyPosition = this.getPosition('enemy');
       const distance = enemyPosition.left - playerPosition.left;
-      if (this.player.facingDirection === "right") {
+      if (this.player.facingDirection === 'right') {
         return (
           distance > 0 && distance <= constants.minimumAttackDamageDistance
         );
@@ -112,20 +129,60 @@ export default {
       ) {
         return false;
       }
-      const playerPosition = this.getPosition("player");
-      const enemyPosition = this.getPosition("enemy");
+      const playerPosition = this.getPosition('player');
+      const enemyPosition = this.getPosition('enemy');
       const heightDifference = enemyPosition.top - playerPosition.top;
       const distance = enemyPosition.left - playerPosition.left;
       if (Math.abs(heightDifference) < 150) {
-        if (this.player.facingDirection === "right") {
+        if (this.player.facingDirection === 'right') {
           return distance > 0;
         } else {
           return distance < 0;
         }
       }
       return false;
-    }
-  }
+    },
+    attackCanDamagePlayer() {
+      if (
+        this.player.currentAnimation === characterActions.roll ||
+        this.player.currentAnimation === characterActions.slide
+      ) {
+        return false;
+      }
+      const playerPosition = this.getPosition('player');
+      const enemyPosition = this.getPosition('enemy');
+      const distance = playerPosition.left - enemyPosition.left;
+      if (this.enemy.facingDirection === 'right') {
+        return (
+          distance > 0 && distance <= constants.minimumAttackDamageDistance
+        );
+      } else {
+        return (
+          distance >= -constants.minimumAttackDamageDistance && distance < 0
+        );
+      }
+    },
+    shotCanDamagePlayer() {
+      if (
+        this.player.currentAnimation === characterActions.roll ||
+        this.player.currentAnimation === characterActions.slide
+      ) {
+        return false;
+      }
+      const playerPosition = this.getPosition('player');
+      const enemyPosition = this.getPosition('enemy');
+      const heightDifference = playerPosition.top - enemyPosition.top;
+      const distance = playerPosition.left - enemyPosition.left;
+      if (Math.abs(heightDifference) < 150) {
+        if (this.enemy.facingDirection === 'right') {
+          return distance > 0;
+        } else {
+          return distance < 0;
+        }
+      }
+      return false;
+    },
+  },
 };
 </script>
 
@@ -137,7 +194,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url("~@/assets/worlds/bg7.png");
+    background-image: url('~@/assets/worlds/bg7.png');
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;

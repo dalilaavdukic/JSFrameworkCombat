@@ -13,15 +13,15 @@ export default {
   props: {
     animation: {
       type: Object,
-      default: () => (characterActions.idle)
+      default: () => characterActions.idle,
     },
     character: {
       type: String,
-      required: true
+      required: true,
     },
     modifications: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -33,8 +33,8 @@ export default {
       characterMode: constants.characterModes.player,
       defaultAnimation: {},
       currentAnimation: {},
-      currentModifications: {}
-    }
+      currentModifications: {},
+    };
   },
   methods: {
     getCanvas() {
@@ -57,16 +57,23 @@ export default {
       this.characterSprite.render();
     },
     getSprite() {
-      if (this.currentModifications?.mode) this.characterMode = this.currentModifications.mode
-      this.characterImage = gameAssetsService.assets.characters[this.characterMode][this.character][this.currentAnimation.name];
+      if (this.currentModifications?.mode)
+        this.characterMode = this.currentModifications.mode;
+      this.characterImage =
+        gameAssetsService.assets.characters[this.characterMode][this.character][
+          this.currentAnimation.name
+        ];
       this.characterSprite = sprite({
-        context: this.canvas.getContext("2d"),
-        width: this.width*this.currentAnimation.numberOfFrames,
+        context: this.canvas.getContext('2d'),
+        width: this.width * this.currentAnimation.numberOfFrames,
         height: this.height,
         image: this.characterImage,
         numberOfFrames: this.currentAnimation.numberOfFrames,
         ticksPerFrame: this.currentAnimation.ticksPerFrame,
-        loop: this.currentModifications?.loop !== undefined ? this.currentModifications.loop : this.currentAnimation.loop
+        loop:
+          this.currentModifications?.loop !== undefined
+            ? this.currentModifications.loop
+            : this.currentAnimation.loop,
       });
       this.characterSprite.render();
     },
@@ -77,7 +84,7 @@ export default {
     updateModification(modifications) {
       this.currentModifications = modifications;
       this.getSprite();
-    }
+    },
   },
   mounted() {
     this.defaultAnimation = characterActions.idle;
@@ -86,8 +93,8 @@ export default {
     this.getCanvas();
     this.getSprite();
     this.animate();
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>

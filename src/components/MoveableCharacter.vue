@@ -11,14 +11,14 @@
   </character-animation>
 </template>
 <script>
-import CharacterAnimation from "@/components/CharacterAnimation";
-import characters from "@/assets/constants/characters";
-import constants from "@/assets/constants/common";
-import transitions from "@/assets/constants/transitions";
-import characterActions from "@/assets/constants/characterActions";
+import CharacterAnimation from '@/components/CharacterAnimation';
+import characters from '@/assets/constants/characters';
+import constants from '@/assets/constants/common';
+import transitions from '@/assets/constants/transitions';
+import characterActions from '@/assets/constants/characterActions';
 
 export default {
-  name: "MoveableCharacter",
+  name: 'MoveableCharacter',
   components: { CharacterAnimation },
   props: {
     character: {
@@ -38,21 +38,23 @@ export default {
       transition: undefined,
       isJumping: false,
       positionBeforeAnimation: {},
-      characterAnimation: undefined
+      characterAnimation: undefined,
     };
   },
   computed: {
-    isFacingToTheRight: function() {
-      return this.currentModifications?.mode === constants.characterModes.player;
+    isFacingToTheRight: function () {
+      return (
+        this.currentModifications?.mode === constants.characterModes.player
+      );
     },
-    isFacingToTheLeft: function() {
+    isFacingToTheLeft: function () {
       return this.currentModifications?.mode === constants.characterModes.enemy;
     },
-    slideSpeed: function() {
+    slideSpeed: function () {
       let slideSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
-        slideSpeed = 
+        slideSpeed =
           // don't let character move out of screen to the left
           -(this.positionBeforeAnimation.left - constants.slideSpeed >= 0
             ? constants.slideSpeed
@@ -61,7 +63,7 @@ export default {
       } else {
         // if character is moving to the right
         slideSpeed =
-        // don't let character move out of screen to the right
+          // don't let character move out of screen to the right
           this.positionBeforeAnimation.right - constants.slideSpeed >= 0
             ? constants.slideSpeed
             : this.positionBeforeAnimation.right +
@@ -69,44 +71,48 @@ export default {
       }
       return slideSpeed;
     },
-    rollSpeed: function() {
+    rollSpeed: function () {
       let rollSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
-        rollSpeed = 
+        rollSpeed =
           // don't let character move out of screen to the left
           -(this.positionBeforeAnimation.left - constants.rollSpeed >= 0
             ? constants.rollSpeed
-            : this.positionBeforeAnimation.left + constants.playAreaBorderLimitOffset);
+            : this.positionBeforeAnimation.left +
+              constants.playAreaBorderLimitOffset);
       } else {
         // if character is moving to the right
         rollSpeed =
           // don't let character move out of screen to the right
           this.positionBeforeAnimation.right - constants.rollSpeed >= 0
             ? constants.rollSpeed
-            : this.positionBeforeAnimation.right + constants.playAreaBorderLimitOffset;
+            : this.positionBeforeAnimation.right +
+              constants.playAreaBorderLimitOffset;
       }
       return rollSpeed;
     },
-    runSpeed: function() {
+    runSpeed: function () {
       let runSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
-        runSpeed = 
+        runSpeed =
           // don't let character move out of screen to the left
           -(this.positionBeforeAnimation.left - constants.runSpeed >= 0
             ? constants.runSpeed
-            : this.positionBeforeAnimation.left + constants.playAreaBorderLimitOffset);
+            : this.positionBeforeAnimation.left +
+              constants.playAreaBorderLimitOffset);
       } else {
         // if character is moving to the right
         runSpeed =
           // don't let character move out of screen to the right
           this.positionBeforeAnimation.right - constants.runSpeed >= 0
             ? constants.runSpeed
-            : this.positionBeforeAnimation.right + constants.playAreaBorderLimitOffset;
+            : this.positionBeforeAnimation.right +
+              constants.playAreaBorderLimitOffset;
       }
       return runSpeed;
-    }
+    },
   },
   created() {
     this.currentModifications = this.modifications;
@@ -174,14 +180,17 @@ export default {
       this.characterAnimation.updateAnimation(action);
       setTimeout(() => {
         const action = characterActions.idle;
-        this.initiateAction(action)
+        this.initiateAction(action);
         this.characterAnimation.updateAnimation(action);
-      }, constants.dizzinessDuration)
+      }, constants.dizzinessDuration);
     },
     moveRight() {
       if (this.isFacingToTheLeft) {
         // if the character is facing the opposite direction
-        if (!this.animationCompleted && this.lastTriggeredAnimation !== characterActions.idle) {
+        if (
+          !this.animationCompleted &&
+          this.lastTriggeredAnimation !== characterActions.idle
+        ) {
           // and the animation has not finished yet, stop the action but leave the character facing the same direction
           this.stopAction();
         } else {
@@ -205,7 +214,10 @@ export default {
     moveLeft() {
       if (this.isFacingToTheRight) {
         // if the character is facing the opposite direction
-        if (!this.animationCompleted && this.lastTriggeredAnimation !== characterActions.idle) {
+        if (
+          !this.animationCompleted &&
+          this.lastTriggeredAnimation !== characterActions.idle
+        ) {
           // and the animation has not finished yet, stop the action but leave the character facing the same direction
           this.stopAction();
         } else {
@@ -224,7 +236,7 @@ export default {
       // set appropriate spritesheet
       this.characterAnimation.updateAnimation(action);
       // move character to appropriate position
-      this.moveToNewPosition(action.name); 
+      this.moveToNewPosition(action.name);
     },
     initiateAction(action) {
       this.lastTriggeredAnimation = action;
@@ -238,24 +250,20 @@ export default {
       // stop any remaining movement
       this.positionBeforeAnimation = this.getCurrentPosition();
       this.position = {
-        left: this.positionBeforeAnimation.left + "px",
+        left: this.positionBeforeAnimation.left + 'px',
       };
     },
     turnToLeft() {
       this.currentModifications = {
         mode: constants.characterModes.enemy,
       };
-      this.characterAnimation.updateModification(
-        this.currentModifications
-      );
+      this.characterAnimation.updateModification(this.currentModifications);
     },
     turnToRight() {
       this.currentModifications = {
         mode: constants.characterModes.player,
       };
-      this.characterAnimation.updateModification(
-        this.currentModifications
-      );
+      this.characterAnimation.updateModification(this.currentModifications);
     },
     moveToNewPosition(action) {
       this.positionBeforeAnimation = this.getCurrentPosition();
@@ -274,7 +282,7 @@ export default {
       }
 
       this.position = {
-        left: this.positionBeforeAnimation.left + speed + "px",
+        left: this.positionBeforeAnimation.left + speed + 'px',
       };
     },
     getCurrentPosition() {
@@ -289,10 +297,7 @@ export default {
     },
     calculateInitialPosition() {
       this.position = {
-        left:
-          this.isFacingToTheLeft
-            ? "calc(100% - 300px)"
-            : "0px",
+        left: this.isFacingToTheLeft ? 'calc(100% - 300px)' : '0px',
       };
     },
     animationComplete(runningAnimation) {
@@ -300,9 +305,11 @@ export default {
       this.$emit('animationStarted', runningAnimation);
     },
     facingDirection() {
-      return this.currentModifications?.mode === constants.characterModes.player? 'right' : 'left';
-    }
-  }
+      return this.currentModifications?.mode === constants.characterModes.player
+        ? 'right'
+        : 'left';
+    },
+  },
 };
 </script>
 <style lang="scss">

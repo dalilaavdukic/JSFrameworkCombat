@@ -5,5 +5,5 @@ export default {
   slide: 40, // 'down arrow key', // roll and move forward,
   attack: 65, // 'a', // play attack animation, if close to other character decrease health
   shoot: 83, // 's', // play shoot animation, if on same height in facing correct direction decrease health
-  roll: 68, //'d', // play roll animation, move forwward, decrease health if colides with other character
-}
+  roll: 68 //'d', // play roll animation, move forwward, decrease health if colides with other character
+};

@@ -35,7 +35,7 @@ const state = {
 const mutations = {
   damagePlayersHealth(state, damage) {
     state.player.health -= damage;
-    if (state.player.health < 15 && state.player.health > 0 && !state.player.hasBeenDizzy) {
+    if (state.player.health < constants.dizzyHealth && state.player.health > 0 && !state.player.hasBeenDizzy) {
       EventBus.$emit('player-dizzy');
       state.player.hasBeenDizzy = true;
     } else if (state.player.health <= 0) {
@@ -45,7 +45,7 @@ const mutations = {
   },
   damageEnemysHealth(state, damage) {
     state.enemy.health -= damage;
-    if (state.enemy.health < 15 && state.enemy.health > 0 && !state.enemy.hasBeenDizzy) {
+    if (state.enemy.health < constants.dizzyHealth && state.enemy.health > 0 && !state.enemy.hasBeenDizzy) {
       EventBus.$emit('enemy-dizzy');
       state.enemy.hasBeenDizzy = true;
     } else if (state.enemy.health <= 0) {
@@ -92,9 +92,11 @@ const mutations = {
   },
   resetPlayersSpecialAttack(state) {
     state.player.specialAttack = 0;
+    state.player.canUseSpecialAttack = false;
   },
   resetEnemysSpecialAttack(state) {
     state.enemy.specialAttack = 0;
+    state.enemy.canUseSpecialAttack = false;
   },
   chooseCharacter(state, payload) {
     state[payload.type].character = payload.character
