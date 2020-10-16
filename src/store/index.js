@@ -86,7 +86,8 @@ const mutations = {
   },
   decreaseEnemysSpecialAttack(state) {
     state.enemy.specialAttack -= constants.specialAttackDecreaseAmount;
-    if (state.enemy.specialAttack === 0) {
+    if (state.enemy.specialAttack <= 0) {
+      state.enemy.specialAttack = 0;
       state.enemy.canUseSpecialAttack = false;
     }
   },

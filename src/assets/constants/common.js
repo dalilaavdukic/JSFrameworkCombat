@@ -20,6 +20,7 @@ export default {
   specialAttackMaxValue: 100,
   dizzinessDuration: 3000, // ms
   dizzyHealth: 15,
-  specialAttackIncreaseInterval: 2000, // ms
-  oponentAttackInterval: 2000, // ms
+  specialAttackIncreaseInterval: 3000, // ms
+  oponentFightInterval: 2000, // ms
+  damageHeight: 150
 };

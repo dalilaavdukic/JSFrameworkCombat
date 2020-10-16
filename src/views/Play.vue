@@ -16,6 +16,8 @@
         <oponent
           ref="enemy"
           :character="enemy.character.name"
+          :positions="positions"
+          @positionRequest="getPositions()"
           @attack="enemyAttacked()"
           @shoot="enemyShot()"
         ></oponent>
@@ -42,6 +44,10 @@ export default {
     return {
       constants: constants,
       specialAttackInterval: undefined,
+      positions: {
+        player: {},
+        enemy: {}
+      }
     };
   },
   created() {
@@ -97,10 +103,30 @@ export default {
       this.decreaseEnemysSpecialAttack(constants.specialAttackDecreaseAmount);
     },
     getPosition(mode) {
-      return {
+      const position = {
         top: this.$refs[mode].$el.offsetTop,
         left: this.$refs[mode].$el.offsetLeft,
-      };
+      }
+
+      if (mode === 'player') {
+        this.playerPosition = position;
+      } else {
+        this.enemyPosition = position;
+      }
+
+      return position;
+    },
+    getPositions() {
+      this.positions = {
+        enemy: {
+          top: this.$refs.enemy.$el.offsetTop,
+          left: this.$refs.enemy.$el.offsetLeft,
+        },
+        player: {
+          top: this.$refs.player.$el.offsetTop,
+          left: this.$refs.player.$el.offsetLeft,
+        }
+      }
     },
     attackCanDamageEnemy() {
       if (
@@ -109,9 +135,8 @@ export default {
       ) {
         return false;
       }
-      const playerPosition = this.getPosition('player');
-      const enemyPosition = this.getPosition('enemy');
-      const distance = enemyPosition.left - playerPosition.left;
+      this.getPositions();
+      const distance = this.positions.enemy.left - this.positions.player.left;
       if (this.player.facingDirection === 'right') {
         return (
           distance > 0 && distance <= constants.minimumAttackDamageDistance
@@ -129,11 +154,10 @@ export default {
       ) {
         return false;
       }
-      const playerPosition = this.getPosition('player');
-      const enemyPosition = this.getPosition('enemy');
-      const heightDifference = enemyPosition.top - playerPosition.top;
-      const distance = enemyPosition.left - playerPosition.left;
-      if (Math.abs(heightDifference) < 150) {
+      this.getPositions();
+      const heightDifference = this.positions.enemy.top - this.positions.player.top;
+      const distance = this.positions.enemy.left - this.positions.player.left;
+      if (Math.abs(heightDifference) < constants.damageHeight) {
         if (this.player.facingDirection === 'right') {
           return distance > 0;
         } else {
@@ -149,9 +173,8 @@ export default {
       ) {
         return false;
       }
-      const playerPosition = this.getPosition('player');
-      const enemyPosition = this.getPosition('enemy');
-      const distance = playerPosition.left - enemyPosition.left;
+      this.getPositions();
+      const distance = this.positions.player.left - this.positions.enemy.left;
       if (this.enemy.facingDirection === 'right') {
         return (
           distance > 0 && distance <= constants.minimumAttackDamageDistance
@@ -169,11 +192,10 @@ export default {
       ) {
         return false;
       }
-      const playerPosition = this.getPosition('player');
-      const enemyPosition = this.getPosition('enemy');
-      const heightDifference = playerPosition.top - enemyPosition.top;
-      const distance = playerPosition.left - enemyPosition.left;
-      if (Math.abs(heightDifference) < 150) {
+      this.getPositions();
+      const heightDifference = this.positions.player.top - this.positions.enemy.top;
+      const distance = this.positions.player.left - this.positions.enemy.left;
+      if (Math.abs(heightDifference) < constants.damageHeight) {
         if (this.enemy.facingDirection === 'right') {
           return distance > 0;
         } else {
