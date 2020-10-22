@@ -44,25 +44,33 @@ export default {
     },
     animate() {
       requestAnimationFrame(this.animate);
+      // update sprite, move to next image
       const animationCompleted = this.characterSprite.update();
       if (animationCompleted) {
+        // if animation is completed and die animation has been played, play dead animation
         if (this.currentAnimation === characterActions.die) {
           this.currentAnimation = characterActions.dead;
         } else {
+        // else if some other animation has been completed play default (idle) animation
           this.currentAnimation = this.defaultAnimation;
         }
+        // let parent component know that past animation has completed, and let it know what the new animation is
         this.$emit('animationComplete', this.currentAnimation);
+        // get new sprite
         this.getSprite();
       }
       this.characterSprite.render();
     },
     getSprite() {
+      // if a modification (enemy, loop) has been provided use it
       if (this.currentModifications?.mode)
         this.characterMode = this.currentModifications.mode;
+      // get correct sprite image from image resources
       this.characterImage =
         gameAssetsService.assets.characters[this.characterMode][this.character][
           this.currentAnimation.name
         ];
+      // create sprite object, responsible for rendering one frame of the sprite at a time
       this.characterSprite = sprite({
         context: this.canvas.getContext('2d'),
         width: this.width * this.currentAnimation.numberOfFrames,
@@ -75,6 +83,7 @@ export default {
             ? this.currentModifications.loop
             : this.currentAnimation.loop,
       });
+      // render first image
       this.characterSprite.render();
     },
     updateAnimation(animation) {

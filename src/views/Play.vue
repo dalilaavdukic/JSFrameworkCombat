@@ -216,7 +216,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('~@/assets/worlds/bg7.png');
+    background-image: url('~@/assets/worlds/boxingRing.jpg');
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -240,7 +240,7 @@ export default {
     .playable-area {
       position: relative;
       width: 100%;
-      height: 74.5%;
+      height: 75%;
     }
   }
 }

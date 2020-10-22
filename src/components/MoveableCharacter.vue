@@ -179,9 +179,12 @@ export default {
       // set appropriate spritesheet
       this.characterAnimation.updateAnimation(action);
       setTimeout(() => {
-        const action = characterActions.idle;
-        this.initiateAction(action);
-        this.characterAnimation.updateAnimation(action);
+        // if character isn't already dead, return to idle animation
+        if(this.lastTriggeredAnimation !== characterActions.die) {
+          const action = characterActions.idle;
+          this.initiateAction(action);
+          this.characterAnimation.updateAnimation(action);
+        }
       }, constants.dizzinessDuration);
     },
     moveRight() {
@@ -301,7 +304,9 @@ export default {
       };
     },
     animationComplete(runningAnimation) {
+      // last animation has been completed
       this.animationCompleted = true;
+      // emit newly started animation so it can be saved in the store
       this.$emit('animationStarted', runningAnimation);
     },
     facingDirection() {
