@@ -39,6 +39,68 @@ export default {
   components: { Player, Oponent, PlayersBars },
   computed: {
     ...mapGetters(['player', 'enemy']),
+    distance: function () {
+      return this.positions.enemy.left - this.positions.player.left;
+    },
+    heightDifference: function () {
+      return this.positions.enemy.top - this.positions.player.top;
+    },
+    enemyIsFacingPlayer: function () {
+      const playerSide = this.distance > 0 ? 'left' : 'right';
+      return this.enemy.facingDirection === playerSide;
+    },
+    playerIsFacingEnemy: function () {
+      const enemySide = this.distance < 0 ? 'left' : 'right'
+      return this.player.facingDirection === enemySide;
+    },
+    attackCanDamageEnemy: function () {
+      if (
+        this.enemy.currentAnimation === characterActions.roll ||
+        this.enemy.currentAnimation === characterActions.slide
+      ) {
+        return false;
+      }
+      return (
+        Math.abs(this.distance) <= constants.minimumAttackDamageDistance &&
+        this.playerIsFacingEnemy
+      );
+    },
+    attackCanDamagePlayer: function () {
+      if (
+        this.player.currentAnimation === characterActions.roll ||
+        this.player.currentAnimation === characterActions.slide
+      ) {
+        return false;
+      }
+      return (
+        Math.abs(this.distance) <= constants.minimumAttackDamageDistance &&
+        this.enemyIsFacingPlayer
+      );
+    },
+    shotCanDamageEnemy: function () {
+      if (
+        this.enemy.currentAnimation === characterActions.roll ||
+        this.enemy.currentAnimation === characterActions.slide
+      ) {
+        return false;
+      }
+      return (
+        Math.abs(this.heightDifference) < constants.damageHeight &&
+        this.playerIsFacingEnemy
+      );
+    },
+    shotCanDamagePlayer: function () {
+      if (
+        this.player.currentAnimation === characterActions.roll ||
+        this.player.currentAnimation === characterActions.slide
+      ) {
+        return false;
+      }
+      return (
+        Math.abs(this.heightDifference) < constants.damageHeight &&
+        this.enemyIsFacingPlayer
+      );
+    },
   },
   data() {
     return {
@@ -46,8 +108,8 @@ export default {
       specialAttackInterval: undefined,
       positions: {
         player: {},
-        enemy: {}
-      }
+        enemy: {},
+      },
     };
   },
   created() {
@@ -83,24 +145,28 @@ export default {
     ]),
     playerAttacked() {
       // emit event that player has attacked so enemy can react
-      if (this.attackCanDamageEnemy()) {
+      this.getPositions();
+      if (this.attackCanDamageEnemy) {
         this.damageEnemysHealth(constants.attackDamageHealthAmount);
       }
     },
     playerShot() {
       // emit event that play has shot so enemy can react
-      if (this.shotCanDamageEnemy()) {
+      this.getPositions();
+      if (this.shotCanDamageEnemy) {
         this.damageEnemysHealth(constants.shotDamageHealthAmount);
       }
       this.decreasePlayersSpecialAttack(constants.specialAttackDecreaseAmount);
     },
     enemyAttacked() {
-      if (this.attackCanDamagePlayer()) {
+      this.getPositions();
+      if (this.attackCanDamagePlayer) {
         this.damagePlayersHealth(constants.attackDamageHealthAmount);
       }
     },
     enemyShot() {
-      if (this.shotCanDamagePlayer()) {
+      this.getPositions();
+      if (this.shotCanDamagePlayer) {
         this.damagePlayersHealth(constants.shotDamageHealthAmount);
       }
       this.decreaseEnemysSpecialAttack(constants.specialAttackDecreaseAmount);
@@ -114,84 +180,8 @@ export default {
         player: {
           top: this.$refs.player.$el.offsetTop,
           left: this.$refs.player.$el.offsetLeft,
-        }
-      }
-    },
-    attackCanDamageEnemy() {
-      if (
-        this.enemy.currentAnimation === characterActions.roll ||
-        this.enemy.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      this.getPositions();
-      const distance = this.positions.enemy.left - this.positions.player.left;
-      if (this.player.facingDirection === 'right') {
-        return (
-          distance > 0 && distance <= constants.minimumAttackDamageDistance
-        );
-      } else {
-        return (
-          distance >= -constants.minimumAttackDamageDistance && distance < 0
-        );
-      }
-    },
-    shotCanDamageEnemy() {
-      if (
-        this.enemy.currentAnimation === characterActions.roll ||
-        this.enemy.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      this.getPositions();
-      const heightDifference = this.positions.enemy.top - this.positions.player.top;
-      const distance = this.positions.enemy.left - this.positions.player.left;
-      if (Math.abs(heightDifference) < constants.damageHeight) {
-        if (this.player.facingDirection === 'right') {
-          return distance > 0;
-        } else {
-          return distance < 0;
-        }
-      }
-      return false;
-    },
-    attackCanDamagePlayer() {
-      if (
-        this.player.currentAnimation === characterActions.roll ||
-        this.player.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      this.getPositions();
-      const distance = this.positions.player.left - this.positions.enemy.left;
-      if (this.enemy.facingDirection === 'right') {
-        return (
-          distance > 0 && distance <= constants.minimumAttackDamageDistance
-        );
-      } else {
-        return (
-          distance >= -constants.minimumAttackDamageDistance && distance < 0
-        );
-      }
-    },
-    shotCanDamagePlayer() {
-      if (
-        this.player.currentAnimation === characterActions.roll ||
-        this.player.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      this.getPositions();
-      const heightDifference = this.positions.player.top - this.positions.enemy.top;
-      const distance = this.positions.player.left - this.positions.enemy.left;
-      if (Math.abs(heightDifference) < constants.damageHeight) {
-        if (this.enemy.facingDirection === 'right') {
-          return distance > 0;
-        } else {
-          return distance < 0;
-        }
-      }
-      return false;
+        },
+      };
     },
   },
 };
