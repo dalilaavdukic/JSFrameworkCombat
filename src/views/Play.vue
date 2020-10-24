@@ -58,6 +58,9 @@ export default {
       }
     }, constants.specialAttackIncreaseInterval);
   },
+  mounted() {
+    this.getPositions();
+  },
   destroyed() {
     this.resetEnemysSpecialAttack();
     this.resetPlayersSpecialAttack();
