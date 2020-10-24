@@ -14,13 +14,13 @@ export default {
   playAreaBorderLimitOffset: 100,
   minimumAttackDamageDistance: 140,
   attackDamageHealthAmount: 5,
-  shotDamageHealthAmount: 10,
+  shotDamageHealthAmount: 20,
   specialAttackIncreaseAmount: 10,
   specialAttackDecreaseAmount: 50,
   specialAttackMaxValue: 100,
   dizzinessDuration: 3000, // ms
   dizzyHealth: 15,
-  specialAttackIncreaseInterval: 3000, // ms
-  oponentFightInterval: 2000, // ms
+  specialAttackIncreaseInterval: 1500, // ms
+  oponentFightInterval: 800, // ms
   damageHeight: 150
 };

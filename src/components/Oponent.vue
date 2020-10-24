@@ -47,10 +47,16 @@ export default {
         this.enemy.currentAnimation !== characterActions.dizzy
       );
     },
+    alreadyAttacking: function () {
+      return (
+        this.enemy.currentAnimation === characterActions.attack ||
+        this.enemy.currentAnimation === characterActions.shoot
+      );
+    },
   },
   created() {
     this.fightInterval = setInterval(() => {
-      this.fight();
+      this.$emit('positionRequest');
     }, constants.oponentFightInterval);
   },
   mounted() {
@@ -67,14 +73,23 @@ export default {
     clearInterval(this.fightInterval);
   },
   watch: {
-    positions: function() {
-      // console.log('WATCHER', this.positions.enemy.left);
-    }
+    positions: function () {
+      this.distance = this.positions.enemy.left - this.positions.player.left;
+      this.playerSide = this.distance > 0 ? 'left' : 'right';
+      if (!this.alreadyAttacking) {
+        this.fight();
+      }
+    },
   },
   methods: {
     ...mapMutations(['setEnemysAnimation', 'setEnemysFacingDirection']),
     fight() {
       if (this.canFight) {
+        // enemy is facing away from player
+        if (this.playerSide !== this.enemy.facingDirection) {
+          // turn around
+          this.playerSide === 'right' ? this.moveRight() : this.moveLeft();
+        }
         if (this.enemy.canUseSpecialAttack) {
           this.shoot();
           return;
@@ -82,44 +97,20 @@ export default {
         this.attemptAttack();
       }
     },
-    async attemptAttack() {
-      let numOfItterations = 0;
-      let attackPerformed = false;
-
-      while (numOfItterations < 10 && !attackPerformed) {
-        numOfItterations++;
-        await this.getCurrentState();
-        // enemy is facing away from player
-        if (this.playerSide !== this.enemy.facingDirection) {
-          // turn around
-          this.playerSide === 'right'? this.moveRight() : this.moveLeft();
-        }
-        // enemy is close enough to player to attack
-        if (Math.abs(this.distance) <= constants.minimumAttackDamageDistance) {
-          this.attack();
-          attackPerformed = true;
-        } else {
+    attemptAttack() {
+      // enemy is close enough to player to attack
+      if (Math.abs(this.distance) <= constants.minimumAttackDamageDistance) {
+        this.attack();
+      } else {
         // enemy needs to move closer to player
-          this.playerSide === 'right'? this.moveRight() : this.moveLeft();
-        }
+        this.playerSide === 'right' ? this.moveRight() : this.moveLeft();
       }
-    },
-    getCurrentState() {
-      return new Promise((resolve) => {
-        this.$emit('positionRequest');
-        setTimeout(()=> {
-          this.distance = this.positions.enemy.left - this.positions.player.left;
-          this.playerSide = this.distance > 0? 'left' : 'right';
-          resolve();
-        }, 500)
-      })
     },
     attack() {
       this.characterRef.attack();
       this.$emit('attack');
     },
     shoot() {
-      this.faceCorrectDirection();
       this.characterRef.shoot();
       this.$emit('shoot');
     },
@@ -130,23 +121,6 @@ export default {
     moveRight() {
       this.characterRef.moveRight();
       this.setEnemysFacingDirection(this.characterRef.facingDirection());
-    },
-    faceCorrectDirection() {
-      this.$emit('positionRequest');
-      const distance = this.positions.enemy.left - this.positions.player.left;
-      // if player is to the left of the enemy
-      if (distance > 0) {
-        // but enemy is facing right
-        if (this.enemy.facingDirection === 'right') {
-          this.moveLeft();
-        }
-      // else, player is to the right of the enemy  
-      } else {
-        // but enemy is facing left
-        if (this.enemy.facingDirection === 'left') {
-          this.moveRight();
-        }
-      }
     },
   },
 };

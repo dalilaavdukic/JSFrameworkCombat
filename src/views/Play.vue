@@ -105,20 +105,6 @@ export default {
       }
       this.decreaseEnemysSpecialAttack(constants.specialAttackDecreaseAmount);
     },
-    getPosition(mode) {
-      const position = {
-        top: this.$refs[mode].$el.offsetTop,
-        left: this.$refs[mode].$el.offsetLeft,
-      }
-
-      if (mode === 'player') {
-        this.playerPosition = position;
-      } else {
-        this.enemyPosition = position;
-      }
-
-      return position;
-    },
     getPositions() {
       this.positions = {
         enemy: {
