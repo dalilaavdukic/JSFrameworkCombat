@@ -16,7 +16,6 @@
         <oponent
           ref="enemy"
           :character="enemy.character.name"
-          :positions="positions"
           @positionRequest="getPositions()"
           @attack="enemyAttacked()"
           @shoot="enemyShot()"
@@ -32,84 +31,17 @@ import Player from '@/components/Player';
 import Oponent from '@/components/Oponent';
 import PlayersBars from '@/components/PlayersBars';
 import constants from '@/assets/constants/common';
-import characterActions from '@/assets/constants/characterActions';
 
 export default {
   name: 'Play',
   components: { Player, Oponent, PlayersBars },
   computed: {
-    ...mapGetters(['player', 'enemy']),
-    distance: function () {
-      return this.positions.enemy.left - this.positions.player.left;
-    },
-    heightDifference: function () {
-      return this.positions.enemy.top - this.positions.player.top;
-    },
-    enemyIsFacingPlayer: function () {
-      const playerSide = this.distance > 0 ? 'left' : 'right';
-      return this.enemy.facingDirection === playerSide;
-    },
-    playerIsFacingEnemy: function () {
-      const enemySide = this.distance < 0 ? 'left' : 'right'
-      return this.player.facingDirection === enemySide;
-    },
-    attackCanDamageEnemy: function () {
-      if (
-        this.enemy.currentAnimation === characterActions.roll ||
-        this.enemy.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      return (
-        Math.abs(this.distance) <= constants.minimumAttackDamageDistance &&
-        this.playerIsFacingEnemy
-      );
-    },
-    attackCanDamagePlayer: function () {
-      if (
-        this.player.currentAnimation === characterActions.roll ||
-        this.player.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      return (
-        Math.abs(this.distance) <= constants.minimumAttackDamageDistance &&
-        this.enemyIsFacingPlayer
-      );
-    },
-    shotCanDamageEnemy: function () {
-      if (
-        this.enemy.currentAnimation === characterActions.roll ||
-        this.enemy.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      return (
-        Math.abs(this.heightDifference) < constants.damageHeight &&
-        this.playerIsFacingEnemy
-      );
-    },
-    shotCanDamagePlayer: function () {
-      if (
-        this.player.currentAnimation === characterActions.roll ||
-        this.player.currentAnimation === characterActions.slide
-      ) {
-        return false;
-      }
-      return (
-        Math.abs(this.heightDifference) < constants.damageHeight &&
-        this.enemyIsFacingPlayer
-      );
-    },
+    ...mapGetters(['player', 'enemy', 'game']),
   },
   data() {
     return {
       constants: constants,
-      specialAttackInterval: undefined,
-      positions: {
-        player: {},
-        enemy: {},
-      },
+      specialAttackInterval: undefined
     };
   },
   created() {
@@ -142,37 +74,38 @@ export default {
       'decreaseEnemysSpecialAttack',
       'resetPlayersSpecialAttack',
       'resetEnemysSpecialAttack',
+      'setPositions'
     ]),
     playerAttacked() {
       // emit event that player has attacked so enemy can react
       this.getPositions();
-      if (this.attackCanDamageEnemy) {
+      if (this.game.attackCanDamageEnemy) {
         this.damageEnemysHealth(constants.attackDamageHealthAmount);
       }
     },
     playerShot() {
       // emit event that play has shot so enemy can react
       this.getPositions();
-      if (this.shotCanDamageEnemy) {
+      if (this.game.shotCanDamageEnemy) {
         this.damageEnemysHealth(constants.shotDamageHealthAmount);
       }
       this.decreasePlayersSpecialAttack(constants.specialAttackDecreaseAmount);
     },
     enemyAttacked() {
       this.getPositions();
-      if (this.attackCanDamagePlayer) {
+      if (this.game.attackCanDamagePlayer) {
         this.damagePlayersHealth(constants.attackDamageHealthAmount);
       }
     },
     enemyShot() {
       this.getPositions();
-      if (this.shotCanDamagePlayer) {
+      if (this.game.shotCanDamagePlayer) {
         this.damagePlayersHealth(constants.shotDamageHealthAmount);
       }
       this.decreaseEnemysSpecialAttack(constants.specialAttackDecreaseAmount);
     },
     getPositions() {
-      this.positions = {
+      const positions = {
         enemy: {
           top: this.$refs.enemy.$el.offsetTop,
           left: this.$refs.enemy.$el.offsetLeft,
@@ -182,6 +115,7 @@ export default {
           left: this.$refs.player.$el.offsetLeft,
         },
       };
+      this.setPositions(positions);
     },
   },
 };

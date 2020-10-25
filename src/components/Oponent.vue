@@ -24,22 +24,16 @@ export default {
     modifications: {
       type: Object,
       default: () => ({ mode: constants.characterModes.enemy }),
-    },
-    positions: {
-      type: Object,
-      required: true,
-    },
+    }
   },
   data() {
     return {
       characterRef: undefined,
-      fightInterval: undefined,
-      distance: 0,
-      playerSide: '',
+      fightInterval: undefined
     };
   },
   computed: {
-    ...mapGetters(['enemy', 'player']),
+    ...mapGetters(['enemy', 'player', 'game', 'positions']),
     canFight: function () {
       return (
         this.player.health > 0 &&
@@ -53,6 +47,9 @@ export default {
         this.enemy.currentAnimation === characterActions.shoot
       );
     },
+    playerSide: function () {
+      return this.game.distance > 0 ? 'left' : 'right';
+    }
   },
   created() {
     this.fightInterval = setInterval(() => {
@@ -74,8 +71,6 @@ export default {
   },
   watch: {
     positions: function () {
-      this.distance = this.positions.enemy.left - this.positions.player.left;
-      this.playerSide = this.distance > 0 ? 'left' : 'right';
       if (!this.alreadyAttacking) {
         this.fight();
       }
@@ -86,7 +81,7 @@ export default {
     fight() {
       if (this.canFight) {
         // enemy is facing away from player
-        if (this.playerSide !== this.enemy.facingDirection) {
+        if (!this.game.enemyIsFacingPlayer) {
           // turn around
           this.playerSide === 'right' ? this.moveRight() : this.moveLeft();
         }
@@ -99,7 +94,7 @@ export default {
     },
     attemptAttack() {
       // enemy is close enough to player to attack
-      if (Math.abs(this.distance) <= constants.minimumAttackDamageDistance) {
+      if (Math.abs(this.game.distance) <= constants.minimumAttackDamageDistance) {
         this.attack();
       } else {
         // enemy needs to move closer to player
