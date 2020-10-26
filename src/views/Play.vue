@@ -1,9 +1,12 @@
 <template>
   <div class="play-container">
-    <div v-if="timeLeft > 0" class="start-game-counter-overlay"></div>
-    <div v-if="timeLeft > 0" class="start-game-counter">
-      <div class="counter-number">
+    <div v-if="timeLeft > 0 || game.over" class="overlay"></div>
+    <div class="overlay-content">
+      <div v-if="timeLeft > 0" class="counter-number">
         {{ timeLeft }}
+      </div>
+      <div v-if="game.over" class="game-over">
+        <game-over></game-over>
       </div>
     </div>
     <div class="game-world-bg"></div>
@@ -36,12 +39,13 @@ import { mapGetters, mapMutations } from 'vuex';
 import Player from '@/components/Player';
 import Oponent from '@/components/Oponent';
 import PlayersBars from '@/components/PlayersBars';
+import GameOver from '@/components/GameOver';
 import constants from '@/assets/constants/common';
 import EventBus from '@/utils/eventBus';
 
 export default {
   name: 'Play',
-  components: { Player, Oponent, PlayersBars },
+  components: { Player, Oponent, PlayersBars, GameOver },
   computed: {
     ...mapGetters(['player', 'enemy', 'game']),
   },
@@ -144,7 +148,7 @@ export default {
 
 <style lang="scss" scoped>
 .play-container {
-  .start-game-counter-overlay {
+  .overlay {
     opacity: 0.5;
     background: #000;
     width: 100%;
@@ -154,7 +158,7 @@ export default {
     left: 0;
     position: fixed;
   }
-  .start-game-counter {
+  .overlay-content {
     width: 100%;
     height: 100%;
     z-index: 11;
@@ -164,7 +168,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    .counter-number {
+    .counter-number, .game-over {
       color: white;
       font-size: 3rem;
       opacity: 1;

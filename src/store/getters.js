@@ -73,6 +73,9 @@ export default {
       getters.enemyIsFacingPlayer
     );
   },
+  gameOver: (state) => {
+    return state.enemy.health <= 0 || state.player.health <= 0;
+  },
   game: (state, getters) => {
     return {
       distance: getters.distance,
@@ -81,7 +84,8 @@ export default {
       attackCanDamageEnemy: getters.attackCanDamageEnemy,
       attackCanDamagePlayer: getters.attackCanDamagePlayer,
       shotCanDamageEnemy: getters.shotCanDamageEnemy,
-      shotCanDamagePlayer: getters.shotCanDamagePlayer
+      shotCanDamagePlayer: getters.shotCanDamagePlayer,
+      over: getters.gameOver
     };
   },
   assetsLoaded: state => {

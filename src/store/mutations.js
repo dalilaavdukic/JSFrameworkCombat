@@ -1,7 +1,15 @@
 import constants from '@/assets/constants/common';
 import EventBus from '@/utils/eventBus';
+import initialState from './initialState';
 
 export default {
+  resetGame(state) {
+    console.log('reset game called');
+    state = {...state};
+    state.player = initialState.player;
+    state.enemy = initialState.enemy;
+    state.positions = initialState.positions;
+  },
   damagePlayersHealth(state, damage) {
     state.player.health -= damage;
     if (

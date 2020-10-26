@@ -16,8 +16,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 import characterActions from '@/assets/constants/characterActions';
 import CharacterAnimation from '@/components/CharacterAnimation';
