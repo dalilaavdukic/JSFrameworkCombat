@@ -31,6 +31,7 @@ import Player from '@/components/Player';
 import Oponent from '@/components/Oponent';
 import PlayersBars from '@/components/PlayersBars';
 import constants from '@/assets/constants/common';
+import EventBus from '@/utils/eventBus';
 
 export default {
   name: 'Play',
@@ -78,13 +79,15 @@ export default {
     ]),
     playerAttacked() {
       // emit event that player has attacked so enemy can react
+      EventBus.$emit('player-attacked');
       this.getPositions();
       if (this.game.attackCanDamageEnemy) {
         this.damageEnemysHealth(constants.attackDamageHealthAmount);
       }
     },
     playerShot() {
-      // emit event that play has shot so enemy can react
+      // emit event that player has shot so enemy can react
+      EventBus.$emit('player-shot');
       this.getPositions();
       if (this.game.shotCanDamageEnemy) {
         this.damageEnemysHealth(constants.shotDamageHealthAmount);

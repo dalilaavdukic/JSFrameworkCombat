@@ -13,6 +13,9 @@ import EventBus from '@/utils/eventBus';
 import characterActions from '@/assets/constants/characterActions';
 import { mapGetters, mapMutations } from 'vuex';
 
+const availableActionsForEvadingAttacks = ['roll', 'slide'];
+const availableActionsForEvadingShots = ['roll', 'slide', 'jump'];
+
 export default {
   name: 'Oponent',
   components: { MoveableCharacter },
@@ -24,12 +27,12 @@ export default {
     modifications: {
       type: Object,
       default: () => ({ mode: constants.characterModes.enemy }),
-    }
+    },
   },
   data() {
     return {
       characterRef: undefined,
-      fightInterval: undefined
+      fightInterval: undefined,
     };
   },
   computed: {
@@ -47,9 +50,16 @@ export default {
         this.enemy.currentAnimation === characterActions.shoot
       );
     },
+    evadingAttack: function () {
+      return (
+        this.enemy.currentAnimation === characterActions.roll ||
+        this.enemy.currentAnimation === characterActions.slide ||
+        this.enemy.currentAnimation === characterActions.jump
+      )
+    },
     playerSide: function () {
       return this.game.distance > 0 ? 'left' : 'right';
-    }
+    },
   },
   created() {
     this.fightInterval = setInterval(() => {
@@ -65,13 +75,19 @@ export default {
     EventBus.$on('enemy-dizzy', () => {
       this.characterRef.dizzy();
     });
+    EventBus.$on('player-attacked', () => {
+      this.reactToPlayerAttack();
+    });
+    EventBus.$on('player-shot', () => {
+      this.reactToPlayerShot();
+    });
   },
   destroyed() {
     clearInterval(this.fightInterval);
   },
   watch: {
     positions: function () {
-      if (!this.alreadyAttacking) {
+      if (!this.alreadyAttacking && !this.evadingAttack) {
         this.fight();
       }
     },
@@ -94,7 +110,9 @@ export default {
     },
     attemptAttack() {
       // enemy is close enough to player to attack
-      if (Math.abs(this.game.distance) <= constants.minimumAttackDamageDistance) {
+      if (
+        Math.abs(this.game.distance) <= constants.minimumAttackDamageDistance
+      ) {
         this.attack();
       } else {
         // enemy needs to move closer to player
@@ -116,6 +134,48 @@ export default {
     moveRight() {
       this.characterRef.moveRight();
       this.setEnemysFacingDirection(this.characterRef.facingDirection());
+    },
+    shouldEvadeAttack() {
+      return Math.random() < 0.5;
+    },
+    reactToPlayerShot() {
+      if (!this.evadingAttack && this.shouldEvadeAttack()) {
+        const response = this.getRandomAttackResponse('shoot');
+        switch (response) {
+          case 'roll':
+            this.characterRef.roll();
+            break;
+          case 'slide':
+            this.characterRef.slide();
+            break;
+          case 'jump':
+            this.characterRef.jump();
+            break;
+        }
+        this.characterRef.jump();
+      }
+    },
+    reactToPlayerAttack() {
+      if (
+        Math.abs(this.game.distance) <= constants.minimumAttackDamageDistance
+      ) {
+        if (!this.evadingAttack && this.shouldEvadeAttack()) {
+          const response = this.getRandomAttackResponse('attack');
+          response === 'roll'
+            ? this.characterRef.roll()
+            : this.characterRef.slide();
+        }
+      }
+    },
+    getRandomAttackResponse(attackType) {
+      const availableResponses =
+        attackType === 'shoot'
+          ? availableActionsForEvadingShots
+          : availableActionsForEvadingAttacks;
+      const arrayIndex = Math.round(
+        Math.random() * (availableResponses.length - 1)
+      );
+      return availableResponses[arrayIndex];
     },
   },
 };
