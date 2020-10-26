@@ -1,5 +1,11 @@
 <template>
   <div class="play-container">
+    <div v-if="timeLeft > 0" class="start-game-counter-overlay"></div>
+    <div v-if="timeLeft > 0" class="start-game-counter">
+      <div class="counter-number">
+        {{ timeLeft }}
+      </div>
+    </div>
     <div class="game-world-bg"></div>
     <div class="game">
       <div class="players-bars">
@@ -42,19 +48,23 @@ export default {
   data() {
     return {
       constants: constants,
-      specialAttackInterval: undefined
+      specialAttackInterval: undefined,
+      timeLeft: constants.countdownToGameSeconds,
     };
   },
-  created() {
-    this.specialAttackInterval = setInterval(() => {
-      if (this.enemy.health > 0 && this.player.health > 0) {
-        this.increasePlayersSpecialAttack();
-        this.increaseEnemysSpecialAttack();
-      }
-    }, constants.specialAttackIncreaseInterval);
-  },
   mounted() {
-    this.getPositions();
+    setTimeout(() => {
+      this.gameCountdown();
+    }, 1000);
+    setTimeout(() => {
+      this.specialAttackInterval = setInterval(() => {
+        if (this.enemy.health > 0 && this.player.health > 0) {
+          this.increasePlayersSpecialAttack();
+          this.increaseEnemysSpecialAttack();
+        }
+      }, constants.specialAttackIncreaseInterval);
+      this.getPositions();
+    }, constants.countdownToGameSeconds * 1000);
   },
   destroyed() {
     this.resetEnemysSpecialAttack();
@@ -75,7 +85,7 @@ export default {
       'decreaseEnemysSpecialAttack',
       'resetPlayersSpecialAttack',
       'resetEnemysSpecialAttack',
-      'setPositions'
+      'setPositions',
     ]),
     playerAttacked() {
       // emit event that player has attacked so enemy can react
@@ -120,12 +130,46 @@ export default {
       };
       this.setPositions(positions);
     },
+    gameCountdown() {
+      this.timeLeft--;
+      if (this.timeLeft >= 0) {
+        setTimeout(() => {
+          this.gameCountdown();
+        }, 1000);
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .play-container {
+  .start-game-counter-overlay {
+    opacity: 0.5;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    position: fixed;
+  }
+  .start-game-counter {
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+    top: 0;
+    left: 0;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .counter-number {
+      color: white;
+      font-size: 3rem;
+      opacity: 1;
+    }
+  }
   .game-world-bg {
     position: absolute;
     top: 0;

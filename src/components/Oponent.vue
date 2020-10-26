@@ -55,19 +55,21 @@ export default {
         this.enemy.currentAnimation === characterActions.roll ||
         this.enemy.currentAnimation === characterActions.slide ||
         this.enemy.currentAnimation === characterActions.jump
-      )
+      );
     },
     playerSide: function () {
       return this.game.distance > 0 ? 'left' : 'right';
     },
   },
-  created() {
-    this.fightInterval = setInterval(() => {
-      this.$emit('positionRequest');
-    }, constants.oponentFightInterval);
-  },
   mounted() {
     this.characterRef = this.$refs.moveableCharacter;
+    // wait for game countdown to finish before initiating enemy actions
+    setTimeout(() => {
+      this.fightInterval = setInterval(() => {
+        this.$emit('positionRequest');
+      }, constants.oponentFightInterval);
+    }, constants.countdownToGameSeconds * 1000);
+
     EventBus.$on('enemy-died', () => {
       this.characterRef.die();
       clearInterval(this.fightInterval);

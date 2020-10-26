@@ -12,6 +12,7 @@ import controlKeys from '@/assets/constants/controlKeys';
 import { mapMutations, mapGetters } from 'vuex';
 import EventBus from '@/utils/eventBus';
 import characterActions from '@/assets/constants/characterActions';
+import constants from '@/assets/constants/common';
 
 export default {
   name: 'Player',
@@ -30,6 +31,10 @@ export default {
   },
   mounted() {
     this.characterRef = this.$refs.moveableCharacter;
+    // wait for game countdown to finish before listening for player actions
+    setTimeout(() => {
+      window.addEventListener('keydown', this.doCommand);
+    }, constants.countdownToGameSeconds * 1000);
     EventBus.$on('player-died', () => {
       this.characterRef.die();
     });
@@ -41,9 +46,6 @@ export default {
     return {
       characterRef: undefined,
     };
-  },
-  created() {
-    window.addEventListener('keydown', this.doCommand);
   },
   destroyed() {
     window.removeEventListener('keydown', this.doCommand);

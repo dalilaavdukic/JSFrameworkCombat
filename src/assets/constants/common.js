@@ -22,5 +22,6 @@ export default {
   dizzyHealth: 15,
   specialAttackIncreaseInterval: 1500, // ms
   oponentFightInterval: 800, // ms
-  damageHeight: 150
+  damageHeight: 150,
+  countdownToGameSeconds: 5
 };
