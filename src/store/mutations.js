@@ -6,6 +6,8 @@ export default {
   exitGame(state) {
     state.player.name = '';
     state.player.character = '';
+    state.paused = false;
+    state.quitInitiated = false;
   },
   resetGame(state) {
     state.enemy.specialAttack = 0;
@@ -114,5 +116,8 @@ export default {
   },
   setPaused(state, payload) {
     state.paused = payload;
+  },
+  setQuitInitiated(state, payload) {
+    state.quitInitiated = payload;
   }
 };

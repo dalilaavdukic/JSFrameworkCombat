@@ -86,7 +86,8 @@ export default {
       shotCanDamageEnemy: getters.shotCanDamageEnemy,
       shotCanDamagePlayer: getters.shotCanDamagePlayer,
       over: getters.gameOver,
-      paused: state.paused
+      paused: state.paused,
+      quitInitiated: state.quitInitiated
     };
   },
   assetsLoaded: state => {

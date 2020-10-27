@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       characterRef: undefined,
-      paused: false,
+      paused: false
     };
   },
   destroyed() {
@@ -56,15 +56,23 @@ export default {
       'setPlayersFacingDirection',
       'setPlayersAnimation',
       'setPaused',
+      'setQuitInitiated'
     ]),
-    pauseGame() {
-      this.paused = !this.paused;
+    togglePause() {
+      this.paused = !this.game.paused;
       this.setPaused(this.paused);
+      if (!this.paused) {
+        this.setQuitInitiated(false);
+      }
+    },
+    quitGame() {
+      this.togglePause();
+      this.setQuitInitiated(true);
     },
     doCommand(e) {
       let cmd = e.keyCode;
-      if (this.paused) {
-        if (cmd === controlKeys.pause) this.pauseGame();
+      if (this.game.paused) {
+        if (cmd === controlKeys.pause || cmd === controlKeys.esc) this.togglePause();
       } else if (
         !e.repeat &&
         !this.game.over &&
@@ -99,10 +107,10 @@ export default {
             this.characterRef.roll();
             break;
           case controlKeys.pause:
-            this.pauseGame();
+            this.togglePause();
             break;
           case controlKeys.esc:
-            console.log('Quit game?');
+            this.quitGame();
             break;
         }
       }

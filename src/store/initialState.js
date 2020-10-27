@@ -27,5 +27,6 @@ export default {
     enemy: {}
   },
   paused: false,
+  quitInitiated: false,
   assetsLoaded: false
 };

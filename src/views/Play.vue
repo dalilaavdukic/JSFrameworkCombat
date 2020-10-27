@@ -9,7 +9,8 @@
         <game-over></game-over>
       </div>
       <div v-if="game.paused" class="paused">
-        Game paused, press 'Space' to resume
+        <div v-if="!game.quitInitiated">Game paused, press 'Space' to resume</div>
+        <quit-game v-else></quit-game>
       </div>
     </div>
     <div class="game-world-bg"></div>
@@ -43,12 +44,13 @@ import Player from '@/components/Player';
 import Oponent from '@/components/Oponent';
 import PlayersBars from '@/components/PlayersBars';
 import GameOver from '@/components/GameOver';
+import QuitGame from '@/components/QuitGame';
 import constants from '@/assets/constants/common';
 import EventBus from '@/utils/eventBus';
 
 export default {
   name: 'Play',
-  components: { Player, Oponent, PlayersBars, GameOver },
+  components: { Player, Oponent, PlayersBars, GameOver, QuitGame },
   computed: {
     ...mapGetters(['player', 'enemy', 'game']),
   },
