@@ -1,5 +1,6 @@
 import constants from '@/assets/constants/common';
 import EventBus from '@/utils/eventBus';
+import characters from '@/assets/constants/characters';
 
 export default {
   exitGame(state) {
@@ -81,7 +82,9 @@ export default {
     }
   },
   chooseCharacter(state, payload) {
-    state[payload.type].character = payload.character;
+    const availableOponents = Object.keys(characters).filter(character => character !== payload.name);
+    state.player.character = payload;
+    state.enemy.character = characters[availableOponents[availableOponents.length * Math.random() << 0]];
   },
   giveName(state, name) {
     state.player.name = name;

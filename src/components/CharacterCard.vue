@@ -54,11 +54,7 @@ export default {
       return characterActions[actionName];
     },
     selectCharacter() {
-      const payload = {
-        type: 'player',
-        character: this.character,
-      };
-      this.chooseCharacter(payload);
+      this.chooseCharacter(this.character);
     },
   },
 };
