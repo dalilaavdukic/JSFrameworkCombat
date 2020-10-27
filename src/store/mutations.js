@@ -1,17 +1,26 @@
 import constants from '@/assets/constants/common';
 import EventBus from '@/utils/eventBus';
-import initialState from './initialState';
 
 export default {
+  exitGame(state) {
+    state.player.name = '';
+    state.player.character = '';
+  },
   resetGame(state) {
-    console.log('reset game called');
-    state = {...state};
-    state.player = initialState.player;
-    state.enemy = initialState.enemy;
-    state.positions = initialState.positions;
+    state.enemy.specialAttack = 0;
+    state.enemy.canUseSpecialAttack = false;
+    state.player.specialAttack = 0;
+    state.player.canUseSpecialAttack = false;
+    state.player.health = 100;
+    state.player.hasBeenDizzy = false;
+    state.enemy.health = 100;
+    state.enemy.hasBeenDizzy = false;
   },
   damagePlayersHealth(state, damage) {
     state.player.health -= damage;
+    if (state.player.health <= 0) {
+      state.player.health = 0;
+    }
     if (
       state.player.health < constants.dizzyHealth &&
       state.player.health > 0 &&
@@ -26,6 +35,9 @@ export default {
   },
   damageEnemysHealth(state, damage) {
     state.enemy.health -= damage;
+    if (state.enemy.health <= 0) {
+      state.enemy.health = 0;
+    }
     if (
       state.enemy.health < constants.dizzyHealth &&
       state.enemy.health > 0 &&
@@ -37,14 +49,6 @@ export default {
       EventBus.$emit('enemy-died');
       state.enemy.hasBeenDizzy = false;
     }
-  },
-  resetPlayersHealth(state) {
-    state.player.health = 100;
-    state.player.hasBeenDizzy = false;
-  },
-  resetEnemysHealth(state) {
-    state.enemy.health = 100;
-    state.enemy.hasBeenDizzy = false;
   },
   increasePlayersSpecialAttack(state) {
     if (state.player.specialAttack < constants.specialAttackMaxValue) {
@@ -75,14 +79,6 @@ export default {
       state.enemy.specialAttack = 0;
       state.enemy.canUseSpecialAttack = false;
     }
-  },
-  resetPlayersSpecialAttack(state) {
-    state.player.specialAttack = 0;
-    state.player.canUseSpecialAttack = false;
-  },
-  resetEnemysSpecialAttack(state) {
-    state.enemy.specialAttack = 0;
-    state.enemy.canUseSpecialAttack = false;
   },
   chooseCharacter(state, payload) {
     state[payload.type].character = payload.character;

@@ -71,24 +71,18 @@ export default {
     }, constants.countdownToGameSeconds * 1000);
   },
   destroyed() {
-    this.resetEnemysSpecialAttack();
-    this.resetPlayersSpecialAttack();
-    this.resetPlayersHealth();
-    this.resetEnemysHealth();
+    this.resetGame();
     clearInterval(this.specialAttackInterval);
   },
   methods: {
     ...mapMutations([
       'damagePlayersHealth',
       'damageEnemysHealth',
-      'resetPlayersHealth',
-      'resetEnemysHealth',
+      'resetGame',
       'increasePlayersSpecialAttack',
       'increaseEnemysSpecialAttack',
       'decreasePlayersSpecialAttack',
       'decreaseEnemysSpecialAttack',
-      'resetPlayersSpecialAttack',
-      'resetEnemysSpecialAttack',
       'setPositions',
     ]),
     playerAttacked() {

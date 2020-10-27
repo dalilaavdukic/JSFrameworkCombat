@@ -1,13 +1,8 @@
 <template>
   <div class="game-over-container">
     <div>Game Over</div>
-    <router-link
-      v-for="(item, index) in items"
-      :key="index"
-      :to="item.link"
-    >
-      <div @click="resetGame()" class="game-over-item">- {{ item.label }} -</div>
-    </router-link>
+    <div @click="playAgain()" class="game-over-item">- Play again -</div>
+    <div @click="exit()" class="game-over-item">- Exit -</div>
   </div>
 </template>
 
@@ -23,7 +18,14 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(['resetGame'])
+    ...mapMutations(['exitGame']),
+    playAgain() {
+      this.$router.push('characters');
+    },
+    exit() {
+      this.exitGame();
+      this.$router.push('home');
+    }
   }
 };
 </script>
@@ -31,18 +33,16 @@ export default {
 <style lang="scss" scoped>
 .game-over-container {
   text-align: center;
-  a {
-    text-decoration: none;
-    .game-over-item {
-      color: $font-color;
-      font-size: 2rem;
-      padding: 1rem;
-      &:hover {
-        color: $js-yellow;
-      }
-      &:active {
-        color: white;
-      }
+  .game-over-item {
+    color: $font-color;
+    font-size: 2rem;
+    padding: 1rem;
+    cursor: pointer;
+    &:hover {
+      color: $js-yellow;
+    }
+    &:active {
+      color: white;
     }
   }
 }
