@@ -14,9 +14,6 @@ export default {
   distance: state => {
     return state.positions.enemy.left - state.positions.player.left;
   },
-  heightDifference: state => {
-    return state.positions.enemy.top - state.positions.player.top;
-  },
   enemyIsFacingPlayer: (state, getters) => {
     const playerSide = getters.distance > 0 ? 'left' : 'right';
     return state.enemy.facingDirection === playerSide;
@@ -28,7 +25,8 @@ export default {
   attackCanDamageEnemy: (state, getters) => {
     if (
       state.enemy.currentAnimation === characterActions.roll ||
-      state.enemy.currentAnimation === characterActions.slide
+      state.enemy.currentAnimation === characterActions.slide ||
+      state.enemy.currentAnimation === characterActions.jump
     ) {
       return false;
     }
@@ -40,7 +38,8 @@ export default {
   attackCanDamagePlayer: (state, getters) => {
     if (
       state.player.currentAnimation === characterActions.roll ||
-      state.player.currentAnimation === characterActions.slide
+      state.player.currentAnimation === characterActions.slide ||
+      state.player.currentAnimation === characterActions.jump
     ) {
       return false;
     }
@@ -49,29 +48,19 @@ export default {
       getters.enemyIsFacingPlayer
     );
   },
-  shotCanDamageEnemy: (state, getters) => {
-    if (
-      state.enemy.currentAnimation === characterActions.roll ||
-      state.enemy.currentAnimation === characterActions.slide
-    ) {
-      return false;
-    }
+  shotCanDamageEnemy: (state) => {
     return (
-      Math.abs(getters.heightDifference) < constants.damageHeight &&
-      getters.playerIsFacingEnemy
-    );
+      state.enemy.currentAnimation !== characterActions.roll &&
+      state.enemy.currentAnimation !== characterActions.slide &&
+      state.enemy.currentAnimation !== characterActions.jump
+    )
   },
-  shotCanDamagePlayer: (state, getters) => {
-    if (
-      state.player.currentAnimation === characterActions.roll ||
-      state.player.currentAnimation === characterActions.slide
-    ) {
-      return false;
-    }
+  shotCanDamagePlayer: (state) => {
     return (
-      Math.abs(getters.heightDifference) < constants.damageHeight &&
-      getters.enemyIsFacingPlayer
-    );
+      state.player.currentAnimation !== characterActions.roll &&
+      state.player.currentAnimation !== characterActions.slide &&
+      state.player.currentAnimation !== characterActions.jump
+    )
   },
   gameOver: state => {
     return state.enemy.health <= 0 || state.player.health <= 0;

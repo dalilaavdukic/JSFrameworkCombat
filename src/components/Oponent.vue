@@ -13,8 +13,7 @@ import EventBus from '@/utils/eventBus';
 import characterActions from '@/assets/constants/characterActions';
 import { mapGetters, mapMutations } from 'vuex';
 
-const availableActionsForEvadingAttacks = ['roll', 'slide'];
-const availableActionsForEvadingShots = ['roll', 'slide', 'jump'];
+const availableActionsForEvadingAttacks = ['roll', 'slide', 'jump'];
 
 export default {
   name: 'Oponent',
@@ -144,19 +143,7 @@ export default {
     },
     reactToPlayerShot() {
       if (!this.evadingAttack && this.shouldEvadeAttack()) {
-        const response = this.getRandomAttackResponse('shoot');
-        switch (response) {
-          case 'roll':
-            this.characterRef.roll();
-            break;
-          case 'slide':
-            this.characterRef.slide();
-            break;
-          case 'jump':
-            this.characterRef.jump();
-            break;
-        }
-        this.characterRef.jump();
+        this.executeAttackEvasion();
       }
     },
     reactToPlayerAttack() {
@@ -164,22 +151,29 @@ export default {
         Math.abs(this.game.distance) <= constants.minimumAttackDamageDistance
       ) {
         if (!this.evadingAttack && this.shouldEvadeAttack()) {
-          const response = this.getRandomAttackResponse('attack');
-          response === 'roll'
-            ? this.characterRef.roll()
-            : this.characterRef.slide();
+          this.executeAttackEvasion();
         }
       }
     },
-    getRandomAttackResponse(attackType) {
-      const availableResponses =
-        attackType === 'shoot'
-          ? availableActionsForEvadingShots
-          : availableActionsForEvadingAttacks;
+    executeAttackEvasion() {
+      const response = this.getRandomAttackResponse();
+      switch (response) {
+        case 'roll':
+          this.characterRef.roll();
+          break;
+        case 'slide':
+          this.characterRef.slide();
+          break;
+        case 'jump':
+          this.characterRef.jump();
+          break;
+      }
+    },
+    getRandomAttackResponse() {
       const arrayIndex = Math.round(
-        Math.random() * (availableResponses.length - 1)
+        Math.random() * (availableActionsForEvadingAttacks.length - 1)
       );
-      return availableResponses[arrayIndex];
+      return availableActionsForEvadingAttacks[arrayIndex];
     },
   },
 };
