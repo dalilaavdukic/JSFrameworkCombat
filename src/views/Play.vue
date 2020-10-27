@@ -1,12 +1,15 @@
 <template>
   <div class="play-container">
-    <div v-if="timeLeft > 0 || game.over" class="overlay"></div>
+    <div v-if="timeLeft > 0 || game.over || game.paused" class="overlay"></div>
     <div class="overlay-content">
       <div v-if="timeLeft > 0" class="counter-number">
         {{ timeLeft }}
       </div>
       <div v-if="game.over" class="game-over">
         <game-over></game-over>
+      </div>
+      <div v-if="game.paused" class="paused">
+        Game paused, press 'Space' to resume
       </div>
     </div>
     <div class="game-world-bg"></div>
@@ -62,7 +65,7 @@ export default {
     }, 1000);
     setTimeout(() => {
       this.specialAttackInterval = setInterval(() => {
-        if (this.enemy.health > 0 && this.player.health > 0) {
+        if (!this.game.over && !this.game.paused) {
           this.increasePlayersSpecialAttack();
           this.increaseEnemysSpecialAttack();
         }
@@ -162,7 +165,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    .counter-number, .game-over {
+    .counter-number,
+    .game-over,
+    .paused {
       color: white;
       font-size: 3rem;
       opacity: 1;

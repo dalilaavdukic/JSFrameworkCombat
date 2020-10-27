@@ -24,7 +24,8 @@ export default {
   },
   positions: {
     player: {},
-    enemy: {},
+    enemy: {}
   },
+  paused: false,
   assetsLoaded: false
-}
+};

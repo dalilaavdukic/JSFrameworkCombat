@@ -39,8 +39,7 @@ export default {
     ...mapGetters(['enemy', 'player', 'game', 'positions']),
     canFight: function () {
       return (
-        this.player.health > 0 &&
-        this.enemy.health > 0 &&
+        !this.game.over &&
         this.enemy.currentAnimation !== characterActions.dizzy
       );
     },
@@ -74,6 +73,9 @@ export default {
       this.characterRef.die();
       clearInterval(this.fightInterval);
     });
+    EventBus.$on('player-died', () => {
+      clearInterval(this.fightInterval);
+    });
     EventBus.$on('enemy-dizzy', () => {
       this.characterRef.dizzy();
     });
@@ -89,7 +91,7 @@ export default {
   },
   watch: {
     positions: function () {
-      if (!this.alreadyAttacking && !this.evadingAttack) {
+      if (!this.alreadyAttacking && !this.evadingAttack && !this.game.paused) {
         this.fight();
       }
     },

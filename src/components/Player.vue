@@ -27,7 +27,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['player', 'enemy']),
+    ...mapGetters(['player', 'game']),
   },
   mounted() {
     this.characterRef = this.$refs.moveableCharacter;
@@ -45,21 +45,31 @@ export default {
   data() {
     return {
       characterRef: undefined,
+      paused: false,
     };
   },
   destroyed() {
     window.removeEventListener('keydown', this.doCommand);
   },
   methods: {
-    ...mapMutations(['setPlayersFacingDirection', 'setPlayersAnimation']),
+    ...mapMutations([
+      'setPlayersFacingDirection',
+      'setPlayersAnimation',
+      'setPaused',
+    ]),
+    pauseGame() {
+      this.paused = !this.paused;
+      this.setPaused(this.paused);
+    },
     doCommand(e) {
-      if (
+      let cmd = e.keyCode;
+      if (this.paused) {
+        if (cmd === controlKeys.pause) this.pauseGame();
+      } else if (
         !e.repeat &&
-        this.player.health > 0 &&
-        this.enemy.health > 0 &&
+        !this.game.over &&
         this.player.currentAnimation !== characterActions.dizzy
       ) {
-        let cmd = e.keyCode;
         switch (cmd) {
           case controlKeys.right:
             this.characterRef.moveRight();
@@ -87,6 +97,12 @@ export default {
             break;
           case controlKeys.roll:
             this.characterRef.roll();
+            break;
+          case controlKeys.pause:
+            this.pauseGame();
+            break;
+          case controlKeys.esc:
+            console.log('Quit game?');
             break;
         }
       }

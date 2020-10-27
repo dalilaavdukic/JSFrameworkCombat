@@ -82,9 +82,14 @@ export default {
     }
   },
   chooseCharacter(state, payload) {
-    const availableOponents = Object.keys(characters).filter(character => character !== payload.name);
+    const availableOponents = Object.keys(characters).filter(
+      character => character !== payload.name
+    );
     state.player.character = payload;
-    state.enemy.character = characters[availableOponents[availableOponents.length * Math.random() << 0]];
+    state.enemy.character =
+      characters[
+        availableOponents[(availableOponents.length * Math.random()) << 0]
+      ];
   },
   giveName(state, name) {
     state.player.name = name;
@@ -106,5 +111,8 @@ export default {
   },
   setPositions(state, positions) {
     state.positions = positions;
+  },
+  setPaused(state, payload) {
+    state.paused = payload;
   }
 };

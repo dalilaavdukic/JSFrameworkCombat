@@ -73,7 +73,7 @@ export default {
       getters.enemyIsFacingPlayer
     );
   },
-  gameOver: (state) => {
+  gameOver: state => {
     return state.enemy.health <= 0 || state.player.health <= 0;
   },
   game: (state, getters) => {
@@ -85,7 +85,8 @@ export default {
       attackCanDamagePlayer: getters.attackCanDamagePlayer,
       shotCanDamageEnemy: getters.shotCanDamageEnemy,
       shotCanDamagePlayer: getters.shotCanDamagePlayer,
-      over: getters.gameOver
+      over: getters.gameOver,
+      paused: state.paused
     };
   },
   assetsLoaded: state => {
