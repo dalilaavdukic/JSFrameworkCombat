@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="!assetsLoaded">Loading Game</div>
+    <loader v-if="!assetsLoaded"></loader>
     <div v-else>
       <router-view></router-view>
     </div>
@@ -10,8 +10,10 @@
 <script>
 import { mapGetters } from 'vuex';
 import gameAssetsService from '@/services/gameAssets.service';
+import Loader from '@/components/Loader';
 export default {
   name: 'App',
+  components: { Loader },
   computed: {
     ...mapGetters(['assetsLoaded']),
   },
