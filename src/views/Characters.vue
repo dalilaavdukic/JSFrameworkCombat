@@ -1,9 +1,6 @@
 <template>
   <div class="game-view">
-    <div class="characters-header">
-      <game-title size="small"></game-title>
-      <h1>Choose a character to play with:</h1>
-    </div>
+    <game-header>Choose a character to play with:</game-header>
     <form class="player-form">
       <div class="character-options">
         <character-card
@@ -32,14 +29,14 @@
 
 <script>
 import characters from '../assets/constants/characters';
-import GameTitle from '@/components/GameTitle';
+import GameHeader from '@/components/GameHeader';
 import CharacterCard from '@/components/CharacterCard';
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'Characters',
   components: {
-    GameTitle,
+    GameHeader,
     CharacterCard,
   },
   data() {
@@ -66,12 +63,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.characters-header {
-  align-self: flex-start;
-  display: flex;
-  align-items: center;
-  padding-top: 25px;
-}
 .player-form {
   .character-options {
     display: flex;

@@ -14,6 +14,8 @@ export default {
 <style lang="scss" scoped>
 a {
   text-decoration: none;
+  display: block;
+  padding-bottom: 1rem;
   .menu-item {
     text-align: center;
     color: $font-color;

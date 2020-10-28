@@ -25,6 +25,6 @@ export default {
 <style lang="scss" scoped>
 .game-menu {
   width: 50%;
-  margin-top: 10%;
+  margin-top: 15%;
 }
 </style>

@@ -5,6 +5,7 @@ import Home from './views/Home';
 import Characters from './views/Characters';
 import Oponents from './views/Oponents';
 import Play from './views/Play';
+import Instructions from './views/Instructions';
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,10 @@ export default new VueRouter({
     {
       path: '/home',
       component: Home
+    },
+    {
+      path: '/instructions',
+      component: Instructions
     },
     {
       path: '/characters',
