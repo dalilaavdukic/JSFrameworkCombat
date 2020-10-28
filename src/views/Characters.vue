@@ -1,9 +1,10 @@
 <template>
   <div class="game-view">
     <game-header>Choose a character to play with:</game-header>
-    <form class="player-form">
+    <form class="player-form" @submit.prevent="play">
       <div class="character-options">
         <character-card
+          tabindex="0"
           v-for="character in characters"
           :key="character.name"
           :character="character"
@@ -16,8 +17,7 @@
           <input :value="player.name" @input="updateName" type="text" />
         </div>
         <button
-          type="button"
-          @click="play"
+          type="submit"
           :disabled="!player.name || !player.character"
         >
           Play!

@@ -2,6 +2,7 @@
   <div
     :class="['card', { selected: isSelected }]"
     @click="selectCharacter()"
+    @keypress="handleKeyPress($event)"
     @mouseenter="mouseOver()"
   >
     <character-animation
@@ -56,6 +57,12 @@ export default {
     selectCharacter() {
       this.chooseCharacter(this.character);
     },
+    handleKeyPress(e) {
+      // enter
+      if (e.keyCode === 13) {
+        this.selectCharacter();
+      }
+    }
   },
 };
 </script>
@@ -71,8 +78,9 @@ export default {
   h2 {
     margin-top: 0px;
   }
-  &:hover {
+  &:hover, &:focus {
     box-shadow: $box-shadow;
+    outline: none;
   }
   &:active {
     color: $js-grey;
