@@ -7,12 +7,15 @@ export default {
   assets: {},
   numOfLoadedAssets: 0,
   totalNumOfAssets() {
+    // total number of actions (num of characters * num of modes * num of actions)
+    // + total number of profile pics (num of characters * num of modes)
+    // + world bg (1)
     return (
       Object.keys(characters).length *
         Object.keys(characterActions).length *
         Object.keys(constants.characterModes).length +
       Object.keys(characters).length *
-        Object.keys(constants.characterModes).length
+        Object.keys(constants.characterModes).length + 1
     );
   },
   loadGameAssets: function() {
@@ -27,6 +30,19 @@ export default {
       this.assets.characters[characterModes[type]] = {};
       availableCharacters.forEach(character => {
         this.assets.characters[characterModes[type]][character] = {};
+
+        // get world background pic
+        const worldBg = new Image();
+        worldBg.onload = () => {
+          this.numOfLoadedAssets++;
+          if (this.numOfLoadedAssets === this.totalNumOfAssets()) {
+            store.commit('setAssetsLoaded', true);
+          }
+        }
+
+        this.assets.worldBg = worldBg;
+        worldBg.src = require(`../assets/worlds/boxingRing.jpg`);
+
         // get profile pic
         const profilePic = new Image();
         profilePic.onload = () => {

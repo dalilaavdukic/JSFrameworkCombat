@@ -13,7 +13,7 @@
         <quit-game v-else></quit-game>
       </div>
     </div>
-    <div class="game-world-bg"></div>
+    <div class="game-world-bg" :style="{backgroundImage: worldBg}"></div>
     <div class="game">
       <div class="players-bars">
         <players-bars :player="player"></players-bars>
@@ -47,6 +47,7 @@ import GameOver from '@/components/GameOver';
 import QuitGame from '@/components/QuitGame';
 import constants from '@/assets/constants/common';
 import EventBus from '@/utils/eventBus';
+import gameAssetsService from '@/services/gameAssets.service';
 
 export default {
   name: 'Play',
@@ -59,6 +60,7 @@ export default {
       constants: constants,
       specialAttackInterval: undefined,
       timeLeft: constants.countdownToGameSeconds,
+      worldBg: `url(${gameAssetsService.assets.worldBg.src})`
     };
   },
   mounted() {
@@ -181,7 +183,6 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('~@/assets/worlds/boxingRing.jpg');
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
