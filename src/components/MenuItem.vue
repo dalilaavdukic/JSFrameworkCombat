@@ -21,6 +21,14 @@ a {
   text-decoration: none;
   display: block;
   padding-bottom: 1rem;
+  &:focus {
+    outline: none;
+    .menu-item {
+      box-shadow: 0 0 100px 0px $js-yellow;
+      color: $js-grey;
+      background: $js-dark-yellow;
+    }
+  }
   .menu-item {
     text-align: center;
     color: $font-color;
