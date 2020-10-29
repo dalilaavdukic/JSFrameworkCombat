@@ -9,8 +9,10 @@ export default {
   totalNumOfAssets() {
     return (
       Object.keys(characters).length *
-      Object.keys(characterActions).length *
-      Object.keys(constants.characterModes).length
+        Object.keys(characterActions).length *
+        Object.keys(constants.characterModes).length +
+      Object.keys(characters).length *
+        Object.keys(constants.characterModes).length
     );
   },
   loadGameAssets: function() {
@@ -25,6 +27,18 @@ export default {
       this.assets.characters[characterModes[type]] = {};
       availableCharacters.forEach(character => {
         this.assets.characters[characterModes[type]][character] = {};
+        // get profile pic
+        const profilePic = new Image();
+        profilePic.onload = () => {
+          this.numOfLoadedAssets++;
+          if (this.numOfLoadedAssets === this.totalNumOfAssets()) {
+            store.commit('setAssetsLoaded', true);
+          }
+        }
+        this.assets.characters[characterModes[type]][character].profilePic = profilePic;
+        profilePic.src = require(`../assets/characters/${characterModes[type]}/${character}/profile.png`);
+
+        // get all action sprites
         availableCharacterActions.forEach(action => {
           const actionSprite = new Image();
           actionSprite.onload = () => {

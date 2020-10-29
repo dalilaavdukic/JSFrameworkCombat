@@ -1,7 +1,7 @@
 <template>
   <div :class="['player-info', side]">
     <div class="profile-pic">
-      <img :src="getProfilePic()" />
+      <img :src="profilePic" />
     </div>
     <div :class="['bars', side]">
       <bar :value="player.health" :side="side"></bar>
@@ -16,6 +16,7 @@
 
 <script>
 import Bar from './Bar';
+import gameAssetsService from '@/services/gameAssets.service';
 
 export default {
   name: 'PlayersBars',
@@ -31,11 +32,11 @@ export default {
       default: 'left',
     },
   },
-  methods: {
-    getProfilePic() {
-      return require(`@/assets/characters/${
+  computed: {
+    profilePic: function () {
+      return gameAssetsService.assets.characters[
         this.side === 'left' ? 'players' : 'enemies'
-      }/${this.player.character.name}/profile.png`);
+      ][this.player.character.name].profilePic.src;
     },
   },
 };
