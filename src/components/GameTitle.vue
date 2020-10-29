@@ -13,7 +13,12 @@
 <script>
 export default {
   name: 'GameTitle',
-  props: ['size'],
+  props: {
+    size: {
+      type: String,
+      required: false,
+    },
+  },
 };
 </script>
 

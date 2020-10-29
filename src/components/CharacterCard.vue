@@ -24,7 +24,12 @@ import CharacterAnimation from '@/components/CharacterAnimation';
 
 export default {
   name: 'CharacterCard',
-  props: ['character'],
+  props: {
+    character: {
+      type: Object,
+      required: true,
+    },
+  },
   components: { CharacterAnimation },
   data() {
     return {

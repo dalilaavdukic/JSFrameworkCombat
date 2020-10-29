@@ -51,7 +51,7 @@ export default {
         if (this.currentAnimation === characterActions.die) {
           this.currentAnimation = characterActions.dead;
         } else {
-        // else if some other animation has been completed play default (idle) animation
+          // else if some other animation has been completed play default (idle) animation
           this.currentAnimation = this.defaultAnimation;
         }
         // let parent component know that past animation has completed, and let it know what the new animation is

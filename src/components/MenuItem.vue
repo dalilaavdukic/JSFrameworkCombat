@@ -7,7 +7,12 @@
 <script>
 export default {
   name: 'MenuItem',
-  props: ['item'],
+  props: {
+    item: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>
 
