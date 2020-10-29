@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="game-world-bg" :style="{backgroundImage: worldBg}"></div>
-    <div class="game">
+    <div class="game" v-if="player.name">
       <div class="players-bars">
         <players-bars :player="player"></players-bars>
         <players-bars :player="enemy" side="right"></players-bars>
@@ -63,10 +63,18 @@ export default {
       worldBg: `url(${gameAssetsService.assets.worldBg.src})`
     };
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (!vm.player.name) {
+        vm.$router.push('/characters');
+      }
+    })
+  },
   mounted() {
     setTimeout(() => {
       this.gameCountdown();
     }, 1000);
+    // wait for game countdown to finish before starting interval for increasing special attack
     setTimeout(() => {
       this.specialAttackInterval = setInterval(() => {
         if (!this.game.over && !this.game.paused) {
@@ -123,17 +131,19 @@ export default {
       this.decreaseEnemysSpecialAttack(constants.specialAttackDecreaseAmount);
     },
     getPositions() {
-      const positions = {
-        enemy: {
-          top: this.$refs.enemy.$el.offsetTop,
-          left: this.$refs.enemy.$el.offsetLeft,
-        },
-        player: {
-          top: this.$refs.player.$el.offsetTop,
-          left: this.$refs.player.$el.offsetLeft,
-        },
-      };
-      this.setPositions(positions);
+      if (this.$refs.enemy && this.$refs.player) {
+        const positions = {
+          enemy: {
+            top: this.$refs.enemy.$el.offsetTop,
+            left: this.$refs.enemy.$el.offsetLeft,
+          },
+          player: {
+            top: this.$refs.player.$el.offsetTop,
+            left: this.$refs.player.$el.offsetLeft,
+          },
+        };
+        this.setPositions(positions);
+      }
     },
     gameCountdown() {
       this.timeLeft--;
