@@ -6,18 +6,10 @@ import store from '../store/index';
 export default {
   assets: {},
   numOfLoadedAssets: 0,
-  totalNumOfAssets() {
-    // total number of actions (num of characters * num of modes * num of actions)
-    // + total number of profile pics (num of characters * num of modes)
-    // + world bg (1)
-    return (
-      Object.keys(characters).length *
-        Object.keys(characterActions).length *
-        Object.keys(constants.characterModes).length +
-      Object.keys(characters).length *
-        Object.keys(constants.characterModes).length + 1
-    );
-  },
+  totalNumOfAssets:
+    Object.keys(characters).length *
+    Object.keys(characterActions).length *
+    Object.keys(constants.characterModes).length,
   loadGameAssets: function() {
     this.assets.characters = {};
 
@@ -33,25 +25,15 @@ export default {
 
         // get world background pic
         const worldBg = new Image();
-        worldBg.onload = () => {
-          this.numOfLoadedAssets++;
-          if (this.numOfLoadedAssets === this.totalNumOfAssets()) {
-            store.commit('setAssetsLoaded', true);
-          }
-        }
 
         this.assets.worldBg = worldBg;
         worldBg.src = require(`../assets/worlds/boxingRing.jpg`);
 
         // get profile pic
         const profilePic = new Image();
-        profilePic.onload = () => {
-          this.numOfLoadedAssets++;
-          if (this.numOfLoadedAssets === this.totalNumOfAssets()) {
-            store.commit('setAssetsLoaded', true);
-          }
-        }
-        this.assets.characters[characterModes[type]][character].profilePic = profilePic;
+        this.assets.characters[characterModes[type]][
+          character
+        ].profilePic = profilePic;
         profilePic.src = require(`../assets/characters/${characterModes[type]}/${character}/profile.png`);
 
         // get all action sprites
@@ -59,7 +41,7 @@ export default {
           const actionSprite = new Image();
           actionSprite.onload = () => {
             this.numOfLoadedAssets++;
-            if (this.numOfLoadedAssets === this.totalNumOfAssets()) {
+            if (this.numOfLoadedAssets === this.totalNumOfAssets) {
               store.commit('setAssetsLoaded', true);
             }
           };

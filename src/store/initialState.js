@@ -1,5 +1,6 @@
 import characters from '../assets/constants/characters';
 import characterActions from '../assets/constants/characterActions';
+import constants from '../assets/constants/common';
 
 export default {
   player: {
@@ -7,7 +8,7 @@ export default {
     character: '',
     health: 100,
     specialAttack: 0,
-    facingDirection: 'right',
+    facingDirection: constants.side.right,
     canUseSpecialAttack: false,
     hasBeenDizzy: false,
     currentAnimation: characterActions.idle
@@ -17,7 +18,7 @@ export default {
     character: characters.angular,
     health: 100,
     specialAttack: 0,
-    facingDirection: 'left',
+    facingDirection: constants.side.left,
     canUseSpecialAttack: false,
     hasBeenDizzy: false,
     currentAnimation: characterActions.idle

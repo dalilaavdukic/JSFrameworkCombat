@@ -17,6 +17,7 @@
 <script>
 import Bar from './Bar';
 import gameAssetsService from '@/services/gameAssets.service';
+import constants from '@/assets/constants/common';
 
 export default {
   name: 'PlayersBars',
@@ -29,13 +30,13 @@ export default {
     side: {
       type: String,
       required: false,
-      default: 'left',
+      default: constants.side.left,
     },
   },
   computed: {
     profilePic: function () {
       return gameAssetsService.assets.characters[
-        this.side === 'left' ? 'players' : 'enemies'
+        this.side === constants.side.left ? 'players' : 'enemies'
       ][this.player.character.name].profilePic.src;
     },
   },

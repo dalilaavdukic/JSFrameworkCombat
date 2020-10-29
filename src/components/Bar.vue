@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import constants from '@/assets/constants/common';
+
 export default {
   name: 'Bar',
   props: {
@@ -21,7 +23,7 @@ export default {
     side: {
       type: String,
       required: false,
-      default: 'left',
+      default: constants.side.left,
     },
   },
 };

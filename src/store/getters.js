@@ -15,11 +15,13 @@ export default {
     return state.positions.enemy.left - state.positions.player.left;
   },
   enemyIsFacingPlayer: (state, getters) => {
-    const playerSide = getters.distance > 0 ? 'left' : 'right';
+    const playerSide =
+      getters.distance > 0 ? constants.side.left : constants.side.right;
     return state.enemy.facingDirection === playerSide;
   },
   playerIsFacingEnemy: (state, getters) => {
-    const enemySide = getters.distance < 0 ? 'left' : 'right';
+    const enemySide =
+      getters.distance < 0 ? constants.side.left : constants.side.right;
     return state.player.facingDirection === enemySide;
   },
   attackCanDamageEnemy: (state, getters) => {
@@ -48,19 +50,19 @@ export default {
       getters.enemyIsFacingPlayer
     );
   },
-  shotCanDamageEnemy: (state) => {
+  shotCanDamageEnemy: state => {
     return (
       state.enemy.currentAnimation !== characterActions.roll &&
       state.enemy.currentAnimation !== characterActions.slide &&
       state.enemy.currentAnimation !== characterActions.jump
-    )
+    );
   },
-  shotCanDamagePlayer: (state) => {
+  shotCanDamagePlayer: state => {
     return (
       state.player.currentAnimation !== characterActions.roll &&
       state.player.currentAnimation !== characterActions.slide &&
       state.player.currentAnimation !== characterActions.jump
-    )
+    );
   },
   gameOver: state => {
     return state.enemy.health <= 0 || state.player.health <= 0;

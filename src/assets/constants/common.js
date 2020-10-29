@@ -23,5 +23,9 @@ export default {
   specialAttackIncreaseInterval: 1500, // ms
   oponentFightInterval: 800, // ms
   damageHeight: 150,
-  countdownToGameSeconds: 5
+  countdownToGameSeconds: 5,
+  side: {
+    right: 'right',
+    left: 'left'
+  }
 };

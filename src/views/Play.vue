@@ -9,15 +9,20 @@
         <game-over></game-over>
       </div>
       <div v-if="game.paused" class="paused">
-        <div v-if="!game.quitInitiated">Game paused, press 'Space' to resume</div>
+        <div v-if="!game.quitInitiated">
+          Game paused, press 'Space' to resume
+        </div>
         <quit-game v-else></quit-game>
       </div>
     </div>
-    <div class="game-world-bg" :style="{backgroundImage: worldBg}"></div>
+    <div class="game-world-bg" :style="{ backgroundImage: worldBg }"></div>
     <div class="game">
       <div class="players-bars">
         <players-bars :player="player"></players-bars>
-        <players-bars :player="enemy" side="right"></players-bars>
+        <players-bars
+          :player="enemy"
+          :side="constants.side.right"
+        ></players-bars>
       </div>
       <div class="playable-area">
         <player
@@ -60,7 +65,7 @@ export default {
       constants: constants,
       specialAttackInterval: undefined,
       timeLeft: constants.countdownToGameSeconds,
-      worldBg: `url(${gameAssetsService.assets.worldBg.src})`
+      worldBg: `url(${gameAssetsService.assets.worldBg.src})`,
     };
   },
   mounted() {
@@ -71,8 +76,8 @@ export default {
     setTimeout(() => {
       this.specialAttackInterval = setInterval(() => {
         if (!this.game.over && !this.game.paused) {
-          this.increasePlayersSpecialAttack();
-          this.increaseEnemysSpecialAttack();
+          this.increaseSpecialAttack('player');
+          this.increaseSpecialAttack('enemy');
         }
       }, constants.specialAttackIncreaseInterval);
       this.getPositions();
@@ -84,13 +89,10 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'damagePlayersHealth',
-      'damageEnemysHealth',
+      'damageHealth',
       'resetGame',
-      'increasePlayersSpecialAttack',
-      'increaseEnemysSpecialAttack',
-      'decreasePlayersSpecialAttack',
-      'decreaseEnemysSpecialAttack',
+      'increaseSpecialAttack',
+      'decreaseSpecialAttack',
       'setPositions',
     ]),
     playerAttacked() {
@@ -98,7 +100,11 @@ export default {
       EventBus.$emit('player-attacked');
       this.getPositions();
       if (this.game.attackCanDamageEnemy) {
-        this.damageEnemysHealth(constants.attackDamageHealthAmount);
+        const payload = {
+          mode: 'enemy',
+          damage: constants.attackDamageHealthAmount,
+        };
+        this.damageHealth(payload);
       }
     },
     playerShot() {
@@ -106,22 +112,34 @@ export default {
       EventBus.$emit('player-shot');
       this.getPositions();
       if (this.game.shotCanDamageEnemy) {
-        this.damageEnemysHealth(constants.shotDamageHealthAmount);
+        const payload = {
+          mode: 'enemy',
+          damage: constants.shotDamageHealthAmount,
+        };
+        this.damageHealth(payload);
       }
-      this.decreasePlayersSpecialAttack(constants.specialAttackDecreaseAmount);
+      this.decreaseSpecialAttack('player');
     },
     enemyAttacked() {
       this.getPositions();
       if (this.game.attackCanDamagePlayer) {
-        this.damagePlayersHealth(constants.attackDamageHealthAmount);
+        const payload = {
+          mode: 'player',
+          damage: constants.attackDamageHealthAmount,
+        };
+        this.damageHealth(payload);
       }
     },
     enemyShot() {
       this.getPositions();
       if (this.game.shotCanDamagePlayer) {
-        this.damagePlayersHealth(constants.shotDamageHealthAmount);
+        const payload = {
+          mode: 'player',
+          damage: constants.shotDamageHealthAmount,
+        };
+        this.damageHealth(payload);
       }
-      this.decreaseEnemysSpecialAttack(constants.specialAttackDecreaseAmount);
+      this.decreaseSpecialAttack('enemy');
     },
     getPositions() {
       if (this.$refs.enemy && this.$refs.player) {

@@ -21,68 +21,37 @@ export default {
     state.paused = false;
     state.quitInitiated = false;
   },
-  damagePlayersHealth(state, damage) {
-    state.player.health -= damage;
-    if (state.player.health <= 0) {
-      state.player.health = 0;
+  damageHealth(state, payload) {
+    const { mode, damage } = payload;
+    state[mode].health -= damage;
+    if (state[mode].health <= 0) {
+      state[mode].health = 0;
     }
     if (
-      state.player.health < constants.dizzyHealth &&
-      state.player.health > 0 &&
-      !state.player.hasBeenDizzy
+      state[mode].health < constants.dizzyHealth &&
+      state[mode].health > 0 &&
+      !state[mode].hasBeenDizzy
     ) {
-      EventBus.$emit('player-dizzy');
-      state.player.hasBeenDizzy = true;
-    } else if (state.player.health <= 0) {
-      EventBus.$emit('player-died');
-      state.player.hasBeenDizzy = false;
+      EventBus.$emit(`${mode}-dizzy`);
+      state[mode].hasBeenDizzy = true;
+    } else if (state[mode].health <= 0) {
+      EventBus.$emit(`${mode}-died`);
+      state[mode].hasBeenDizzy = false;
     }
   },
-  damageEnemysHealth(state, damage) {
-    state.enemy.health -= damage;
-    if (state.enemy.health <= 0) {
-      state.enemy.health = 0;
+  increaseSpecialAttack(state, mode) {
+    if (state[mode].specialAttack < constants.specialAttackMaxValue) {
+      state[mode].specialAttack += constants.specialAttackIncreaseAmount;
     }
-    if (
-      state.enemy.health < constants.dizzyHealth &&
-      state.enemy.health > 0 &&
-      !state.enemy.hasBeenDizzy
-    ) {
-      EventBus.$emit('enemy-dizzy');
-      state.enemy.hasBeenDizzy = true;
-    } else if (state.enemy.health <= 0) {
-      EventBus.$emit('enemy-died');
-      state.enemy.hasBeenDizzy = false;
+    if (state[mode].specialAttack === constants.specialAttackMaxValue) {
+      state[mode].canUseSpecialAttack = true;
     }
   },
-  increasePlayersSpecialAttack(state) {
-    if (state.player.specialAttack < constants.specialAttackMaxValue) {
-      state.player.specialAttack += constants.specialAttackIncreaseAmount;
-    }
-    if (state.player.specialAttack === constants.specialAttackMaxValue) {
-      state.player.canUseSpecialAttack = true;
-    }
-  },
-  increaseEnemysSpecialAttack(state) {
-    if (state.enemy.specialAttack < constants.specialAttackMaxValue) {
-      state.enemy.specialAttack += constants.specialAttackIncreaseAmount;
-    }
-    if (state.enemy.specialAttack === constants.specialAttackMaxValue) {
-      state.enemy.canUseSpecialAttack = true;
-    }
-  },
-  decreasePlayersSpecialAttack(state) {
-    state.player.specialAttack -= constants.specialAttackDecreaseAmount;
-    if (state.player.specialAttack <= 0) {
-      state.player.specialAttack = 0;
-      state.player.canUseSpecialAttack = false;
-    }
-  },
-  decreaseEnemysSpecialAttack(state) {
-    state.enemy.specialAttack -= constants.specialAttackDecreaseAmount;
-    if (state.enemy.specialAttack <= 0) {
-      state.enemy.specialAttack = 0;
-      state.enemy.canUseSpecialAttack = false;
+  decreaseSpecialAttack(state, mode) {
+    state[mode].specialAttack -= constants.specialAttackDecreaseAmount;
+    if (state[mode].specialAttack <= 0) {
+      state[mode].specialAttack = 0;
+      state[mode].canUseSpecialAttack = false;
     }
   },
   chooseCharacter(state, payload) {

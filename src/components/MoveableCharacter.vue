@@ -311,8 +311,8 @@ export default {
     },
     facingDirection() {
       return this.currentModifications?.mode === constants.characterModes.player
-        ? 'right'
-        : 'left';
+        ? constants.side.right
+        : constants.side.left;
     },
   },
 };

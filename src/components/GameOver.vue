@@ -1,14 +1,32 @@
 <template>
   <div class="game-over-container">
     <div class="game-over-note">
-      <div class="game-over-note" v-if="player.health > 0">{{player.character.name}} won!</div>
+      <div class="game-over-note" v-if="player.health > 0">
+        {{ player.character.name }} won!
+      </div>
       <div v-else>
         <div>Game Over!</div>
-        <div class="game-over-note">{{enemy.character.name}} won!</div>
+        <div class="game-over-note">{{ enemy.character.name }} won!</div>
       </div>
     </div>
-    <div @click="playAgain()" class="game-over-item">- Play again -</div>
-    <div @click="exit()" class="game-over-item">- Exit -</div>
+    <div
+      ref="playAgainBtn"
+      tabindex="0"
+      @keydown="handlePlayKeyPress($event)"
+      @click="playAgain()"
+      class="game-over-item"
+    >
+      - Play again -
+    </div>
+    <div
+      ref="exitBtn"
+      tabindex="0"
+      @click="exit()"
+      @keydown="handleExitKeyPress($event)"
+      class="game-over-item"
+    >
+      - Exit -
+    </div>
   </div>
 </template>
 
@@ -23,6 +41,9 @@ export default {
       items: gameOverItems,
     };
   },
+  mounted() {
+    this.$refs.playAgainBtn.focus();
+  },
   computed: {
     ...mapGetters(['player', 'enemy']),
   },
@@ -34,8 +55,28 @@ export default {
     exit() {
       this.exitGame();
       this.$router.push('home');
-    }
-  }
+    },
+    handlePlayKeyPress(e) {
+      // down arrow
+      if (e.keyCode === 40) {
+        this.$refs.exitBtn.focus();
+      }
+      // enter
+      if (e.keyCode === 13) {
+        this.playAgain();
+      }
+    },
+    handleExitKeyPress(e) {
+      // up arrow
+      if (e.keyCode === 38) {
+        this.$refs.playAgainBtn.focus();
+      }
+      // enter
+      if (e.keyCode === 13) {
+        this.exit();
+      }
+    },
+  },
 };
 </script>
 
@@ -50,11 +91,14 @@ export default {
     font-size: 2rem;
     padding: 1rem;
     cursor: pointer;
-    &:hover {
+    &:hover, &:focus {
       color: $js-yellow;
     }
     &:active {
       color: white;
+    }
+    &:focus {
+      outline: none;
     }
   }
 }

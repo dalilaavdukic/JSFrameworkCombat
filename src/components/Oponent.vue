@@ -56,7 +56,9 @@ export default {
       );
     },
     playerSide: function () {
-      return this.game.distance > 0 ? 'left' : 'right';
+      return this.game.distance > 0
+        ? constants.side.left
+        : constants.side.right;
     },
   },
   mounted() {
@@ -102,7 +104,9 @@ export default {
         // enemy is facing away from player
         if (!this.game.enemyIsFacingPlayer) {
           // turn around
-          this.playerSide === 'right' ? this.moveRight() : this.moveLeft();
+          this.playerSide === constants.side.right
+            ? this.moveRight()
+            : this.moveLeft();
         }
         if (this.enemy.canUseSpecialAttack) {
           this.shoot();
@@ -119,7 +123,9 @@ export default {
         this.attack();
       } else {
         // enemy needs to move closer to player
-        this.playerSide === 'right' ? this.moveRight() : this.moveLeft();
+        this.playerSide === constants.side.right
+          ? this.moveRight()
+          : this.moveLeft();
       }
     },
     attack() {
