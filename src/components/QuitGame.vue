@@ -2,8 +2,24 @@
   <div class="quit-game-container">
     <div>Quit Game?</div>
     <div class="quit-game-answers">
-      <div @click="quitGame()" class="quit-game-item">- Yes -</div>
-      <div @click="exitQuitting()" class="quit-game-item">- No -</div>
+      <div
+        ref="yesBtn"
+        tabindex="0"
+        @keydown="handleYesKeyPress($event)"
+        @click="quitGame()"
+        class="quit-game-item"
+      >
+        - Yes -
+      </div>
+      <div
+        ref="noBtn"
+        tabindex="0"
+        @keydown="handleNoKeyPress($event)"
+        @click="exitQuitting()"
+        class="quit-game-item"
+      >
+        - No -
+      </div>
     </div>
   </div>
 </template>
@@ -19,6 +35,9 @@ export default {
       items: gameOverItems,
     };
   },
+  mounted() {
+    this.$refs.noBtn.focus();
+  },
   methods: {
     ...mapMutations(['exitGame', 'setPaused', 'setQuitInitiated']),
     exitQuitting() {
@@ -28,8 +47,28 @@ export default {
     quitGame() {
       this.exitGame();
       this.$router.push('home');
-    }
-  }
+    },
+    handleYesKeyPress(e) {
+      // down arrow
+      if (e.keyCode === 40) {
+        this.$refs.noBtn.focus();
+      }
+      // enter
+      if (e.keyCode === 13) {
+        this.quitGame();
+      }
+    },
+    handleNoKeyPress(e) {
+      // up arrow
+      if (e.keyCode === 38) {
+        this.$refs.yesBtn.focus();
+      }
+      // enter
+      if (e.keyCode === 13) {
+        this.exitQuitting();
+      }
+    },
+  },
 };
 </script>
 
@@ -42,11 +81,15 @@ export default {
       font-size: 2rem;
       padding: 1rem;
       cursor: pointer;
-      &:hover {
+      &:hover,
+      &:focus {
         color: $js-yellow;
       }
       &:active {
         color: white;
+      }
+      &:focus {
+        outline: none;
       }
     }
   }

@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="game-world-bg" :style="{backgroundImage: worldBg}"></div>
-    <div class="game" v-if="player.name">
+    <div class="game">
       <div class="players-bars">
         <players-bars :player="player"></players-bars>
         <players-bars :player="enemy" side="right"></players-bars>
@@ -62,13 +62,6 @@ export default {
       timeLeft: constants.countdownToGameSeconds,
       worldBg: `url(${gameAssetsService.assets.worldBg.src})`
     };
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (!vm.player.name) {
-        vm.$router.push('/characters');
-      }
-    })
   },
   mounted() {
     setTimeout(() => {

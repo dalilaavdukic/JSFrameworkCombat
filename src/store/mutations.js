@@ -18,6 +18,8 @@ export default {
     state.player.hasBeenDizzy = false;
     state.enemy.health = 100;
     state.enemy.hasBeenDizzy = false;
+    state.paused = false;
+    state.quitInitiated = false;
   },
   damagePlayersHealth(state, damage) {
     state.player.health -= damage;
