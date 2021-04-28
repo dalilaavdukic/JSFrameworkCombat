@@ -23,11 +23,11 @@ export default {
   props: {
     character: {
       type: String,
-      default: characters.vue.name,
+      default: characters.vue.name
     },
     modifications: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   data() {
     return {
@@ -38,19 +38,19 @@ export default {
       transition: undefined,
       isJumping: false,
       positionBeforeAnimation: {},
-      characterAnimation: undefined,
+      characterAnimation: undefined
     };
   },
   computed: {
-    isFacingToTheRight: function () {
+    isFacingToTheRight: function() {
       return (
         this.currentModifications?.mode === constants.characterModes.player
       );
     },
-    isFacingToTheLeft: function () {
+    isFacingToTheLeft: function() {
       return this.currentModifications?.mode === constants.characterModes.enemy;
     },
-    slideSpeed: function () {
+    slideSpeed: function() {
       let slideSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
@@ -71,7 +71,7 @@ export default {
       }
       return slideSpeed;
     },
-    rollSpeed: function () {
+    rollSpeed: function() {
       let rollSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
@@ -92,7 +92,7 @@ export default {
       }
       return rollSpeed;
     },
-    runSpeed: function () {
+    runSpeed: function() {
       let runSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
@@ -112,7 +112,7 @@ export default {
               constants.playAreaBorderLimitOffset;
       }
       return runSpeed;
-    },
+    }
   },
   created() {
     this.currentModifications = this.modifications;
@@ -180,7 +180,7 @@ export default {
       this.characterAnimation.updateAnimation(action);
       setTimeout(() => {
         // if character isn't already dead, return to idle animation
-        if(this.lastTriggeredAnimation !== characterActions.die) {
+        if (this.lastTriggeredAnimation !== characterActions.die) {
           const action = characterActions.idle;
           this.initiateAction(action);
           this.characterAnimation.updateAnimation(action);
@@ -241,6 +241,41 @@ export default {
       // move character to appropriate position
       this.moveToNewPosition(action.name);
     },
+    // player movement requires a different logic for movement than the oponent
+    // because the player moves as long as the key is pressed down
+    movePlayerRight() {
+      if (this.animationCompleted) {
+        // if the character is already facing the correct direction move it
+        const action = characterActions.run;
+        this.initiateAction(action);
+        // make sure character is facing to the right
+        this.turnToRight();
+        // apply appropriate transition to make character move at desired speed
+        this.transition = transitions.run;
+        // set appropriate spritesheet
+        this.characterAnimation.updateAnimation(action);
+        // move character to appropriate position
+        this.moveToNewPosition(action.name);
+      }
+    },
+    // player movement requires a different logic for movement than the oponent
+    // because the player moves as long as the key is pressed down
+    movePlayerLeft() {
+      if (this.animationCompleted) {
+        // if the character is already facing the correct direction move it
+        const action = characterActions.run;
+        this.initiateAction(action);
+        // make sure character is facing to the left
+        this.turnToLeft();
+        // apply appropriate transition to make character move at desired speed
+        this.transition = transitions.run;
+        // set appropriate spritesheet
+        this.characterAnimation.updateAnimation(action);
+        // move character to appropriate position
+        this.moveToNewPosition(action.name);
+      }
+    },
+
     initiateAction(action) {
       this.lastTriggeredAnimation = action;
       this.animationCompleted = false;
@@ -249,22 +284,23 @@ export default {
     stopAction() {
       // use idle spritesheet
       this.characterAnimation.updateAnimation(characterActions.idle);
+      this.animationCompleted = true;
       this.lastTriggeredAnimation = characterActions.idle;
       // stop any remaining movement
       this.positionBeforeAnimation = this.getCurrentPosition();
       this.position = {
-        left: this.positionBeforeAnimation.left + 'px',
+        left: this.positionBeforeAnimation.left + 'px'
       };
     },
     turnToLeft() {
       this.currentModifications = {
-        mode: constants.characterModes.enemy,
+        mode: constants.characterModes.enemy
       };
       this.characterAnimation.updateModification(this.currentModifications);
     },
     turnToRight() {
       this.currentModifications = {
-        mode: constants.characterModes.player,
+        mode: constants.characterModes.player
       };
       this.characterAnimation.updateModification(this.currentModifications);
     },
@@ -285,7 +321,7 @@ export default {
       }
 
       this.position = {
-        left: this.positionBeforeAnimation.left + speed + 'px',
+        left: this.positionBeforeAnimation.left + speed + 'px'
       };
     },
     getCurrentPosition() {
@@ -295,12 +331,12 @@ export default {
         right:
           window.innerWidth -
           (this.characterAnimation.$el.offsetLeft +
-            this.characterAnimation.$el.offsetWidth),
+            this.characterAnimation.$el.offsetWidth)
       };
     },
     calculateInitialPosition() {
       this.position = {
-        left: this.isFacingToTheLeft ? 'calc(100% - 300px)' : '0px',
+        left: this.isFacingToTheLeft ? 'calc(100% - 300px)' : '0px'
       };
     },
     animationComplete(runningAnimation) {
@@ -313,8 +349,8 @@ export default {
       return this.currentModifications?.mode === constants.characterModes.player
         ? constants.side.right
         : constants.side.left;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">
