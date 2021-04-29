@@ -4,6 +4,7 @@
     :character="character"
     :modifications="modifications"
     @animationStarted="setEnemysAnimation($event)"
+    :characterType="characterType"
   ></moveable-character>
 </template>
 <script>
@@ -32,6 +33,7 @@ export default {
     return {
       characterRef: undefined,
       fightInterval: undefined,
+      characterType: constants.characterModes.enemy
     };
   },
   computed: {

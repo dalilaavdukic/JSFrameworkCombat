@@ -13,15 +13,19 @@ export default {
   props: {
     animation: {
       type: Object,
-      default: () => characterActions.idle,
+      default: () => characterActions.idle
     },
     character: {
       type: String,
-      required: true,
+      required: true
     },
     modifications: {
-      type: Object,
+      type: Object
     },
+    characterType: {
+      type: String,
+      default: constants.characterModes.player
+    }
   },
   data() {
     return {
@@ -33,7 +37,7 @@ export default {
       characterMode: constants.characterModes.player,
       defaultAnimation: {},
       currentAnimation: {},
-      currentModifications: {},
+      currentModifications: {}
     };
   },
   methods: {
@@ -46,13 +50,21 @@ export default {
       requestAnimationFrame(this.animate);
       // update sprite, move to next image
       const animationCompleted = this.characterSprite.update();
+      // if animation is completed 
       if (animationCompleted) {
-        // if animation is completed and die animation has been played, play dead animation
+        // if die animation has been played, play dead animation
         if (this.currentAnimation === characterActions.die) {
           this.currentAnimation = characterActions.dead;
-        } else if (this.currentAnimation !== characterActions.run) {
-          // else if some other animation than running has been completed play default (idle) animation
-          // the running animation stops by calling the stop action method in the parent component
+        // else if the character is of type enemy, play default animation (idle)
+        } else if (this.characterType === constants.characterModes.enemy) {
+          this.currentAnimation = this.defaultAnimation;
+        // else, the character is a player, if the animation played is not run, slide or roll, play default animation
+        // run, slide and roll stop with the stop action method in the parent component, on key up, therefore the default animation is triggered there
+        } else if (
+          this.currentAnimation !== characterActions.run &&
+          this.currentAnimation !== characterActions.slide &&
+          this.currentAnimation !== characterActions.roll
+        ) {
           this.currentAnimation = this.defaultAnimation;
         }
         // let parent component know that past animation has completed, and let it know what the new animation is
@@ -82,7 +94,7 @@ export default {
         loop:
           this.currentModifications?.loop !== undefined
             ? this.currentModifications.loop
-            : this.currentAnimation.loop,
+            : this.currentAnimation.loop
       });
       // render first image
       this.characterSprite.render();
@@ -94,7 +106,7 @@ export default {
     updateModification(modifications) {
       this.currentModifications = modifications;
       this.getSprite();
-    },
+    }
   },
   mounted() {
     this.defaultAnimation = characterActions.idle;
@@ -103,7 +115,7 @@ export default {
     this.getCanvas();
     this.getSprite();
     this.animate();
-  },
+  }
 };
 </script>
 

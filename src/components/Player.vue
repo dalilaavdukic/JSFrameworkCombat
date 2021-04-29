@@ -4,6 +4,7 @@
     :character="character"
     :modifications="modifications"
     @animationStarted="setPlayersAnimation($event)"
+    :characterType="characterType"
   ></moveable-character>
 </template>
 <script>
@@ -46,7 +47,8 @@ export default {
   data() {
     return {
       characterRef: undefined,
-      paused: false
+      paused: false,
+      characterType: constants.characterModes.player
     };
   },
   destroyed() {
@@ -134,16 +136,31 @@ export default {
                 this.characterRef.facingDirection()
               );
               break;
+            case controlKeys.roll:
+              this.characterRef.roll();
+              break;
+            case controlKeys.slide:
+              this.characterRef.slide();
+              break;
           }
         }
       }
     },
     terminateCommand(e) {
       let cmd = e.keyCode;
-      // if key up came from a key that controls running
-      if (cmd === controlKeys.left || cmd === controlKeys.right) {
-        // and no other animation has been pressed simultanously
-        if (this.player.currentAnimation === characterActions.run) {
+      // if key up came from a key that controls running, rolling or sliding
+      if (
+        cmd === controlKeys.left ||
+        cmd === controlKeys.right ||
+        cmd === controlKeys.roll ||
+        cmd === controlKeys.slide
+      ) {
+        // and no other animation has been pressed simultanously (attack, shoot, jump, pause)
+        if (
+          this.player.currentAnimation === characterActions.run ||
+          this.player.currentAnimation === characterActions.slide ||
+          this.player.currentAnimation === characterActions.roll
+        ) {
           this.characterRef.stopAction();
         }
       }

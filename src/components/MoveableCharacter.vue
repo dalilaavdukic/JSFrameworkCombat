@@ -6,6 +6,7 @@
     :style="[position, transition]"
     :character="character"
     :modifications="currentModifications"
+    :characterType="characterType"
     @animationComplete="animationComplete($event)"
   >
   </character-animation>
@@ -27,6 +28,10 @@ export default {
     },
     modifications: {
       type: Object
+    },
+    characterType: {
+      type: String,
+      default: constants.characterModes.player
     }
   },
   data() {
@@ -136,14 +141,16 @@ export default {
       }, constants.jumpDuration);
     },
     slide() {
-      const action = characterActions.slide;
-      this.initiateAction(action);
-      // apply appropriate transition to make character move at desired speed
-      this.transition = transitions.slide;
-      // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
-      // move character to appropriate position
-      this.moveToNewPosition(action.name);
+      if (this.animationCompleted) {
+        const action = characterActions.slide;
+        this.initiateAction(action);
+        // apply appropriate transition to make character move at desired speed
+        this.transition = transitions.slide;
+        // set appropriate spritesheet
+        this.characterAnimation.updateAnimation(action);
+        // move character to appropriate position
+        this.moveToNewPosition(action.name);
+      }
     },
     attack() {
       const action = characterActions.attack;
@@ -158,14 +165,16 @@ export default {
       this.characterAnimation.updateAnimation(action);
     },
     roll() {
-      const action = characterActions.roll;
-      this.initiateAction(action);
-      // apply appropriate transition to make character move at desired speed
-      this.transition = transitions.roll;
-      // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
-      // move character to appropriate position
-      this.moveToNewPosition(action.name);
+      if (this.animationCompleted) {
+        const action = characterActions.roll;
+        this.initiateAction(action);
+        // apply appropriate transition to make character move at desired speed
+        this.transition = transitions.roll;
+        // set appropriate spritesheet
+        this.characterAnimation.updateAnimation(action);
+        // move character to appropriate position
+        this.moveToNewPosition(action.name);
+      }
     },
     die() {
       const action = characterActions.die;
