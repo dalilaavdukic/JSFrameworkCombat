@@ -10,6 +10,7 @@
       :character="character.name"
       :animation="animation.animation"
       :modifications="modifications"
+      :characterType="'enemies'"
     >
     </character-animation>
     <h2>{{ character.name }}</h2>

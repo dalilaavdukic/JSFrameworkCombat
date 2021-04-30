@@ -141,7 +141,10 @@ export default {
       }, constants.jumpDuration);
     },
     slide() {
-      if (this.animationCompleted) {
+      if (
+        this.animationCompleted ||
+        this.lastTriggeredAnimation !== characterActions.slide
+      ) {
         const action = characterActions.slide;
         this.initiateAction(action);
         // apply appropriate transition to make character move at desired speed
@@ -165,7 +168,10 @@ export default {
       this.characterAnimation.updateAnimation(action);
     },
     roll() {
-      if (this.animationCompleted) {
+      if (
+        this.animationCompleted ||
+        this.lastTriggeredAnimation !== characterActions.roll
+      ) {
         const action = characterActions.roll;
         this.initiateAction(action);
         // apply appropriate transition to make character move at desired speed
@@ -253,7 +259,11 @@ export default {
     // player movement requires a different logic for movement than the oponent
     // because the player moves as long as the key is pressed down
     movePlayerRight() {
-      if (this.animationCompleted) {
+      if (
+        this.animationCompleted ||
+        this.lastTriggeredAnimation !== characterActions.run ||
+        (this.lastTriggeredAnimation === characterActions.run && this.isFacingToTheLeft)
+      ) {
         // if the character is already facing the correct direction move it
         const action = characterActions.run;
         this.initiateAction(action);
@@ -270,7 +280,11 @@ export default {
     // player movement requires a different logic for movement than the oponent
     // because the player moves as long as the key is pressed down
     movePlayerLeft() {
-      if (this.animationCompleted) {
+      if (
+        this.animationCompleted ||
+        this.lastTriggeredAnimation !== characterActions.run ||
+        (this.lastTriggeredAnimation === characterActions.run && this.isFacingToTheRight)
+      ) {
         // if the character is already facing the correct direction move it
         const action = characterActions.run;
         this.initiateAction(action);

@@ -148,21 +148,23 @@ export default {
     },
     terminateCommand(e) {
       let cmd = e.keyCode;
-      // if key up came from a key that controls running, rolling or sliding
       if (
-        cmd === controlKeys.left ||
-        cmd === controlKeys.right ||
-        cmd === controlKeys.roll ||
-        cmd === controlKeys.slide
+        // if roll button has been released and roll animation was playing
+        (cmd === controlKeys.roll &&
+          this.player.currentAnimation === characterActions.roll) ||
+        // or if slide button has been released and slide animation was playing
+        (cmd === controlKeys.slide &&
+          this.player.currentAnimation === characterActions.slide) ||
+        // or if move right button has been released and run animation was playing, and character was facing right
+        (cmd === controlKeys.right &&
+          this.player.currentAnimation === characterActions.run && 
+          this.player.facingDirection === constants.side.right) ||
+        // or if move left button has been released and run animation was playing, and character was facing left
+        (cmd === controlKeys.left &&
+          this.player.currentAnimation === characterActions.run && 
+          this.player.facingDirection === constants.side.left)
       ) {
-        // and no other animation has been pressed simultanously (attack, shoot, jump, pause)
-        if (
-          this.player.currentAnimation === characterActions.run ||
-          this.player.currentAnimation === characterActions.slide ||
-          this.player.currentAnimation === characterActions.roll
-        ) {
-          this.characterRef.stopAction();
-        }
+        this.characterRef.stopAction();
       }
     }
   }
