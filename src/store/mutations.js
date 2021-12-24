@@ -90,5 +90,11 @@ export default {
   },
   setQuitInitiated(state, payload) {
     state.quitInitiated = payload;
+  },
+  addPressedKey(state, payload) {
+    state.pressedKeys.push(payload);
+  },
+  removeReleasedKey(state, payload) {
+    state.pressedKeys = state.pressedKeys.filter(keys => keys !== payload);
   }
 };

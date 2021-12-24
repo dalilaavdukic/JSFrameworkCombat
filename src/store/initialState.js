@@ -29,5 +29,6 @@ export default {
   },
   paused: false,
   quitInitiated: false,
-  assetsLoaded: false
+  assetsLoaded: false,
+  pressedKeys: []
 };

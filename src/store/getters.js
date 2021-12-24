@@ -78,7 +78,8 @@ export default {
       shotCanDamagePlayer: getters.shotCanDamagePlayer,
       over: getters.gameOver,
       paused: state.paused,
-      quitInitiated: state.quitInitiated
+      quitInitiated: state.quitInitiated,
+      pressedKeys: state.pressedKeys
     };
   },
   assetsLoaded: state => {

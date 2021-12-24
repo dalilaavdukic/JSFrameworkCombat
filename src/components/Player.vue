@@ -21,14 +21,14 @@ export default {
   props: {
     character: {
       type: String,
-      required: true
+      required: true,
     },
     modifications: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   computed: {
-    ...mapGetters(['player', 'game'])
+    ...mapGetters(['player', 'game']),
   },
   mounted() {
     this.characterRef = this.$refs.moveableCharacter;
@@ -48,7 +48,8 @@ export default {
     return {
       characterRef: undefined,
       paused: false,
-      characterType: constants.characterModes.player
+      characterType: constants.characterModes.player,
+      pressedKeys: [],
     };
   },
   destroyed() {
@@ -60,7 +61,9 @@ export default {
       'setPlayersFacingDirection',
       'setPlayersAnimation',
       'setPaused',
-      'setQuitInitiated'
+      'setQuitInitiated',
+      'addPressedKey',
+      'removeReleasedKey',
     ]),
     togglePause() {
       this.paused = !this.game.paused;
@@ -75,6 +78,9 @@ export default {
     },
     doCommand(e) {
       let cmd = e.keyCode;
+      if (this.game.pressedKeys.indexOf(cmd) === -1) {
+        this.addPressedKey(cmd);
+      }
       if (this.game.paused) {
         if (cmd === controlKeys.pause || cmd === controlKeys.esc)
           this.togglePause();
@@ -148,6 +154,9 @@ export default {
     },
     terminateCommand(e) {
       let cmd = e.keyCode;
+      if (this.game.pressedKeys.indexOf(cmd) !== -1) {
+        this.removeReleasedKey(cmd);
+      }
       if (
         // if roll button has been released and roll animation was playing
         (cmd === controlKeys.roll &&
@@ -157,17 +166,17 @@ export default {
           this.player.currentAnimation === characterActions.slide) ||
         // or if move right button has been released and run animation was playing, and character was facing right
         (cmd === controlKeys.right &&
-          this.player.currentAnimation === characterActions.run && 
+          this.player.currentAnimation === characterActions.run &&
           this.player.facingDirection === constants.side.right) ||
         // or if move left button has been released and run animation was playing, and character was facing left
         (cmd === controlKeys.left &&
-          this.player.currentAnimation === characterActions.run && 
+          this.player.currentAnimation === characterActions.run &&
           this.player.facingDirection === constants.side.left)
       ) {
         this.characterRef.stopAction();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

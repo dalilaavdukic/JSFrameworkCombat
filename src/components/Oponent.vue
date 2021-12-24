@@ -33,7 +33,7 @@ export default {
     return {
       characterRef: undefined,
       fightInterval: undefined,
-      characterType: constants.characterModes.enemy
+      characterType: constants.characterModes.enemy,
     };
   },
   computed: {
