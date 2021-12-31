@@ -128,27 +128,6 @@ export default {
               this.quitGame();
               break;
           }
-        } else {
-          switch (cmd) {
-            case controlKeys.right:
-              this.characterRef.movePlayerRight();
-              this.setPlayersFacingDirection(
-                this.characterRef.facingDirection()
-              );
-              break;
-            case controlKeys.left:
-              this.characterRef.movePlayerLeft();
-              this.setPlayersFacingDirection(
-                this.characterRef.facingDirection()
-              );
-              break;
-            case controlKeys.roll:
-              this.characterRef.roll();
-              break;
-            case controlKeys.slide:
-              this.characterRef.slide();
-              break;
-          }
         }
       }
     },

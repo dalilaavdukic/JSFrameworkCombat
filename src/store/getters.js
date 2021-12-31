@@ -84,5 +84,8 @@ export default {
   },
   assetsLoaded: state => {
     return state.assetsLoaded;
+  },
+  pressedKeys: state => {
+    return state.pressedKeys;
   }
 };

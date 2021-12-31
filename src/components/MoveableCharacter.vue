@@ -8,6 +8,7 @@
     :modifications="currentModifications"
     :characterType="characterType"
     @animationComplete="animationComplete($event)"
+    @continueAction="doContinuedAction($event)"
   >
   </character-animation>
 </template>
@@ -17,6 +18,8 @@ import characters from '@/assets/constants/characters';
 import constants from '@/assets/constants/common';
 import transitions from '@/assets/constants/transitions';
 import characterActions from '@/assets/constants/characterActions';
+import { mapMutations } from 'vuex';
+import controlKeys from '@/assets/constants/controlKeys';
 
 export default {
   name: 'MoveableCharacter',
@@ -24,15 +27,15 @@ export default {
   props: {
     character: {
       type: String,
-      default: characters.vue.name
+      default: characters.vue.name,
     },
     modifications: {
-      type: Object
+      type: Object,
     },
     characterType: {
       type: String,
-      default: constants.characterModes.player
-    }
+      default: constants.characterModes.player,
+    },
   },
   data() {
     return {
@@ -43,19 +46,19 @@ export default {
       transition: undefined,
       isJumping: false,
       positionBeforeAnimation: {},
-      characterAnimation: undefined
+      characterAnimation: undefined,
     };
   },
   computed: {
-    isFacingToTheRight: function() {
+    isFacingToTheRight: function () {
       return (
         this.currentModifications?.mode === constants.characterModes.player
       );
     },
-    isFacingToTheLeft: function() {
+    isFacingToTheLeft: function () {
       return this.currentModifications?.mode === constants.characterModes.enemy;
     },
-    slideSpeed: function() {
+    slideSpeed: function () {
       let slideSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
@@ -76,7 +79,7 @@ export default {
       }
       return slideSpeed;
     },
-    rollSpeed: function() {
+    rollSpeed: function () {
       let rollSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
@@ -97,7 +100,7 @@ export default {
       }
       return rollSpeed;
     },
-    runSpeed: function() {
+    runSpeed: function () {
       let runSpeed = 0;
       if (this.isFacingToTheLeft) {
         // if character is moving to the left
@@ -117,7 +120,7 @@ export default {
               constants.playAreaBorderLimitOffset;
       }
       return runSpeed;
-    }
+    },
   },
   created() {
     this.currentModifications = this.modifications;
@@ -128,6 +131,7 @@ export default {
     this.positionBeforeAnimation = this.getCurrentPosition();
   },
   methods: {
+    ...mapMutations(['setPlayersFacingDirection']),
     jump() {
       const action = characterActions.jump;
       this.initiateAction(action);
@@ -262,7 +266,8 @@ export default {
       if (
         this.animationCompleted ||
         this.lastTriggeredAnimation !== characterActions.run ||
-        (this.lastTriggeredAnimation === characterActions.run && this.isFacingToTheLeft)
+        (this.lastTriggeredAnimation === characterActions.run &&
+          this.isFacingToTheLeft)
       ) {
         // if the character is already facing the correct direction move it
         const action = characterActions.run;
@@ -283,7 +288,8 @@ export default {
       if (
         this.animationCompleted ||
         this.lastTriggeredAnimation !== characterActions.run ||
-        (this.lastTriggeredAnimation === characterActions.run && this.isFacingToTheRight)
+        (this.lastTriggeredAnimation === characterActions.run &&
+          this.isFacingToTheRight)
       ) {
         // if the character is already facing the correct direction move it
         const action = characterActions.run;
@@ -299,6 +305,24 @@ export default {
       }
     },
 
+    doContinuedAction(action) {
+      switch (action) {
+        case controlKeys.right:
+          this.movePlayerRight();
+          this.setPlayersFacingDirection(this.facingDirection());
+          break;
+        case controlKeys.left:
+          this.movePlayerLeft();
+          this.setPlayersFacingDirection(this.facingDirection());
+          break;
+        case controlKeys.roll:
+          this.roll();
+          break;
+        case controlKeys.slide:
+          this.slide();
+          break;
+      }
+    },
     initiateAction(action) {
       this.lastTriggeredAnimation = action;
       this.animationCompleted = false;
@@ -312,18 +336,18 @@ export default {
       // stop any remaining movement
       this.positionBeforeAnimation = this.getCurrentPosition();
       this.position = {
-        left: this.positionBeforeAnimation.left + 'px'
+        left: this.positionBeforeAnimation.left + 'px',
       };
     },
     turnToLeft() {
       this.currentModifications = {
-        mode: constants.characterModes.enemy
+        mode: constants.characterModes.enemy,
       };
       this.characterAnimation.updateModification(this.currentModifications);
     },
     turnToRight() {
       this.currentModifications = {
-        mode: constants.characterModes.player
+        mode: constants.characterModes.player,
       };
       this.characterAnimation.updateModification(this.currentModifications);
     },
@@ -344,7 +368,7 @@ export default {
       }
 
       this.position = {
-        left: this.positionBeforeAnimation.left + speed + 'px'
+        left: this.positionBeforeAnimation.left + speed + 'px',
       };
     },
     getCurrentPosition() {
@@ -354,12 +378,12 @@ export default {
         right:
           window.innerWidth -
           (this.characterAnimation.$el.offsetLeft +
-            this.characterAnimation.$el.offsetWidth)
+            this.characterAnimation.$el.offsetWidth),
       };
     },
     calculateInitialPosition() {
       this.position = {
-        left: this.isFacingToTheLeft ? 'calc(100% - 300px)' : '0px'
+        left: this.isFacingToTheLeft ? 'calc(100% - 300px)' : '0px',
       };
     },
     animationComplete(runningAnimation) {
@@ -372,8 +396,8 @@ export default {
       return this.currentModifications?.mode === constants.characterModes.player
         ? constants.side.right
         : constants.side.left;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">
