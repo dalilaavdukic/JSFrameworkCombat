@@ -3,7 +3,7 @@
     <game-header>How to play this game</game-header>
     <div class="game-instructions">
       <div class="instructions">
-        <h2>Instructions</h2>
+        <h2>Instructions (Test pipeline)</h2>
         <div>
           Choose your favourite JS framework and let it face off against other
           JS frameworks and see who wins! <br /><br />
@@ -16,8 +16,8 @@
           knife attack you have to come close to your oponent.<br /><br />
           The colored bar bellow the health bar indicates when shooting is
           available. Shooting can be performed from a distance and it causes
-          significantly more damage to your oponent than attacking with a
-          knife. So be aware of your oponent's special attack bar! <br /><br />
+          significantly more damage to your oponent than attacking with a knife.
+          So be aware of your oponent's special attack bar! <br /><br />
           In order to evade attacks by your oponent and safe your character's
           health from being affected, you can roll, slide, jump or stay away
           from your oponent (for knife attacks).<br /><br />
