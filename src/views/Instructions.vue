@@ -3,7 +3,7 @@
     <game-header>How to play this game</game-header>
     <div class="game-instructions">
       <div class="instructions">
-        <h2>Instructions (Test pipeline)</h2>
+        <h2>Instructions</h2>
         <div>
           Choose your favourite JS framework and let it face off against other
           JS frameworks and see who wins! <br /><br />

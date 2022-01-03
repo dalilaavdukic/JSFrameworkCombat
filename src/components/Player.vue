@@ -15,6 +15,13 @@ import EventBus from '@/utils/eventBus';
 import characterActions from '@/assets/constants/characterActions';
 import constants from '@/assets/constants/common';
 
+const holdableKeys = [
+  controlKeys.right,
+  controlKeys.left,
+  controlKeys.slide,
+  controlKeys.roll,
+];
+
 export default {
   name: 'Player',
   components: { MoveableCharacter },
@@ -76,9 +83,15 @@ export default {
       this.togglePause();
       this.setQuitInitiated(true);
     },
+    isHoldableKey(key) {
+      return holdableKeys.indexOf(key) !== -1;
+    },
     doCommand(e) {
       let cmd = e.keyCode;
-      if (this.game.pressedKeys.indexOf(cmd) === -1) {
+      if (
+        this.isHoldableKey(cmd) &&
+        this.game.pressedKeys.indexOf(cmd) === -1
+      ) {
         this.addPressedKey(cmd);
       }
       if (this.game.paused) {
@@ -152,7 +165,13 @@ export default {
           this.player.currentAnimation === characterActions.run &&
           this.player.facingDirection === constants.side.left)
       ) {
-        this.characterRef.stopAction();
+        if (this.game.pressedKeys.length === 0) {
+          this.characterRef.stopAction();
+        } else {
+          this.characterRef.doContinuedAction(
+            this.game.pressedKeys[this.game.pressedKeys.length - 1]
+          );
+        }
       }
     },
   },
