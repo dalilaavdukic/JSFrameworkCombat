@@ -102,7 +102,8 @@ export default {
           this.togglePause();
       } else if (
         !this.game.over &&
-        this.player.currentAnimation !== characterActions.dizzy
+        this.player.currentAnimation !== characterActions.dizzy &&
+        this.player.currentAnimation !== characterActions.takeDamage
       ) {
         if (!e.repeat) {
           switch (cmd) {

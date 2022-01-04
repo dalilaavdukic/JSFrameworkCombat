@@ -41,7 +41,8 @@ export default {
     canFight: function () {
       return (
         !this.game.over &&
-        this.enemy.currentAnimation !== characterActions.dizzy
+        this.enemy.currentAnimation !== characterActions.dizzy &&
+        this.enemy.currentAnimation !== characterActions.takeDamage
       );
     },
     alreadyAttacking: function () {
@@ -150,7 +151,7 @@ export default {
       this.setEnemysFacingDirection(this.characterRef.facingDirection());
     },
     shouldEvadeAttack() {
-      return Math.random() < 0.5;
+      return this.canFight && Math.random() < 0.5;
     },
     reactToPlayerShot() {
       if (!this.evadingAttack && this.shouldEvadeAttack()) {

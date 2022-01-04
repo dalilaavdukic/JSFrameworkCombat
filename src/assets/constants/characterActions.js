@@ -80,7 +80,7 @@ export default {
   takeDamage: {
     name: 'takeDamage',
     numberOfFrames: 1,
-    ticksPerFrame: 10,
+    ticksPerFrame: 20,
     loop: false
   }
 };
