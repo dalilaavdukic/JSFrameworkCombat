@@ -88,6 +88,9 @@ export default {
     EventBus.$on('player-shot', () => {
       this.reactToPlayerShot();
     });
+    EventBus.$on('enemy-damaged', () => {
+      this.characterRef.takeDamage();
+    });
   },
   destroyed() {
     clearInterval(this.fightInterval);

@@ -76,5 +76,11 @@ export default {
     numberOfFrames: 6,
     ticksPerFrame: 7,
     loop: false
+  },
+  takeDamage: {
+    name: 'takeDamage',
+    numberOfFrames: 1,
+    ticksPerFrame: 10,
+    loop: false
   }
 };

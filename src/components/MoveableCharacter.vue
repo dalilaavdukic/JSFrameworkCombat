@@ -132,6 +132,19 @@ export default {
   },
   methods: {
     ...mapMutations(['setPlayersFacingDirection']),
+    takeDamage() {
+      if (
+        this.lastTriggeredAnimation !== characterActions.dizzy &&
+        this.lastTriggeredAnimation !== characterActions.die
+      ) {
+        setTimeout(() => {
+          const action = characterActions.takeDamage;
+          this.initiateAction(action);
+          // set appropriate spritesheet
+          this.characterAnimation.updateAnimation(action);
+        }, 350);
+      }
+    },
     jump() {
       const action = characterActions.jump;
       this.initiateAction(action);

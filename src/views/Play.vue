@@ -105,6 +105,7 @@ export default {
           damage: constants.attackDamageHealthAmount,
         };
         this.damageHealth(payload);
+        EventBus.$emit('enemy-damaged');
       }
     },
     playerShot() {
@@ -117,6 +118,7 @@ export default {
           damage: constants.shotDamageHealthAmount,
         };
         this.damageHealth(payload);
+        EventBus.$emit('enemy-damaged');
       }
       this.decreaseSpecialAttack('player');
     },
@@ -128,6 +130,7 @@ export default {
           damage: constants.attackDamageHealthAmount,
         };
         this.damageHealth(payload);
+        EventBus.$emit('player-damaged');
       }
     },
     enemyShot() {
@@ -138,6 +141,7 @@ export default {
           damage: constants.shotDamageHealthAmount,
         };
         this.damageHealth(payload);
+        EventBus.$emit('player-damaged');
       }
       this.decreaseSpecialAttack('enemy');
     },

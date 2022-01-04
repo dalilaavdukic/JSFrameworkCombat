@@ -50,6 +50,9 @@ export default {
     EventBus.$on('player-dizzy', () => {
       this.characterRef.dizzy();
     });
+    EventBus.$on('player-damaged', () => {
+      this.characterRef.takeDamage();
+    });
   },
   data() {
     return {
