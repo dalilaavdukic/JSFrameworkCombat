@@ -47,6 +47,7 @@ export default {
       isJumping: false,
       positionBeforeAnimation: {},
       characterAnimation: undefined,
+      attackSide: undefined,
     };
   },
   computed: {
@@ -121,6 +122,25 @@ export default {
       }
       return runSpeed;
     },
+    damageSpeed: function () {
+      let damageSpeed = 0;
+      if (this.attackSide === constants.side.left) {
+        damageSpeed =
+          // don't let character move out of screen to the right
+          this.positionBeforeAnimation.right - constants.damageSpeed >= 0
+            ? constants.damageSpeed
+            : this.positionBeforeAnimation.right +
+              constants.playAreaBorderLimitOffset;
+      } else {
+        damageSpeed =
+          // don't let character move out of screen to the left
+          -(this.positionBeforeAnimation.left - constants.damageSpeed >= 0
+            ? constants.damageSpeed
+            : this.positionBeforeAnimation.left +
+              constants.playAreaBorderLimitOffset);
+      }
+      return damageSpeed;
+    },
   },
   created() {
     this.currentModifications = this.modifications;
@@ -132,16 +152,21 @@ export default {
   },
   methods: {
     ...mapMutations(['setPlayersFacingDirection']),
-    takeDamage() {
+    takeDamage(attackSide) {
       if (
         this.lastTriggeredAnimation !== characterActions.dizzy &&
         this.lastTriggeredAnimation !== characterActions.die
       ) {
         setTimeout(() => {
+          this.attackSide = attackSide;
           const action = characterActions.takeDamage;
           this.initiateAction(action);
+          // apply appropriate transition to make character move at desired speed
+          this.transition = transitions.takeDamage;
           // set appropriate spritesheet
           this.characterAnimation.updateAnimation(action);
+          // move character to appropriate position
+          this.moveToNewPosition(action.name);
         }, 350);
       }
     },
@@ -377,6 +402,9 @@ export default {
           break;
         case characterActions.run.name:
           speed = this.runSpeed;
+          break;
+        case characterActions.takeDamage.name:
+          speed = this.damageSpeed;
           break;
       }
 

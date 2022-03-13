@@ -35,7 +35,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['player', 'game']),
+    ...mapGetters(['player', 'game', 'distance']),
   },
   mounted() {
     this.characterRef = this.$refs.moveableCharacter;
@@ -51,7 +51,9 @@ export default {
       this.characterRef.dizzy();
     });
     EventBus.$on('player-damaged', () => {
-      this.characterRef.takeDamage();
+      const attackSide =
+        this.distance > 0 ? constants.side.right : constants.side.left;
+      this.characterRef.takeDamage(attackSide);
     });
   },
   data() {

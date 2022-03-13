@@ -9,5 +9,8 @@ export default {
   },
   run: {
     transition: `left ${constants.runDuration} linear`
+  },
+  takeDamage: {
+    transition: `left ${constants.damageDuration} linear`
   }
 };

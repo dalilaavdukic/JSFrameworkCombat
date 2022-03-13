@@ -37,7 +37,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['enemy', 'player', 'game', 'positions']),
+    ...mapGetters(['enemy', 'player', 'game', 'positions', 'distance']),
     canFight: function () {
       return (
         !this.game.over &&
@@ -90,7 +90,9 @@ export default {
       this.reactToPlayerShot();
     });
     EventBus.$on('enemy-damaged', () => {
-      this.characterRef.takeDamage();
+      const attackSide =
+        this.distance > 0 ? constants.side.left : constants.side.right;
+      this.characterRef.takeDamage(attackSide);
     });
   },
   destroyed() {
