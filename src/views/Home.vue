@@ -27,6 +27,13 @@
         </character-animation>
       </div>
       <game-menu></game-menu>
+      <div class="credits">
+        <div>Game by Dalila Balic</div>
+        <div>
+          Characters by
+          <a href="https://themeforest.net/user/pasilan">Pasilan</a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -91,6 +98,15 @@ export default {
   }
   .menu-side {
     justify-content: flex-start;
+    .credits {
+      position: absolute;
+      bottom: 31px;
+      right: 40px;
+      font-size: 20px;
+      a {
+        color: $js-dark-yellow;
+      }
+    }
   }
 }
 </style>

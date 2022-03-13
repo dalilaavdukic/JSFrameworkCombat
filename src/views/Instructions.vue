@@ -8,19 +8,19 @@
           Choose your favourite JS framework and let it face off against other
           JS frameworks and see who wins! <br /><br />
           The character who's health (upper bar, yellow) first reaches 0,
-          looses.<br /><br />
-          You can decrease your oponent's health by attacking them with a knife
+          loses.<br /><br />
+          You can decrease your opponent's health by attacking them with a knife
           or shooting at them.<br /><br />
           Attacking with a knife is always available, but causes less damage to
-          your oponen't health than shooting. In order to cause damage with a
-          knife attack you have to come close to your oponent.<br /><br />
+          your opponen't health than shooting. In order to cause damage with a
+          knife attack you have to come close to your opponent.<br /><br />
           The colored bar bellow the health bar indicates when shooting is
           available. Shooting can be performed from a distance and it causes
-          significantly more damage to your oponent than attacking with a knife.
-          So be aware of your oponent's special attack bar! <br /><br />
-          In order to evade attacks by your oponent and safe your character's
+          significantly more damage to your opponent than attacking with a
+          knife. So be aware of your opponent's special attack bar! <br /><br />
+          In order to evade attacks by your opponent and safe your character's
           health from being affected, you can roll, slide, jump or stay away
-          from your oponent (for knife attacks).<br /><br />
+          from your opponent (for knife attacks).<br /><br />
           Let's play!
         </div>
       </div>
