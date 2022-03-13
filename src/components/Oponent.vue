@@ -153,7 +153,7 @@ export default {
       this.setEnemysFacingDirection(this.characterRef.facingDirection());
     },
     shouldEvadeAttack() {
-      return this.canFight && Math.random() < 0.5;
+      return this.canFight && Math.random() < 0.35;
     },
     reactToPlayerShot() {
       if (!this.evadingAttack && this.shouldEvadeAttack()) {
