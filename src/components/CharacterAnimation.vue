@@ -1,7 +1,5 @@
 <template>
-  <div class="canvas-container">
-    <canvas ref="characterAnimation"></canvas>
-  </div>
+  <canvas ref="characterAnimation"></canvas>
 </template>
 
 <script>
@@ -59,9 +57,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.canvas-container {
-  canvas {
-    height: 300px;
-  }
+canvas {
+  height: 300px;
 }
 </style>
