@@ -13,13 +13,13 @@ export default (options) => {
       //draw the image
       context.drawImage(
         image,
-        (frameIndex * width) / numberOfFrames,
+        frameIndex * width,
         0,
-        width / numberOfFrames,
+        width,
         height,
         0,
         0,
-        width / numberOfFrames,
+        width,
         height
       );
     },

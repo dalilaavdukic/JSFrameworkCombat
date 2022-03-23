@@ -39,7 +39,7 @@ export default {
       this.characterImage.src = require(`../assets/characters/${this.animation.character.name}/${this.animation.action.name}.png`);
       this.characterSprite = sprite({
         context: this.canvas.getContext("2d"),
-        width: this.width * this.animation.action.numberOfFrames,
+        width: this.width,
         height: this.height,
         image: this.characterImage,
         numberOfFrames: this.animation.action.numberOfFrames,
