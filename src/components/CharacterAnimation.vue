@@ -97,7 +97,7 @@ export default {
       // create sprite object, responsible for rendering one frame of the sprite at a time
       this.characterSprite = sprite({
         context: this.canvas.getContext('2d'),
-        width: this.width * this.currentAnimation.numberOfFrames,
+        width: this.width,
         height: this.height,
         image: this.characterImage,
         numberOfFrames: this.currentAnimation.numberOfFrames,

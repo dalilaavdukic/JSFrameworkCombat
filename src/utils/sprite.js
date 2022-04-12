@@ -4,26 +4,23 @@ export default options => {
   let ticksPerFrame = options.ticksPerFrame || 0; // The number of updates until the next frame should be displayed
   let numberOfFrames = options.numberOfFrames || 1;
 
+  const { context, width, height, image, loop } = options;
+
   return {
-    context: options.context,
-    width: options.width,
-    height: options.height,
-    image: options.image,
-    loop: options.loop,
     render: function() {
       // clear the canvas
-      this.context.clearRect(0, 0, this.width, this.height);
+      context.clearRect(0, 0, width, height);
       //draw the image
-      this.context.drawImage(
-        this.image,
-        (frameIndex * this.width) / numberOfFrames,
+      context.drawImage(
+        image,
+        frameIndex * width,
         0,
-        this.width / numberOfFrames,
-        this.height,
+        width,
+        height,
         0,
         0,
-        this.width / numberOfFrames,
-        this.height
+        width,
+        height
       );
     },
     update: function() {
@@ -37,7 +34,7 @@ export default options => {
         if (frameIndex < numberOfFrames - 1) {
           // Go to the next frame
           frameIndex += 1;
-        } else if (this.loop) {
+        } else if (loop) {
           frameIndex = 0;
         } else {
           animationCompleted = true;
