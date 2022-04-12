@@ -5,16 +5,15 @@
 <script>
 import sprite from "../utils/sprite";
 
+const width = 600;
+const height = 600;
+
 export default {
   name: "CharacterAnimation",
   props: ["animation"],
   data() {
     return {
-      canvas: {},
-      characterImage: new Image(),
       characterSprite: {},
-      width: 600,
-      height: 600,
     };
   },
   watch: {
@@ -24,24 +23,22 @@ export default {
     },
   },
   methods: {
-    getCanvas: function () {
-      this.canvas = this.$refs.characterAnimation;
-      this.canvas.width = this.width;
-      this.canvas.height = this.height;
-    },
     animate: function () {
       requestAnimationFrame(this.animate);
       this.characterSprite.update();
       this.characterSprite.render();
     },
     renderSprite: function () {
-      this.getCanvas();
-      this.characterImage.src = require(`../assets/characters/${this.animation.character.name}/${this.animation.action.name}.png`);
+      const canvas = this.$refs.characterAnimation;
+      canvas.width = width;
+      canvas.height = height;
+      const characterImage = new Image();
+      characterImage.src = require(`../assets/characters/${this.animation.character.name}/${this.animation.action.name}.png`);
       this.characterSprite = sprite({
-        context: this.canvas.getContext("2d"),
-        width: this.width,
-        height: this.height,
-        image: this.characterImage,
+        context: canvas.getContext("2d"),
+        width,
+        height,
+        image: characterImage,
         numberOfFrames: this.animation.action.numberOfFrames,
         ticksPerFrame: this.animation.action.ticksPerFrame,
         loop: this.animation.action.loop,
