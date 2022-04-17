@@ -102,10 +102,7 @@ export default {
         image: this.characterImage,
         numberOfFrames: this.currentAnimation.numberOfFrames,
         ticksPerFrame: this.currentAnimation.ticksPerFrame,
-        loop:
-          this.currentModifications?.loop !== undefined
-            ? this.currentModifications.loop
-            : this.currentAnimation.loop,
+        loop: this.currentAnimation.loop,
       });
       // render first image
       this.characterSprite.render();

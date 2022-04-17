@@ -2,7 +2,6 @@
   <moveable-character
     ref="moveableCharacter"
     :character="character"
-    :modifications="modifications"
     @animationStarted="setPlayersAnimation($event)"
     :characterType="characterType"
   ></moveable-character>
@@ -29,9 +28,6 @@ export default {
     character: {
       type: String,
       required: true,
-    },
-    modifications: {
-      type: Object,
     },
   },
   computed: {

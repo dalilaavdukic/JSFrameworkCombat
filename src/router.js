@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 
 import Home from './views/Home';
 import Characters from './views/Characters';
-import Oponents from './views/Oponents';
 import Play from './views/Play';
 import Instructions from './views/Instructions';
 import store from './store';
@@ -30,11 +29,6 @@ export default new VueRouter({
       name: 'characters',
       path: '/characters',
       component: Characters
-    },
-    {
-      name: 'oponents',
-      path: '/oponents',
-      component: Oponents
     },
     {
       path: '/play',
