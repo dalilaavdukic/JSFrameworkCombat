@@ -2,7 +2,7 @@
   <moveable-character
     ref="moveableCharacter"
     :character="character"
-    :modifications="modifications"
+    :modification="characterType"
     @animationStarted="setEnemysAnimation($event)"
     :characterType="characterType"
   ></moveable-character>
@@ -23,10 +23,6 @@ export default {
     character: {
       type: String,
       required: true,
-    },
-    modifications: {
-      type: Object,
-      default: () => ({ mode: constants.characterModes.enemy }),
     },
   },
   data() {

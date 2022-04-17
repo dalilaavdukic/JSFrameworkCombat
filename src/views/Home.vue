@@ -6,13 +6,13 @@
         <character-animation
           :character="characters.vue.name"
           :animation="vueAnimation.animation"
-          :modifications="vueAnimation.modifications"
+          :modification="vueAnimation.modification"
         >
         </character-animation>
         <character-animation
           :character="characters.react.name"
           :animation="reactAnimation.animation"
-          :modifications="reactAnimation.modifications"
+          :modification="reactAnimation.modification"
         >
         </character-animation>
       </div>
@@ -22,7 +22,7 @@
         <character-animation
           :character="characters.angular.name"
           :animation="angularAnimation.animation"
-          :modifications="angularAnimation.modifications"
+          :modification="angularAnimation.modification"
         >
         </character-animation>
       </div>
@@ -61,15 +61,11 @@ export default {
       },
       reactAnimation: {
         animation: { ...characterActions.shoot, loop: true },
-        modifications: {
-          mode: constants.characterModes.enemy,
-        },
+        modification: constants.characterModes.enemy,
       },
       angularAnimation: {
         animation: { ...characterActions.jetpack, loop: true },
-        modifications: {
-          mode: constants.characterModes.enemy,
-        },
+        modification: constants.characterModes.enemy,
       },
     };
   },

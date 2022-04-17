@@ -20,8 +20,8 @@ export default {
       type: String,
       required: true,
     },
-    modifications: {
-      type: Object,
+    modification: {
+      type: String,
     },
     characterType: {
       type: String,
@@ -38,7 +38,7 @@ export default {
       characterMode: constants.characterModes.player,
       defaultAnimation: {},
       currentAnimation: {},
-      currentModifications: {},
+      currentModification: '',
     };
   },
   computed: {
@@ -86,9 +86,9 @@ export default {
       this.characterSprite.render();
     },
     getSprite() {
-      // if a modification (enemy, loop) has been provided use it
-      if (this.currentModifications?.mode)
-        this.characterMode = this.currentModifications.mode;
+      // if a modification (enemy) has been provided use it
+      if (this.currentModification)
+        this.characterMode = this.currentModification;
       // get correct sprite image from image resources
       this.characterImage =
         gameAssetsService.assets.characters[this.characterMode][this.character][
@@ -111,18 +111,20 @@ export default {
       this.currentAnimation = animation;
       this.getSprite();
     },
-    updateModification(modifications) {
-      this.currentModifications = modifications;
-      this.getSprite();
-    },
   },
   mounted() {
     this.defaultAnimation = characterActions.idle;
     this.currentAnimation = this.animation;
-    this.currentModifications = this.modifications;
+    this.currentModification = this.modification;
     this.getCanvas();
     this.getSprite();
     this.animate();
+  },
+  watch: {
+    modification: function () {
+      this.currentModification = this.modification;
+      this.getSprite();
+    },
   },
 };
 </script>

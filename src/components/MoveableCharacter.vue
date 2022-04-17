@@ -5,7 +5,7 @@
     :class="{ 'jump-animation': isJumping }"
     :style="[position, transition]"
     :character="character"
-    :modifications="currentModifications"
+    :modification="currentModification"
     :characterType="characterType"
     @animationComplete="animationComplete($event)"
     @continueAction="doContinuedAction($event)"
@@ -29,8 +29,8 @@ export default {
       type: String,
       default: characters.vue.name,
     },
-    modifications: {
-      type: Object,
+    modification: {
+      type: String,
     },
     characterType: {
       type: String,
@@ -41,7 +41,7 @@ export default {
     return {
       lastTriggeredAnimation: {},
       animationCompleted: true,
-      currentModifications: {},
+      currentModification: '',
       position: {},
       transition: undefined,
       isJumping: false,
@@ -52,12 +52,10 @@ export default {
   },
   computed: {
     isFacingToTheRight: function () {
-      return (
-        this.currentModifications?.mode === constants.characterModes.player
-      );
+      return this.currentModification === constants.characterModes.player;
     },
     isFacingToTheLeft: function () {
-      return this.currentModifications?.mode === constants.characterModes.enemy;
+      return this.currentModification === constants.characterModes.enemy;
     },
     slideSpeed: function () {
       let slideSpeed = 0;
@@ -143,7 +141,7 @@ export default {
     },
   },
   created() {
-    this.currentModifications = this.modifications;
+    this.currentModification = this.modification;
     this.calculateInitialPosition();
   },
   mounted() {
@@ -378,16 +376,10 @@ export default {
       };
     },
     turnToLeft() {
-      this.currentModifications = {
-        mode: constants.characterModes.enemy,
-      };
-      this.characterAnimation.updateModification(this.currentModifications);
+      this.currentModification = constants.characterModes.enemy;
     },
     turnToRight() {
-      this.currentModifications = {
-        mode: constants.characterModes.player,
-      };
-      this.characterAnimation.updateModification(this.currentModifications);
+      this.currentModification = constants.characterModes.player;
     },
     moveToNewPosition(action) {
       this.positionBeforeAnimation = this.getCurrentPosition();
@@ -434,7 +426,7 @@ export default {
       this.$emit('animationStarted', runningAnimation);
     },
     facingDirection() {
-      return this.currentModifications?.mode === constants.characterModes.player
+      return this.currentModification === constants.characterModes.player
         ? constants.side.right
         : constants.side.left;
     },
