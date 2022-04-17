@@ -89,20 +89,28 @@ export default {
     },
     doCommand(e) {
       let cmd = e.keyCode;
+
+      // check if user pressed a key they can hold down to continuesly perform an action (left, right, roll, slide)
+      // and if pressed key is not added to list of pressed keys yet
       if (
         this.isHoldableKey(cmd) &&
         this.game.pressedKeys.indexOf(cmd) === -1
       ) {
+        // add it to list of pressed down keys
         this.addPressedKey(cmd);
       }
+
       if (this.game.paused) {
+        // if the game is paused, ignore all commands except for resuming game
         if (cmd === controlKeys.pause || cmd === controlKeys.esc)
           this.togglePause();
       } else if (
+        // if the game is not over and the player is not dizzy or taking damage
         !this.game.over &&
         this.player.currentAnimation !== characterActions.dizzy &&
         this.player.currentAnimation !== characterActions.takeDamage
       ) {
+        // process the user's key press
         if (!e.repeat) {
           switch (cmd) {
             case controlKeys.right:
@@ -148,28 +156,23 @@ export default {
     },
     terminateCommand(e) {
       let cmd = e.keyCode;
+
+      // if the user released the last pressed key, remove it from list of pressed keys
       if (this.game.pressedKeys.indexOf(cmd) !== -1) {
         this.removeReleasedKey(cmd);
       }
+
+      // if the game is not over and the player is not dizzy or taking damage
       if (
-        // if roll button has been released and roll animation was playing
-        (cmd === controlKeys.roll &&
-          this.player.currentAnimation === characterActions.roll) ||
-        // or if slide button has been released and slide animation was playing
-        (cmd === controlKeys.slide &&
-          this.player.currentAnimation === characterActions.slide) ||
-        // or if move right button has been released and run animation was playing, and character was facing right
-        (cmd === controlKeys.right &&
-          this.player.currentAnimation === characterActions.run &&
-          this.player.facingDirection === constants.side.right) ||
-        // or if move left button has been released and run animation was playing, and character was facing left
-        (cmd === controlKeys.left &&
-          this.player.currentAnimation === characterActions.run &&
-          this.player.facingDirection === constants.side.left)
+        !this.game.over &&
+        this.player.currentAnimation !== characterActions.dizzy &&
+        this.player.currentAnimation !== characterActions.takeDamage
       ) {
         if (this.game.pressedKeys.length === 0) {
+          // if all keys have been released stop action and play idle animation
           this.characterRef.stopAction();
         } else {
+          // if there are still pressed down keys, play the action of the most recently pressed
           this.characterRef.doContinuedAction(
             this.game.pressedKeys[this.game.pressedKeys.length - 1]
           );
