@@ -104,53 +104,53 @@ export default {
         // if the game is paused, ignore all commands except for resuming game
         if (cmd === controlKeys.pause || cmd === controlKeys.esc)
           this.togglePause();
-      } else if (
-        // if the game is not over and the player is not dizzy or taking damage
-        !this.game.over &&
-        this.player.currentAnimation !== characterActions.dizzy &&
-        this.player.currentAnimation !== characterActions.takeDamage
-      ) {
-        // process the user's key press
-        if (!e.repeat) {
-          switch (cmd) {
-            case controlKeys.right:
-              this.characterRef.movePlayerRight();
-              this.setPlayersFacingDirection(
-                this.characterRef.facingDirection()
-              );
-              break;
-            case controlKeys.left:
-              this.characterRef.movePlayerLeft();
-              this.setPlayersFacingDirection(
-                this.characterRef.facingDirection()
-              );
-              break;
-            case controlKeys.jump:
-              this.characterRef.jump();
-              break;
-            case controlKeys.slide:
-              this.characterRef.slide();
-              break;
-            case controlKeys.attack:
-              this.characterRef.attack();
-              this.$emit('attack');
-              break;
-            case controlKeys.shoot:
-              if (this.player.canUseSpecialAttack) {
-                this.characterRef.shoot();
-                this.$emit('shoot');
-              }
-              break;
-            case controlKeys.roll:
-              this.characterRef.roll();
-              break;
-            case controlKeys.pause:
-              this.togglePause();
-              break;
-            case controlKeys.esc:
-              this.quitGame();
-              break;
-          }
+        return;
+      }
+
+      // if the game is over and the player is dizzy or taking damage, don't process the user's key presses
+      if (
+        this.game.over ||
+        this.player.currentAnimation === characterActions.dizzy ||
+        this.player.currentAnimation === characterActions.takeDamage
+      )
+        return;
+
+      // process the user's key press
+      if (!e.repeat) {
+        switch (cmd) {
+          case controlKeys.right:
+            this.characterRef.movePlayerRight();
+            this.setPlayersFacingDirection(this.characterRef.facingDirection());
+            break;
+          case controlKeys.left:
+            this.characterRef.movePlayerLeft();
+            this.setPlayersFacingDirection(this.characterRef.facingDirection());
+            break;
+          case controlKeys.jump:
+            this.characterRef.jump();
+            break;
+          case controlKeys.slide:
+            this.characterRef.slide();
+            break;
+          case controlKeys.attack:
+            this.characterRef.attack();
+            this.$emit('attack');
+            break;
+          case controlKeys.shoot:
+            if (this.player.canUseSpecialAttack) {
+              this.characterRef.shoot();
+              this.$emit('shoot');
+            }
+            break;
+          case controlKeys.roll:
+            this.characterRef.roll();
+            break;
+          case controlKeys.pause:
+            this.togglePause();
+            break;
+          case controlKeys.esc:
+            this.quitGame();
+            break;
         }
       }
     },
@@ -162,21 +162,29 @@ export default {
         this.removeReleasedKey(cmd);
       }
 
-      // if the game is not over and the player is not dizzy or taking damage
+      // if the game is over and the player is dizzy or taking damage, don't stop any actions or play new ones
       if (
-        !this.game.over &&
-        this.player.currentAnimation !== characterActions.dizzy &&
-        this.player.currentAnimation !== characterActions.takeDamage
-      ) {
-        if (this.game.pressedKeys.length === 0) {
-          // if all keys have been released stop action and play idle animation
-          this.characterRef.stopAction();
-        } else {
-          // if there are still pressed down keys, play the action of the most recently pressed
-          this.characterRef.doContinuedAction(
-            this.game.pressedKeys[this.game.pressedKeys.length - 1]
-          );
-        }
+        this.game.over ||
+        this.player.currentAnimation === characterActions.dizzy ||
+        this.player.currentAnimation === characterActions.takeDamage
+      )
+        return;
+
+      // if all keys have been released
+      if (this.game.pressedKeys.length === 0) {
+        // if the player is shooting or atacking don't stop the action until animation finishes by itself
+        if (
+          this.player.currentAnimation === characterActions.shoot ||
+          this.player.currentAnimation === characterActions.attack
+        )
+          return;
+        // stop action and play idle animation
+        this.characterRef.stopAction();
+      } else {
+        // if there are still pressed down keys, play the action of the most recently pressed
+        this.characterRef.doContinuedAction(
+          this.game.pressedKeys[this.game.pressedKeys.length - 1]
+        );
       }
     },
   },
