@@ -57,23 +57,18 @@ export default {
     return {
       characters: characters,
       vueAnimation: {
-        animation: characterActions.shoot,
-        modifications: {
-          loop: true,
-        },
+        animation: { ...characterActions.shoot, loop: true },
       },
       reactAnimation: {
-        animation: characterActions.shoot,
+        animation: { ...characterActions.shoot, loop: true },
         modifications: {
           mode: constants.characterModes.enemy,
-          loop: true,
         },
       },
       angularAnimation: {
-        animation: characterActions.jetpack,
+        animation: { ...characterActions.jetpack, loop: true },
         modifications: {
           mode: constants.characterModes.enemy,
-          loop: true,
         },
       },
     };

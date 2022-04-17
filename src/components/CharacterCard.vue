@@ -8,8 +8,7 @@
     <character-animation
       ref="characterAnimation"
       :character="character.name"
-      :animation="animation.animation"
-      :modifications="modifications"
+      :animation="animation"
       :characterType="'enemies'"
     >
     </character-animation>
@@ -34,8 +33,7 @@ export default {
   components: { CharacterAnimation },
   data() {
     return {
-      animation: { animation: characterActions.idle },
-      modifications: {},
+      animation: characterActions.idle,
       availableAnimations: ['attack', 'shoot', 'slide'],
     };
   },
@@ -49,9 +47,8 @@ export default {
     ...mapMutations(['chooseCharacter']),
     mouseOver() {
       const characterAnimation = this.$refs.characterAnimation;
-      const animation = this.getRandomAnimation();
-      this.modifications = { loop: false };
-      characterAnimation.updateAnimation(animation);
+      this.animation = this.getRandomAnimation();
+      characterAnimation.updateAnimation(this.animation);
     },
     getRandomAnimation() {
       const arrayIndex = Math.round(
@@ -68,7 +65,7 @@ export default {
       if (e.keyCode === 13) {
         this.selectCharacter();
       }
-    }
+    },
   },
 };
 </script>
@@ -84,7 +81,8 @@ export default {
   h2 {
     margin-top: 0px;
   }
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     box-shadow: $box-shadow;
     outline: none;
   }
