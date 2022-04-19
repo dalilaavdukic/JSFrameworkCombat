@@ -41,7 +41,6 @@ export default {
   data() {
     return {
       lastTriggeredAnimation: {},
-      animationCompleted: true,
       currentModification: '',
       currentAnimation: undefined,
       position: {},
@@ -183,19 +182,14 @@ export default {
       }, constants.jumpDuration);
     },
     slide() {
-      if (
-        this.animationCompleted ||
-        this.lastTriggeredAnimation !== characterActions.slide
-      ) {
-        const action = characterActions.slide;
-        this.initiateAction(action);
-        // apply appropriate transition to make character move at desired speed
-        this.transition = transitions.slide;
-        // set appropriate spritesheet
-        this.currentAnimation = { ...action };
-        // move character to appropriate position
-        this.moveToNewPosition(action.name);
-      }
+      const action = characterActions.slide;
+      this.initiateAction(action);
+      // apply appropriate transition to make character move at desired speed
+      this.transition = transitions.slide;
+      // set appropriate spritesheet
+      this.currentAnimation = { ...action };
+      // move character to appropriate position
+      this.moveToNewPosition(action.name);
     },
     attack() {
       const action = characterActions.attack;
@@ -210,19 +204,14 @@ export default {
       this.currentAnimation = { ...action };
     },
     roll() {
-      if (
-        this.animationCompleted ||
-        this.lastTriggeredAnimation !== characterActions.roll
-      ) {
-        const action = characterActions.roll;
-        this.initiateAction(action);
-        // apply appropriate transition to make character move at desired speed
-        this.transition = transitions.roll;
-        // set appropriate spritesheet
-        this.currentAnimation = { ...action };
-        // move character to appropriate position
-        this.moveToNewPosition(action.name);
-      }
+      const action = characterActions.roll;
+      this.initiateAction(action);
+      // apply appropriate transition to make character move at desired speed
+      this.transition = transitions.roll;
+      // set appropriate spritesheet
+      this.currentAnimation = { ...action };
+      // move character to appropriate position
+      this.moveToNewPosition(action.name);
     },
     die() {
       const action = characterActions.die;
@@ -244,22 +233,25 @@ export default {
         }
       }, constants.dizzinessDuration);
     },
-    moveRight() {
+    moveEnemyRight() {
       if (this.isFacingToTheLeft) {
         // if the character is facing the opposite direction
-        if (
-          !this.animationCompleted &&
-          this.lastTriggeredAnimation !== characterActions.idle
-        ) {
-          // and the animation has not finished yet, stop the action but leave the character facing the same direction
-          this.stopAction();
-        } else {
-          // if the animation has finished, only turn the character around without moving it
-          this.turnToRight();
-        }
+        this.turnToRight();
         return;
       }
       // if the character is already facing the correct direction move it
+      this.moveRight();
+    },
+    moveEnemyLeft() {
+      if (this.isFacingToTheRight) {
+        // if the character is facing the opposite direction
+        this.turnToLeft();
+        return;
+      }
+      // if the character is already facing the correct direction move it
+      this.moveLeft();
+    },
+    moveRight() {
       const action = characterActions.run;
       this.initiateAction(action);
       // make sure character is facing to the right
@@ -272,21 +264,6 @@ export default {
       this.moveToNewPosition(action.name);
     },
     moveLeft() {
-      if (this.isFacingToTheRight) {
-        // if the character is facing the opposite direction
-        if (
-          !this.animationCompleted &&
-          this.lastTriggeredAnimation !== characterActions.idle
-        ) {
-          // and the animation has not finished yet, stop the action but leave the character facing the same direction
-          this.stopAction();
-        } else {
-          // if the animation has finished, only turn the character around without moving it
-          this.turnToLeft();
-        }
-        return;
-      }
-      // if the character is already facing the correct direction move it
       const action = characterActions.run;
       this.initiateAction(action);
       // make sure character is facing to the left
@@ -298,59 +275,15 @@ export default {
       // move character to appropriate position
       this.moveToNewPosition(action.name);
     },
-    // player movement requires a different logic for movement than the oponent
-    // because the player moves as long as the key is pressed down
-    movePlayerRight() {
-      if (
-        this.animationCompleted ||
-        this.lastTriggeredAnimation !== characterActions.run ||
-        (this.lastTriggeredAnimation === characterActions.run &&
-          this.isFacingToTheLeft)
-      ) {
-        // if the character is already facing the correct direction move it
-        const action = characterActions.run;
-        this.initiateAction(action);
-        // make sure character is facing to the right
-        this.turnToRight();
-        // apply appropriate transition to make character move at desired speed
-        this.transition = transitions.run;
-        // set appropriate spritesheet
-        this.currentAnimation = { ...action };
-        // move character to appropriate position
-        this.moveToNewPosition(action.name);
-      }
-    },
-    // player movement requires a different logic for movement than the oponent
-    // because the player moves as long as the key is pressed down
-    movePlayerLeft() {
-      if (
-        this.animationCompleted ||
-        this.lastTriggeredAnimation !== characterActions.run ||
-        (this.lastTriggeredAnimation === characterActions.run &&
-          this.isFacingToTheRight)
-      ) {
-        // if the character is already facing the correct direction move it
-        const action = characterActions.run;
-        this.initiateAction(action);
-        // make sure character is facing to the left
-        this.turnToLeft();
-        // apply appropriate transition to make character move at desired speed
-        this.transition = transitions.run;
-        // set appropriate spritesheet
-        this.currentAnimation = { ...action };
-        // move character to appropriate position
-        this.moveToNewPosition(action.name);
-      }
-    },
 
     doContinuedAction(action) {
       switch (action) {
         case controlKeys.right:
-          this.movePlayerRight();
+          this.moveRight();
           this.setPlayersFacingDirection(this.facingDirection());
           break;
         case controlKeys.left:
-          this.movePlayerLeft();
+          this.moveLeft();
           this.setPlayersFacingDirection(this.facingDirection());
           break;
         case controlKeys.roll:
@@ -363,13 +296,11 @@ export default {
     },
     initiateAction(action) {
       this.lastTriggeredAnimation = action;
-      this.animationCompleted = false;
       this.$emit('animationStarted', action);
     },
     stopAction() {
       // use idle spritesheet
       this.currentAnimation = characterActions.idle;
-      this.animationCompleted = true;
       this.lastTriggeredAnimation = characterActions.idle;
       // stop any remaining movement
       this.positionBeforeAnimation = this.getCurrentPosition();
@@ -422,8 +353,6 @@ export default {
       };
     },
     animationComplete(runningAnimation) {
-      // last animation has been completed
-      this.animationCompleted = true;
       // emit newly started animation so it can be saved in the store
       this.$emit('animationStarted', runningAnimation);
     },

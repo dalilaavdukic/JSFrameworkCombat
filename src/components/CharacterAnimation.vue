@@ -36,7 +36,6 @@ export default {
       width: 600,
       height: 600,
       characterMode: constants.characterModes.player,
-      defaultAnimation: {},
       currentAnimation: {},
       currentModification: '',
     };
@@ -50,40 +49,49 @@ export default {
       this.canvas.width = this.width;
       this.canvas.height = this.height;
     },
-    animate() {
-      const requestiId = requestAnimationFrame(this.animate);
+    animate(requestiId) {
       // update sprite, move to next image
       const animationCompleted = this.characterSprite.update();
-      // if animation is completed
-      if (animationCompleted) {
-        // if character is dead, don't play any new animations
-        if (this.currentAnimation === characterActions.dead) {
-          cancelAnimationFrame(requestiId);
-          return;
-        } else if (this.currentAnimation === characterActions.die) {
-          // else if die animation has been played, play dead animation
-          this.currentAnimation = characterActions.dead;
-        } else if (
-          // else, if the character is a player, and there are pressed down keys
-          this.characterType === constants.characterModes.player &&
-          this.pressedKeys.length > 0
-        ) {
-          // trigger action for last key that is being helled down
-          this.$emit('animationComplete', this.currentAnimation);
-          this.$emit(
-            'continueAction',
-            this.pressedKeys[this.pressedKeys.length - 1]
-          );
-          return;
-        } else {
-          // else, play default animation (idle)
-          this.currentAnimation = this.defaultAnimation;
-          // let parent component know that past animation has completed, and let it know what the new animation is
-          this.$emit('animationComplete', this.currentAnimation);
-          // get new sprite
-          this.getSprite();
-        }
+
+      // if animation is not completed, continue rendering frames
+      if (!animationCompleted) return;
+
+      // if character is dead, don't play any new animations
+      if (this.currentAnimation === characterActions.dead) {
+        cancelAnimationFrame(requestiId);
+        return;
       }
+
+      if (this.currentAnimation === characterActions.die) {
+        // if die animation has been played, play dead animation
+        this.currentAnimation = characterActions.dead;
+        return;
+      }
+
+      if (
+        // if the character is a player, and there are pressed down keys
+        this.characterType === constants.characterModes.player &&
+        this.pressedKeys.length > 0
+      ) {
+        // trigger action for last key that is being helled down
+        this.$emit('animationComplete', this.currentAnimation);
+        this.$emit(
+          'continueAction',
+          this.pressedKeys[this.pressedKeys.length - 1]
+        );
+        return;
+      }
+
+      // default: play default animation (idle)
+      this.currentAnimation = characterActions.idle;
+      // let parent component know that past animation has completed, and let it know what the new animation is
+      this.$emit('animationComplete', this.currentAnimation);
+      // get new sprite
+      this.getSprite();
+    },
+    handleAnimationFrame() {
+      const requestiId = requestAnimationFrame(this.handleAnimationFrame);
+      this.animate(requestiId);
       this.characterSprite.render();
     },
     getSprite() {
@@ -110,12 +118,11 @@ export default {
     },
   },
   mounted() {
-    this.defaultAnimation = characterActions.idle;
     this.currentAnimation = this.animation;
     this.currentModification = this.modification;
     this.getCanvas();
     this.getSprite();
-    this.animate();
+    this.handleAnimationFrame();
   },
   watch: {
     modification: function () {

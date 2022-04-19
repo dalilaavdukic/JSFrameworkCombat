@@ -118,11 +118,11 @@ export default {
       if (!e.repeat) {
         switch (cmd) {
           case controlKeys.right:
-            this.characterRef.movePlayerRight();
+            this.characterRef.moveRight();
             this.setPlayersFacingDirection(this.characterRef.facingDirection());
             break;
           case controlKeys.left:
-            this.characterRef.movePlayerLeft();
+            this.characterRef.moveLeft();
             this.setPlayersFacingDirection(this.characterRef.facingDirection());
             break;
           case controlKeys.jump:

@@ -27,18 +27,18 @@ export default options => {
       let animationCompleted = false;
       tickCount += 1;
 
-      if (tickCount > ticksPerFrame) {
-        tickCount = 0;
+      if (tickCount <= ticksPerFrame) return;
 
-        // If the current frame index is in range
-        if (frameIndex < numberOfFrames - 1) {
-          // Go to the next frame
-          frameIndex += 1;
-        } else if (loop) {
-          frameIndex = 0;
-        } else {
-          animationCompleted = true;
-        }
+      tickCount = 0;
+
+      // If the current frame index is in range
+      if (frameIndex < numberOfFrames - 1) {
+        // Go to the next frame
+        frameIndex += 1;
+      } else if (loop) {
+        frameIndex = 0;
+      } else {
+        animationCompleted = true;
       }
       return animationCompleted;
     }

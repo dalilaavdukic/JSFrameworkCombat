@@ -141,11 +141,11 @@ export default {
       this.$emit('shoot');
     },
     moveLeft() {
-      this.characterRef.moveLeft();
+      this.characterRef.moveEnemyLeft();
       this.setEnemysFacingDirection(this.characterRef.facingDirection());
     },
     moveRight() {
-      this.characterRef.moveRight();
+      this.characterRef.moveEnemyRight();
       this.setEnemysFacingDirection(this.characterRef.facingDirection());
     },
     shouldEvadeAttack() {
