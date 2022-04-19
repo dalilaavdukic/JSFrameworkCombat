@@ -5,6 +5,7 @@
     :class="{ 'jump-animation': isJumping }"
     :style="[position, transition]"
     :character="character"
+    :animation="currentAnimation"
     :modification="currentModification"
     :characterType="characterType"
     @animationComplete="animationComplete($event)"
@@ -42,6 +43,7 @@ export default {
       lastTriggeredAnimation: {},
       animationCompleted: true,
       currentModification: '',
+      currentAnimation: undefined,
       position: {},
       transition: undefined,
       isJumping: false,
@@ -162,7 +164,7 @@ export default {
           // apply appropriate transition to make character move at desired speed
           this.transition = transitions.takeDamage;
           // set appropriate spritesheet
-          this.characterAnimation.updateAnimation(action);
+          this.currentAnimation = { ...action };
           // move character to appropriate position
           this.moveToNewPosition(action.name);
         }, 350);
@@ -172,7 +174,7 @@ export default {
       const action = characterActions.jump;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
+      this.currentAnimation = { ...action };
       // apply jumping class to play animation
       this.isJumping = true;
       // remove class after animation finishes
@@ -190,7 +192,7 @@ export default {
         // apply appropriate transition to make character move at desired speed
         this.transition = transitions.slide;
         // set appropriate spritesheet
-        this.characterAnimation.updateAnimation(action);
+        this.currentAnimation = { ...action };
         // move character to appropriate position
         this.moveToNewPosition(action.name);
       }
@@ -199,13 +201,13 @@ export default {
       const action = characterActions.attack;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
+      this.currentAnimation = { ...action };
     },
     shoot() {
       const action = characterActions.shoot;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
+      this.currentAnimation = { ...action };
     },
     roll() {
       if (
@@ -217,7 +219,7 @@ export default {
         // apply appropriate transition to make character move at desired speed
         this.transition = transitions.roll;
         // set appropriate spritesheet
-        this.characterAnimation.updateAnimation(action);
+        this.currentAnimation = { ...action };
         // move character to appropriate position
         this.moveToNewPosition(action.name);
       }
@@ -226,19 +228,19 @@ export default {
       const action = characterActions.die;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
+      this.currentAnimation = action;
     },
     dizzy() {
       const action = characterActions.dizzy;
       this.initiateAction(action);
       // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
+      this.currentAnimation = { ...action };
       setTimeout(() => {
         // if character isn't already dead, return to idle animation
         if (this.lastTriggeredAnimation !== characterActions.die) {
           const action = characterActions.idle;
           this.initiateAction(action);
-          this.characterAnimation.updateAnimation(action);
+          this.currentAnimation = { ...action };
         }
       }, constants.dizzinessDuration);
     },
@@ -265,7 +267,7 @@ export default {
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.run;
       // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
+      this.currentAnimation = { ...action };
       // move character to appropriate position
       this.moveToNewPosition(action.name);
     },
@@ -292,7 +294,7 @@ export default {
       // apply appropriate transition to make character move at desired speed
       this.transition = transitions.run;
       // set appropriate spritesheet
-      this.characterAnimation.updateAnimation(action);
+      this.currentAnimation = { ...action };
       // move character to appropriate position
       this.moveToNewPosition(action.name);
     },
@@ -313,7 +315,7 @@ export default {
         // apply appropriate transition to make character move at desired speed
         this.transition = transitions.run;
         // set appropriate spritesheet
-        this.characterAnimation.updateAnimation(action);
+        this.currentAnimation = { ...action };
         // move character to appropriate position
         this.moveToNewPosition(action.name);
       }
@@ -335,7 +337,7 @@ export default {
         // apply appropriate transition to make character move at desired speed
         this.transition = transitions.run;
         // set appropriate spritesheet
-        this.characterAnimation.updateAnimation(action);
+        this.currentAnimation = { ...action };
         // move character to appropriate position
         this.moveToNewPosition(action.name);
       }
@@ -366,7 +368,7 @@ export default {
     },
     stopAction() {
       // use idle spritesheet
-      this.characterAnimation.updateAnimation(characterActions.idle);
+      this.currentAnimation = characterActions.idle;
       this.animationCompleted = true;
       this.lastTriggeredAnimation = characterActions.idle;
       // stop any remaining movement

@@ -57,7 +57,6 @@ export default {
       characterRef: undefined,
       paused: false,
       characterType: constants.characterModes.player,
-      pressedKeys: [],
     };
   },
   destroyed() {
@@ -181,7 +180,7 @@ export default {
         // stop action and play idle animation
         this.characterRef.stopAction();
       } else {
-        // if there are still pressed down keys, play the action of the most recently pressed
+        // if there are still pressed down keys, play the action of the most recently pressed key
         this.characterRef.doContinuedAction(
           this.game.pressedKeys[this.game.pressedKeys.length - 1]
         );
@@ -190,5 +189,3 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-</style>

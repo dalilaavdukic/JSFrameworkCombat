@@ -6,7 +6,6 @@
     @mouseenter="mouseOver()"
   >
     <character-animation
-      ref="characterAnimation"
       :character="character.name"
       :animation="animation"
       :characterType="'enemies'"
@@ -46,9 +45,7 @@ export default {
   methods: {
     ...mapMutations(['chooseCharacter']),
     mouseOver() {
-      const characterAnimation = this.$refs.characterAnimation;
-      this.animation = this.getRandomAnimation();
-      characterAnimation.updateAnimation(this.animation);
+      this.animation = { ...this.getRandomAnimation() };
     },
     getRandomAnimation() {
       const arrayIndex = Math.round(

@@ -51,13 +51,14 @@ export default {
       this.canvas.height = this.height;
     },
     animate() {
-      requestAnimationFrame(this.animate);
+      const requestiId = requestAnimationFrame(this.animate);
       // update sprite, move to next image
       const animationCompleted = this.characterSprite.update();
       // if animation is completed
       if (animationCompleted) {
         // if character is dead, don't play any new animations
         if (this.currentAnimation === characterActions.dead) {
+          cancelAnimationFrame(requestiId);
           return;
         } else if (this.currentAnimation === characterActions.die) {
           // else if die animation has been played, play dead animation
@@ -107,10 +108,6 @@ export default {
       // render first image
       this.characterSprite.render();
     },
-    updateAnimation(animation) {
-      this.currentAnimation = animation;
-      this.getSprite();
-    },
   },
   mounted() {
     this.defaultAnimation = characterActions.idle;
@@ -123,6 +120,10 @@ export default {
   watch: {
     modification: function () {
       this.currentModification = this.modification;
+      this.getSprite();
+    },
+    animation: function () {
+      this.currentAnimation = this.animation;
       this.getSprite();
     },
   },
