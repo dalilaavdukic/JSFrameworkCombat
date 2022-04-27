@@ -74,7 +74,6 @@ export default {
         this.pressedKeys.length > 0
       ) {
         // trigger action for last key that is being helled down
-        this.$emit('animationComplete', this.currentAnimation);
         this.$emit(
           'continueAction',
           this.pressedKeys[this.pressedKeys.length - 1]
