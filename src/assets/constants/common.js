@@ -23,7 +23,7 @@ export default {
   dizzinessDuration: 3000, // ms
   dizzyHealth: 25,
   specialAttackIncreaseInterval: 1500, // ms
-  oponentFightInterval: 800, // ms
+  opponentFightInterval: 800, // ms
   damageHeight: 150,
   countdownToGameSeconds: 5,
   side: {

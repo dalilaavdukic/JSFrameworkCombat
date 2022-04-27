@@ -17,7 +17,7 @@ import { mapGetters, mapMutations } from 'vuex';
 const availableActionsForEvadingAttacks = ['roll', 'slide', 'jump'];
 
 export default {
-  name: 'Oponent',
+  name: 'Opponent',
   components: { MoveableCharacter },
   props: {
     character: {
@@ -66,7 +66,7 @@ export default {
     setTimeout(() => {
       this.fightInterval = setInterval(() => {
         this.$emit('positionRequest');
-      }, constants.oponentFightInterval);
+      }, constants.opponentFightInterval);
     }, constants.countdownToGameSeconds * 1000);
 
     EventBus.$on('enemy-died', () => {
@@ -79,20 +79,17 @@ export default {
     EventBus.$on('enemy-dizzy', () => {
       this.characterRef.dizzy();
     });
+    EventBus.$on('enemy-damaged', () => {
+      const attackSide =
+        this.distance > 0 ? constants.side.left : constants.side.right;
+      this.characterRef.takeDamage(attackSide);
+    });
     EventBus.$on('player-attacked', () => {
       this.reactToPlayerAttack();
     });
     EventBus.$on('player-shot', () => {
       this.reactToPlayerShot();
     });
-    EventBus.$on('enemy-damaged', () => {
-      const attackSide =
-        this.distance > 0 ? constants.side.left : constants.side.right;
-      this.characterRef.takeDamage(attackSide);
-    });
-  },
-  destroyed() {
-    clearInterval(this.fightInterval);
   },
   watch: {
     positions: function () {
@@ -101,23 +98,28 @@ export default {
       }
     },
   },
+  destroyed() {
+    clearInterval(this.fightInterval);
+  },
   methods: {
     ...mapMutations(['setEnemysAnimation', 'setEnemysFacingDirection']),
     fight() {
-      if (this.canFight) {
-        // enemy is facing away from player
-        if (!this.game.enemyIsFacingPlayer) {
-          // turn around
-          this.playerSide === constants.side.right
-            ? this.moveRight()
-            : this.moveLeft();
-        }
-        if (this.enemy.canUseSpecialAttack) {
-          this.shoot();
-          return;
-        }
-        this.attemptAttack();
+      if (!this.canFight) return;
+
+      // enemy is facing away from player
+      if (!this.game.enemyIsFacingPlayer) {
+        // turn around
+        this.playerSide === constants.side.right
+          ? this.moveRight()
+          : this.moveLeft();
       }
+
+      if (this.enemy.canUseSpecialAttack) {
+        this.shoot();
+        return;
+      }
+
+      this.attemptAttack();
     },
     attemptAttack() {
       // enemy is close enough to player to attack
@@ -125,12 +127,13 @@ export default {
         Math.abs(this.game.distance) <= constants.minimumAttackDamageDistance
       ) {
         this.attack();
-      } else {
-        // enemy needs to move closer to player
-        this.playerSide === constants.side.right
-          ? this.moveRight()
-          : this.moveLeft();
+        return;
       }
+
+      // enemy needs to move closer to player
+      this.playerSide === constants.side.right
+        ? this.moveRight()
+        : this.moveLeft();
     },
     attack() {
       this.characterRef.attack();

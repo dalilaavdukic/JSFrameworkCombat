@@ -55,13 +55,13 @@ export default {
     }
   },
   chooseCharacter(state, payload) {
-    const availableOponents = Object.keys(characters).filter(
+    const availableOpponents = Object.keys(characters).filter(
       character => character !== payload.name
     );
     state.player.character = payload;
     state.enemy.character =
       characters[
-        availableOponents[(availableOponents.length * Math.random()) << 0]
+        availableOpponents[(availableOpponents.length * Math.random()) << 0]
       ];
   },
   giveName(state, name) {

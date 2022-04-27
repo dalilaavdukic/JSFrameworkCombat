@@ -156,7 +156,7 @@ export default {
     terminateCommand(e) {
       let cmd = e.keyCode;
 
-      // if the user released the last pressed key, remove it from list of pressed keys
+      // if the user released a pressed key, remove it from list of pressed keys
       if (this.game.pressedKeys.indexOf(cmd) !== -1) {
         this.removeReleasedKey(cmd);
       }

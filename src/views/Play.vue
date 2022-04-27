@@ -31,13 +31,13 @@
           @shoot="playerShot()"
           :character="player.character.name"
         ></player>
-        <oponent
+        <opponent
           ref="enemy"
           :character="enemy.character.name"
           @positionRequest="getPositions()"
           @attack="enemyAttacked()"
           @shoot="enemyShot()"
-        ></oponent>
+        ></opponent>
       </div>
     </div>
   </div>
@@ -46,7 +46,7 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import Player from '@/components/Player';
-import Oponent from '@/components/Oponent';
+import Opponent from '@/components/Opponent';
 import PlayersBars from '@/components/PlayersBars';
 import GameOver from '@/components/GameOver';
 import QuitGame from '@/components/QuitGame';
@@ -56,7 +56,7 @@ import gameAssetsService from '@/services/gameAssets.service';
 
 export default {
   name: 'Play',
-  components: { Player, Oponent, PlayersBars, GameOver, QuitGame },
+  components: { Player, Opponent, PlayersBars, GameOver, QuitGame },
   computed: {
     ...mapGetters(['player', 'enemy', 'game']),
   },
